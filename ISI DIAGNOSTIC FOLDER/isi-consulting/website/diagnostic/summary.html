@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Executive Summary | ISI Consulting</title>
+  <meta name="description" content="Client-ready executive summary of the ISI Growth &amp; Turnaround Diagnostic.">
+  <link rel="stylesheet" href="/src/styles/isi.css">
+</head>
+<body>
+  <script src="/src/components/isiHeader.js"></script>
+  <script>injectIsiHeader();</script>
+  <script src="/src/components/isiNav.js"></script>
+  <script>injectIsiNav("summary");</script>
+  <script src="/src/engine/isiConfig.js"></script>
+  <script src="/src/engine/isiDiagnosticEngine.js"></script>
+
+
+  <div class="isi-page">
+    <h2>Executive Summary</h2>
+    <div class="isi-section">
+      <p>Client-ready snapshot of archetype, root causes, scores, priorities, and roadmap.</p>
+    </div>
+
+    <h3>Client Deliverable</h3>
+    <div id="summaryOutput" class="isi-section" aria-live="polite"></div>
+
+    <div class="isi-priority-actions">
+      <a href="/diagnostic/dashboard.html" class="isi-button-secondary">Back to Dashboard</a>
+      <a href="/website/schedule.html" class="isi-button">Schedule a Consultation</a>
+    </div>
+
+    <div class="isi-section">
+      <h3>Export Options</h3>
+      <div class="isi-priority-actions">
+        <button type="button" class="isi-button-secondary" onclick="downloadSummary()">Download Summary</button>
+        <button type="button" class="isi-button-secondary" onclick="printDiagnostic()">Print Diagnostic</button>
+        <button type="button" class="isi-button-accent" onclick="emailSummary()">Email Summary to Myself</button>
+      </div>
+    </div>
+
+    <div class="isi-section">
+      <h3>Save &amp; Share</h3>
+      <div class="isi-priority-actions">
+        <button type="button" class="isi-button-secondary" onclick="saveDiagnostic()">Save Diagnostic</button>
+        <button type="button" class="isi-button-accent" onclick="shareDiagnostic()">Share Diagnostic</button>
+      </div>
+    </div>
+  
+    <h3>Automation Hooks</h3>
+    <div class="isi-section">
+      <div class="isi-priority-actions">
+        <button type="button" class="isi-button-secondary" onclick="isiDiagnosticEngine.exportJSON()">Export JSON</button>
+        <button type="button" class="isi-button-secondary" onclick="isiDiagnosticEngine.sendToCRM()">Send to CRM</button>
+        <button type="button" class="isi-button-secondary" onclick="isiDiagnosticEngine.sendToWebhook()">Trigger Webhook</button>
+        <button type="button" class="isi-button-accent" onclick="isiDiagnosticEngine.saveToCloud()">Save to Cloud</button>
+      </div>
+    </div>
+
+    <div class="isi-card">
+      <h3>Developer Console</h3>
+      <button type="button" class="isi-button-secondary" onclick="console.log(isiDiagnosticEngine.getSummary())">
+        Log Summary to Console
+      </button>
+    </div>
+
+  </div>
+
+  <footer class="isi-footer">
+    © 2026 ISI Consulting — The Truth Collective<br>
+    Diagnostic Engine v1.0 — All Rights Reserved<br>
+    Contact: support@truthcollective.io
+  </footer>
+
+  <script src="/src/summary.js"></script>
+  <script src="/src/export.js"></script>
+  <script src="/src/saveShare.js"></script>
+  <script>
+    window.onload = displaySummary;
+  </script>
+</body>
+</html>

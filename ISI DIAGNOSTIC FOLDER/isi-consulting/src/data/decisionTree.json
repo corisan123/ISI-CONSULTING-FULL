@@ -1,0 +1,72 @@
+{
+  "archetypes": [
+    {
+      "id": "revenue_stalled",
+      "name": "Revenue Engine Stalled",
+      "conditions": {
+        "revenue": "Red",
+        "margin": ["Yellow", "Green"],
+        "operations": ["Yellow", "Green"],
+        "leadership": ["Yellow", "Green"]
+      },
+      "rootCause": [
+        "Weak pipeline velocity",
+        "Low close rate",
+        "Deal size inconsistency",
+        "Sales cycle drag"
+      ]
+    },
+    {
+      "id": "margin_collapse",
+      "name": "Margin Collapse",
+      "conditions": {
+        "margin": "Red"
+      },
+      "rootCause": [
+        "Gross margin erosion",
+        "EBITDA compression",
+        "Pricing discipline breakdown"
+      ]
+    },
+    {
+      "id": "ops_bottleneck",
+      "name": "Operational Bottleneck",
+      "conditions": {
+        "operations": "Red"
+      },
+      "rootCause": [
+        "High cost-to-serve",
+        "Customer concentration risk",
+        "Sales capacity constraints"
+      ]
+    },
+    {
+      "id": "leadership_misalignment",
+      "name": "Leadership Misalignment",
+      "conditions": {
+        "leadership": "Red"
+      },
+      "rootCause": [
+        "Leadership cadence breakdown",
+        "Misaligned priorities",
+        "Low accountability rhythm"
+      ]
+    },
+    {
+      "id": "healthy_growth",
+      "name": "Healthy Growth",
+      "conditions": {
+        "revenue": ["Green"],
+        "margin": ["Green"],
+        "operations": ["Green"],
+        "leadership": ["Green"]
+      },
+      "rootCause": [
+        "Strong revenue engine",
+        "Healthy margins",
+        "Operational stability",
+        "Aligned leadership"
+      ]
+    }
+  ]
+}

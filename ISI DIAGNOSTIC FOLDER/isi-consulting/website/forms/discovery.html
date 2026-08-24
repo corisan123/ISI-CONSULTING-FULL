@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Discovery Questionnaire | ISI Consulting</title>
+  <meta name="description" content="Discovery questionnaire capturing revenue, margin, pipeline, and operational metrics for ISI Consulting diagnostics.">
+  <link rel="stylesheet" href="../css/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="../index.html">ISI <span>Consulting</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+      <nav class="site-nav" id="primary-nav" aria-label="Primary">
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../about.html">About</a></li>
+          <li><a href="../philosophy.html">Philosophy</a></li>
+          <li><a href="../services/index.html">Services</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+          <li><a class="nav-cta" href="../schedule.html">Schedule</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <div class="container">
+        <h1>Discovery Questionnaire</h1>
+        <p class="lede">Capture the financial and commercial metrics that ground a Growth &amp; Turnaround Diagnostic. Estimates are fine—precision can be refined later.</p>
+      </div>
+    </div>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="form-block form-block-xl" style="margin-inline:auto">
+          <h2 style="margin-top:0">Discovery Metrics</h2>
+          <p>All fields are required. After submission you will continue to consultation scheduling.</p>
+          <form id="discoveryForm" class="isi-form" data-next="../schedule.html" novalidate>
+            <div class="form-success" aria-live="polite">Discovery data saved locally.</div>
+
+            <div class="isi-form-grid">
+              <div class="form-group">
+                <label for="annualRevenue">Annual Revenue</label>
+                <input type="text" id="annualRevenue" name="annualRevenue" required placeholder="e.g., $25M">
+                <div class="error">Please enter annual revenue.</div>
+              </div>
+
+              <div class="form-group">
+                <label for="grossMargin">Gross Margin (%)</label>
+                <input type="text" id="grossMargin" name="grossMargin" required placeholder="e.g., 28%">
+                <div class="error">Please enter gross margin.</div>
+              </div>
+
+              <div class="form-group">
+                <label for="ebitda">EBITDA</label>
+                <input type="text" id="ebitda" name="ebitda" required placeholder="e.g., $2.1M or 8%">
+                <div class="error">Please enter EBITDA.</div>
+              </div>
+
+              <div class="form-group">
+                <label for="pipelineValue">Pipeline Value</label>
+                <input type="text" id="pipelineValue" name="pipelineValue" required placeholder="e.g., $8M">
+                <div class="error">Please enter pipeline value.</div>
+              </div>
+
+              <div class="form-group">
+                <label for="closeRate">Close Rate (%)</label>
+                <input type="text" id="closeRate" name="closeRate" required placeholder="e.g., 22%">
+                <div class="error">Please enter close rate.</div>
+              </div>
+
+              <div class="form-group">
+                <label for="avgDealSize">Average Deal Size</label>
+                <input type="text" id="avgDealSize" name="avgDealSize" required placeholder="e.g., $175K">
+                <div class="error">Please enter average deal size.</div>
+              </div>
+
+              <div class="form-group">
+                <label for="salesCycle">Sales Cycle</label>
+                <input type="text" id="salesCycle" name="salesCycle" required placeholder="e.g., 6–9 months">
+                <div class="error">Please enter sales cycle length.</div>
+              </div>
+
+              <div class="form-group">
+                <label for="customerConcentration">Customer Concentration</label>
+                <input type="text" id="customerConcentration" name="customerConcentration" required placeholder="e.g., Top 3 = 55% of revenue">
+                <div class="error">Please describe customer concentration.</div>
+              </div>
+
+              <div class="form-group">
+                <label for="salesTeamCapacity">Sales Team Capacity</label>
+                <input type="text" id="salesTeamCapacity" name="salesTeamCapacity" required placeholder="e.g., 4 AEs, 1 manager">
+                <div class="error">Please describe sales team capacity.</div>
+              </div>
+
+              <div class="form-group">
+                <label for="costToServe">Cost to Serve</label>
+                <input type="text" id="costToServe" name="costToServe" required placeholder="e.g., High / rising with project complexity">
+                <div class="error">Please describe cost to serve.</div>
+              </div>
+
+              <div class="form-group form-group-span">
+                <label for="bottlenecks">Primary Bottlenecks</label>
+                <textarea id="bottlenecks" name="bottlenecks" required placeholder="Where does work stall—pipeline quality, estimating, production, project handoff, leadership decisions?"></textarea>
+                <div class="error">Please describe primary bottlenecks.</div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" type="submit" onclick="return submitDiscovery()">Submit Discovery</button>
+          </form>
+          <p style="margin-top:1.25rem;margin-bottom:0;font-size:0.9rem"><a href="client-intake.html">← Client Intake</a> · <a href="index.html">All forms</a> · <a href="../schedule.html">Skip to Schedule</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">ISI <span>Consulting</span></div>
+          <p>Iron Sharpens Iron — transforming revenue, margin, and operational performance for industrial and project-driven companies.</p>
+        </div>
+        <div>
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="../about.html">About</a></li>
+            <li><a href="../philosophy.html">Philosophy</a></li>
+            <li><a href="../services/index.html">Services</a></li>
+            <li><a href="../contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Engage</h4>
+          <ul>
+            <li><a href="../schedule.html">Schedule</a></li>
+            <li><a href="index.html">Forms</a></li>
+            <li><a href="client-intake.html">Client Intake</a></li>
+            <li><a href="lead-magnet.html">Lead Magnet</a></li>
+            <li><a href="../templates/resource-library.html">Resources</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="../legal/nda.html">Confidentiality Notice</a></li>
+            <li><a href="../legal/terms.html">Terms of Engagement</a></li>
+            <li><a href="../legal/privacy.html">Privacy Policy</a></li>
+            <li><a href="../legal/disclaimer.html">Consulting Disclaimer</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 ISI Consulting. All rights reserved.</span>
+        <span>contact@isiconsulting.com</span>
+      </div>
+    </div>
+  </footer>
+  <script src="../js/site.js"></script>
+  <script src="../js/forms.js"></script>
+</body>
+</html>

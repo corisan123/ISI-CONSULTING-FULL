@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Schedule a Consultation | ISI Consulting</title>
+  <meta name="description" content="Schedule a consultation with ISI Consulting — name, email, preferred date and time.">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="index.html">ISI <span>Consulting</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+      <nav class="site-nav" id="primary-nav" aria-label="Primary">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="philosophy.html">Philosophy</a></li>
+          <li><a href="services/index.html">Services</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a class="nav-cta" href="schedule.html">Schedule</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <div class="container">
+        <h1>Schedule a Consultation</h1>
+        <p class="lede">Request a time to discuss constraints, priorities, and whether a diagnostic or targeted engagement is the right next step.</p>
+      </div>
+    </div>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="calendar-placeholder" role="img" aria-label="Calendar embed placeholder">
+          <strong>Calendar Embed Placeholder</strong>
+          Scheduling widget (e.g., Calendly or equivalent) will be embedded here in a later block. Use the form below for now.
+        </div>
+
+        <div class="form-block form-block-wide" style="margin-inline:auto">
+          <h2 style="margin-top:0">Consultation Scheduling</h2>
+          <p>Prefer structured onboarding first? Start with <a href="forms/client-intake.html">Client Intake</a> and the <a href="forms/discovery.html">Discovery Questionnaire</a>.</p>
+          <form id="scheduleForm" class="isi-form" novalidate>
+            <div class="form-success" aria-live="polite">Thank you. Your consultation request has been saved locally.</div>
+
+            <div class="form-group">
+              <label for="schedName">Name</label>
+              <input type="text" id="schedName" name="schedName" required autocomplete="name">
+              <div class="error">Please enter your name.</div>
+            </div>
+
+            <div class="form-group">
+              <label for="schedEmail">Email</label>
+              <input type="email" id="schedEmail" name="schedEmail" required autocomplete="email">
+              <div class="error">Please enter a valid email address.</div>
+            </div>
+
+            <div class="isi-form-grid">
+              <div class="form-group">
+                <label for="schedDate">Preferred Date</label>
+                <input type="date" id="schedDate" name="schedDate" required>
+                <div class="error">Please select a preferred date.</div>
+              </div>
+
+              <div class="form-group">
+                <label for="schedTime">Preferred Time</label>
+                <input type="time" id="schedTime" name="schedTime" required>
+                <div class="error">Please select a preferred time.</div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary" type="submit" onclick="return submitSchedule()">Request Consultation</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">ISI <span>Consulting</span></div>
+          <p>Iron Sharpens Iron — transforming revenue, margin, and operational performance for industrial and project-driven companies.</p>
+        </div>
+        <div>
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="about.html">About</a></li>
+            <li><a href="philosophy.html">Philosophy</a></li>
+            <li><a href="services/index.html">Services</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Engage</h4>
+          <ul>
+            <li><a href="schedule.html">Schedule</a></li>
+            <li><a href="forms/index.html">Forms</a></li>
+            <li><a href="forms/client-intake.html">Client Intake</a></li>
+            <li><a href="forms/lead-magnet.html">Lead Magnet</a></li>
+            <li><a href="templates/resource-library.html">Resources</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="legal/nda.html">Confidentiality Notice</a></li>
+            <li><a href="legal/terms.html">Terms of Engagement</a></li>
+            <li><a href="legal/privacy.html">Privacy Policy</a></li>
+            <li><a href="legal/disclaimer.html">Consulting Disclaimer</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 ISI Consulting. All rights reserved.</span>
+        <span>contact@isiconsulting.com</span>
+      </div>
+    </div>
+  </footer>
+  <script src="js/site.js"></script>
+  <script src="js/forms.js"></script>
+</body>
+</html>

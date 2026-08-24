@@ -1,0 +1,27 @@
+{
+  "weights": {
+    "revenue": {
+      "pipeline": 0.25,
+      "closeRate": 0.25,
+      "dealSize": 0.25,
+      "salesCycle": 0.25
+    },
+    "margin": {
+      "margin": 0.5,
+      "ebitda": 0.5
+    },
+    "operations": {
+      "costToServe": 0.4,
+      "customerConcentration": 0.3,
+      "salesCapacity": 0.3
+    },
+    "leadership": {
+      "leadership": 1.0
+    }
+  },
+  "thresholds": {
+    "green": 75,
+    "yellow": 50,
+    "red": 0
+  }
+}

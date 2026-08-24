@@ -1,0 +1,35 @@
+{
+  "version": "1.0",
+  "formId": "diagnosticInputForm",
+  "sessionStorageKey": "isi_diagnosticInput",
+  "canonicalTemplate": "../../src/data/diagnosticInput.json",
+  "note": "Runtime payload uses the flat keys below. src/data/diagnosticInput.json is the template overwritten dynamically by the diagnostic engine later.",
+  "fields": [
+    { "id": "diagRevenue", "key": "revenue", "type": "number", "required": true, "label": "Annual Revenue" },
+    { "id": "diagMargin", "key": "margin", "type": "number", "required": true, "label": "Gross Margin %" },
+    { "id": "diagEBITDA", "key": "ebitda", "type": "number", "required": true, "label": "EBITDA %" },
+    { "id": "diagPipeline", "key": "pipeline", "type": "number", "required": true, "label": "Pipeline Value" },
+    { "id": "diagCloseRate", "key": "closeRate", "type": "number", "required": true, "label": "Close Rate %" },
+    { "id": "diagDealSize", "key": "dealSize", "type": "number", "required": true, "label": "Average Deal Size" },
+    { "id": "diagSalesCycle", "key": "salesCycle", "type": "number", "required": true, "label": "Sales Cycle (days)" },
+    { "id": "diagCustConc", "key": "customerConcentration", "type": "number", "required": true, "label": "Customer Concentration %" },
+    { "id": "diagSalesCap", "key": "salesCapacity", "type": "number", "required": true, "label": "Sales Team Capacity (FTE)" },
+    { "id": "diagCTS", "key": "costToServe", "type": "number", "required": true, "label": "Cost-to-Serve %" },
+    { "id": "diagBottlenecks", "key": "bottlenecks", "type": "string", "required": true, "label": "Operational Bottlenecks" },
+    { "id": "diagLeadership", "key": "leadership", "type": "number", "required": true, "min": 1, "max": 10, "label": "Leadership Alignment Score (1–10)" }
+  ],
+  "example": {
+    "revenue": 0,
+    "margin": 0,
+    "ebitda": 0,
+    "pipeline": 0,
+    "closeRate": 0,
+    "dealSize": 0,
+    "salesCycle": 0,
+    "customerConcentration": 0,
+    "salesCapacity": 0,
+    "costToServe": 0,
+    "bottlenecks": "",
+    "leadership": 0
+  }
+}

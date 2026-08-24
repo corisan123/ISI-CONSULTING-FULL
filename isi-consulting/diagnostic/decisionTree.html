@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Diagnostic Archetype | ISI Consulting</title>
+  <meta name="description" content="ISI Consulting Decision Tree Engine — classify scoring results into a diagnostic archetype with root-cause analysis.">
+  <link rel="stylesheet" href="/src/styles/isi.css">
+</head>
+<body>
+  <script src="/src/components/isiHeader.js"></script>
+  <script>injectIsiHeader();</script>
+  <script src="/src/components/isiNav.js"></script>
+  <script>injectIsiNav("decision");</script>
+  <script src="/src/engine/isiConfig.js"></script>
+  <script src="/src/engine/isiDiagnosticEngine.js"></script>
+
+
+  <div class="isi-page">
+    <h2>Diagnostic Archetype</h2>
+    <div class="isi-section">
+      <p>Root-cause classification from your scoring ratings. The decision tree runs only when you click <strong>Run Decision Tree</strong>. It reads <code>isi_scoringResults</code> from this browser session. If you already ran it, prior results appear below on load.</p>
+      <p id="decisionTreeNoScoring" class="scoring-hint" hidden>
+        No scoring results found.
+        <a href="/diagnostic/scoring.html">Run Diagnostic Scoring</a> first, then return here.
+      </p>
+      <div class="isi-priority-actions">
+        <button type="button" class="isi-button" id="runDecisionTreeBtn" onclick="runAndDisplayDecisionTree()">Run Decision Tree</button>
+      </div>
+    </div>
+
+    <h3>Root-Cause Analysis</h3>
+    <div id="decisionTreeResults" class="isi-card" aria-live="polite"></div>
+
+    <div class="isi-priority-actions">
+      <a href="/diagnostic/prioritization.html" class="isi-button">Continue</a>
+      <a href="/diagnostic/scoring.html" class="isi-button-secondary">Back to Scoring</a>
+    </div>
+  </div>
+
+  <footer class="isi-footer">
+    © 2026 ISI Consulting — The Truth Collective<br>
+    Diagnostic Engine v1.0 — All Rights Reserved<br>
+    Contact: support@truthcollective.io
+  </footer>
+
+  <script src="/src/decisionTree.js"></script>
+  <script>
+    (function () {
+      function checkScoringHint() {
+        var hint = document.getElementById("decisionTreeNoScoring");
+        if (!hint) return;
+        var hasScoring = false;
+        try {
+          hasScoring = !!sessionStorage.getItem("isi_scoringResults");
+        } catch (err) { /* ignore */ }
+        hint.hidden = hasScoring;
+      }
+
+      window.addEventListener("load", function () {
+        checkScoringHint();
+        if (typeof displayDecisionTree === "function") displayDecisionTree();
+      });
+    })();
+  </script>
+</body>
+</html>

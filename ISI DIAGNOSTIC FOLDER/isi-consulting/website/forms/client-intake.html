@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Client Intake | ISI Consulting</title>
+  <meta name="description" content="Structured client intake for ISI Consulting — company, contact, industry, and primary challenge.">
+  <link rel="stylesheet" href="../css/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="../index.html">ISI <span>Consulting</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+      <nav class="site-nav" id="primary-nav" aria-label="Primary">
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../about.html">About</a></li>
+          <li><a href="../philosophy.html">Philosophy</a></li>
+          <li><a href="../services/index.html">Services</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+          <li><a class="nav-cta" href="../schedule.html">Schedule</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <div class="container">
+        <h1>Client Intake</h1>
+        <p class="lede">Tell us about your organization and the constraint you want to address. This intake feeds the discovery questionnaire and consultation.</p>
+      </div>
+    </div>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="form-block form-block-wide" style="margin-inline:auto">
+          <h2 style="margin-top:0">Client Intake Form</h2>
+          <p>All fields are required. After submission you will continue to the Discovery Questionnaire.</p>
+          <form id="clientIntakeForm" class="isi-form" data-next="discovery.html" novalidate>
+            <div class="form-success" aria-live="polite">Thank you. Your client intake has been saved locally.</div>
+
+            <div class="form-group">
+              <label for="companyName">Company Name</label>
+              <input type="text" id="companyName" name="companyName" required autocomplete="organization">
+              <div class="error">Please enter your company name.</div>
+            </div>
+
+            <div class="form-group">
+              <label for="contactName">Contact Name</label>
+              <input type="text" id="contactName" name="contactName" required autocomplete="name">
+              <div class="error">Please enter a contact name.</div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" required autocomplete="email">
+              <div class="error">Please enter a valid email address.</div>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <input type="tel" id="phone" name="phone" required autocomplete="tel">
+              <div class="error">Please enter a phone number.</div>
+            </div>
+
+            <div class="form-group">
+              <label for="industry">Industry</label>
+              <select id="industry" name="industry" required>
+                <option value="">Select industry…</option>
+                <option value="AEC">AEC</option>
+                <option value="Manufacturing">Manufacturing</option>
+                <option value="Building Products">Building Products</option>
+                <option value="Automation">Automation</option>
+                <option value="Construction">Construction</option>
+                <option value="Other">Other</option>
+              </select>
+              <div class="error">Please select an industry.</div>
+            </div>
+
+            <div class="form-group">
+              <label for="challenge">Primary Challenge</label>
+              <textarea id="challenge" name="challenge" required placeholder="e.g., margin compression, pipeline quality, operational bottlenecks, leadership cadence…"></textarea>
+              <div class="error">Please describe the primary challenge.</div>
+            </div>
+
+            <button class="btn btn-primary" type="submit" onclick="return submitClientIntake()">Submit Client Intake</button>
+          </form>
+          <p style="margin-top:1.25rem;margin-bottom:0;font-size:0.9rem"><a href="index.html">← All forms</a> · <a href="discovery.html">Skip to Discovery</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">ISI <span>Consulting</span></div>
+          <p>Iron Sharpens Iron — transforming revenue, margin, and operational performance for industrial and project-driven companies.</p>
+        </div>
+        <div>
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="../about.html">About</a></li>
+            <li><a href="../philosophy.html">Philosophy</a></li>
+            <li><a href="../services/index.html">Services</a></li>
+            <li><a href="../contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Engage</h4>
+          <ul>
+            <li><a href="../schedule.html">Schedule</a></li>
+            <li><a href="index.html">Forms</a></li>
+            <li><a href="client-intake.html">Client Intake</a></li>
+            <li><a href="lead-magnet.html">Lead Magnet</a></li>
+            <li><a href="../templates/resource-library.html">Resources</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="../legal/nda.html">Confidentiality Notice</a></li>
+            <li><a href="../legal/terms.html">Terms of Engagement</a></li>
+            <li><a href="../legal/privacy.html">Privacy Policy</a></li>
+            <li><a href="../legal/disclaimer.html">Consulting Disclaimer</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 ISI Consulting. All rights reserved.</span>
+        <span>contact@isiconsulting.com</span>
+      </div>
+    </div>
+  </footer>
+  <script src="../js/site.js"></script>
+  <script src="../js/forms.js"></script>
+</body>
+</html>

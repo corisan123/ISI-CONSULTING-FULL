@@ -1,0 +1,1014 @@
+/**
+ * ISI Consulting — Design System (Block 3A Section 1)
+ * Hybrid consulting + premium SaaS tokens and .isi-* components.
+ * Load on diagnostic pages after or instead of legacy site.css overrides.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+/* -------------------------------------------------------------------------- */
+/* Design tokens                                                              */
+/* -------------------------------------------------------------------------- */
+:root {
+  /* Primary */
+  --isi-blue: #003366;
+  --isi-blue-deep: #002244;
+  --isi-blue-mid: #004080;
+
+  /* Accent */
+  --isi-gold: #c9a86a;
+  --isi-gold-hover: #d4b87c;
+
+  /* Secondary */
+  --isi-cyan: #0099cc;
+  --isi-cyan-hover: #00aad9;
+
+  /* Surfaces */
+  --isi-bg: #f5f7fa;
+  --isi-surface: #ffffff;
+  --isi-white: #ffffff;
+  --isi-border: #e0e6ed;
+  --isi-text: #1a2332;
+  --isi-text-muted: #5a6577;
+  --isi-text-future: #9aa3b2;
+
+  /* Ratings */
+  --isi-green: #067647;
+  --isi-green-bg: #ecfdf3;
+  --isi-yellow: #b54708;
+  --isi-yellow-bg: #fffaeb;
+  --isi-red: #b42318;
+  --isi-red-bg: #fef3f2;
+
+  /* Layout */
+  --isi-page-pad: 40px;
+  --isi-section-gap: 32px;
+  --isi-card-pad: 24px;
+  --isi-radius: 8px;
+  --isi-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  --isi-max: 1120px;
+  --isi-font: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Base                                                                       */
+/* -------------------------------------------------------------------------- */
+.isi-app,
+.isi-page,
+body.isi-diagnostic {
+  font-family: var(--isi-font);
+  color: var(--isi-text);
+  background: var(--isi-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+body.isi-diagnostic {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.isi-page {
+  width: min(100% - 2.5rem, var(--isi-max));
+  margin-inline: auto;
+  padding: var(--isi-page-pad) 0;
+}
+
+.isi-page > h1,
+.isi-page > h2 {
+  font-weight: 600;
+  color: var(--isi-blue);
+  letter-spacing: -0.02em;
+  margin: 0 0 0.75rem;
+}
+
+.isi-page > h2 {
+  font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+}
+
+.isi-section {
+  margin-bottom: var(--isi-section-gap);
+}
+
+.isi-section:last-child {
+  margin-bottom: 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Diagnostic shell header (branded)                                          */
+/* -------------------------------------------------------------------------- */
+.isi-diag-header {
+  background: var(--isi-blue);
+  color: #fff;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.isi-diag-header-inner {
+  width: min(100% - 2.5rem, var(--isi-max));
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 0.85rem 0;
+}
+
+.isi-diag-brand {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.isi-diag-brand span {
+  color: var(--isi-gold);
+  font-weight: 500;
+}
+
+.isi-diag-brand:hover {
+  color: #fff;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Branded page header (Block 3B Section 2)                                   */
+/* -------------------------------------------------------------------------- */
+.isi-header-root {
+  width: 100%;
+}
+
+.isi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  background: var(--isi-blue);
+  color: var(--isi-white);
+  padding: 16px 40px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.isi-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.isi-header-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.isi-header-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+  color: var(--isi-white);
+}
+
+.isi-header-subtitle {
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--isi-gold);
+}
+
+.isi-header-tagline {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 720px) {
+  .isi-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 14px 20px;
+  }
+
+  .isi-header-right {
+    text-align: left;
+    justify-content: flex-start;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Navigation — icons + labels + gold progress                                */
+/* -------------------------------------------------------------------------- */
+.isi-diag-nav {
+  background: var(--isi-surface);
+  border-bottom: 1px solid var(--isi-border);
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+
+.isi-diag-nav-inner {
+  width: min(100% - 1.5rem, var(--isi-max));
+  margin-inline: auto;
+  display: flex;
+  align-items: stretch;
+  gap: 0.15rem;
+  overflow-x: auto;
+  padding: 0.35rem 0 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.isi-nav-step {
+  flex: 1 1 auto;
+  min-width: 5.5rem;
+  text-align: center;
+  text-decoration: none;
+  color: var(--isi-text-future);
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 0.55rem 0.4rem 0.65rem;
+  position: relative;
+  border-bottom: 3px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.isi-nav-step .isi-nav-icon {
+  display: block;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0 auto 0.3rem;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.isi-nav-step .isi-nav-label {
+  display: block;
+  line-height: 1.2;
+}
+
+/* Future */
+.isi-nav-step.is-future {
+  color: var(--isi-text-future);
+  font-weight: 400;
+}
+
+/* Completed */
+.isi-nav-step.is-complete {
+  color: var(--isi-blue);
+  font-weight: 500;
+}
+
+.isi-nav-step.is-complete .isi-nav-check {
+  display: inline-block;
+  width: 0.85rem;
+  height: 0.85rem;
+  margin-left: 0.2rem;
+  vertical-align: -0.05rem;
+}
+
+.isi-nav-step .isi-nav-check {
+  display: none;
+}
+
+.isi-nav-step.is-complete .isi-nav-check {
+  display: inline-block;
+}
+
+/* Active — gold underline + bold */
+.isi-nav-step.is-active {
+  color: var(--isi-blue);
+  font-weight: 700;
+  border-bottom-color: var(--isi-gold);
+}
+
+.isi-nav-step.is-active .isi-nav-icon {
+  stroke: var(--isi-gold);
+}
+
+.isi-nav-step:hover {
+  color: var(--isi-blue-mid);
+}
+
+/* Progress track under nav (optional continuous bar) */
+.isi-diag-progress {
+  height: 3px;
+  background: var(--isi-border);
+  width: min(100% - 1.5rem, var(--isi-max));
+  margin: 0 auto;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.isi-diag-progress-bar {
+  height: 100%;
+  background: var(--isi-gold);
+  border-radius: 2px;
+  transition: width 0.25s ease;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Cards                                                                      */
+/* -------------------------------------------------------------------------- */
+.isi-card {
+  background: var(--isi-surface);
+  border: 1px solid var(--isi-border);
+  border-radius: var(--isi-radius);
+  padding: var(--isi-card-pad);
+  margin-bottom: 1rem;
+  box-shadow: var(--isi-shadow);
+}
+
+.isi-card h3 {
+  margin: 0 0 0.65rem;
+  color: var(--isi-blue);
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.isi-card p {
+  margin: 0.3rem 0;
+  color: var(--isi-text-muted);
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+.isi-card ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.15rem;
+  color: var(--isi-text-muted);
+}
+
+.isi-card li {
+  margin-bottom: 0.3rem;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Buttons                                                                    */
+/* -------------------------------------------------------------------------- */
+.isi-button,
+.btn.isi-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-family: var(--isi-font);
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 0.65rem 1.15rem;
+  border-radius: var(--isi-radius);
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  line-height: 1.2;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+/* Primary — deep consulting blue */
+.isi-button,
+.isi-button-primary,
+.btn-primary.isi-button {
+  background: var(--isi-blue);
+  color: #fff;
+  border-color: var(--isi-blue);
+}
+
+.isi-button:hover,
+.isi-button-primary:hover,
+.btn-primary.isi-button:hover {
+  background: var(--isi-blue-mid);
+  border-color: var(--isi-blue-mid);
+  color: #fff;
+}
+
+/* Secondary — cyan */
+.isi-button-secondary,
+.btn-secondary.isi-button {
+  background: var(--isi-cyan);
+  color: #fff;
+  border-color: var(--isi-cyan);
+}
+
+.isi-button-secondary:hover,
+.btn-secondary.isi-button:hover {
+  background: var(--isi-cyan-hover);
+  border-color: var(--isi-cyan-hover);
+  color: #fff;
+}
+
+/* Accent — gold (sparingly) */
+.isi-button-accent {
+  background: var(--isi-gold);
+  color: var(--isi-blue-deep);
+  border-color: var(--isi-gold);
+  font-weight: 600;
+}
+
+.isi-button-accent:hover {
+  background: var(--isi-gold-hover);
+  border-color: var(--isi-gold-hover);
+  color: var(--isi-blue-deep);
+}
+
+.isi-button-outline {
+  background: transparent;
+  color: var(--isi-blue);
+  border-color: var(--isi-blue);
+}
+
+.isi-button-outline:hover {
+  background: rgba(0, 51, 102, 0.06);
+}
+
+.isi-priority-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 1.25rem 0 var(--isi-section-gap);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Forms (diagnostic / isi-form)                                              */
+/* -------------------------------------------------------------------------- */
+.isi-form {
+  max-width: 720px;
+}
+
+.isi-label,
+.isi-form label,
+.isi-form .form-group > label {
+  display: block;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--isi-blue);
+  margin-bottom: 0.35rem;
+}
+
+.isi-input,
+.isi-form input,
+.isi-form select,
+.isi-form textarea,
+.isi-form .form-group input,
+.isi-form .form-group select,
+.isi-form .form-group textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--isi-border);
+  border-radius: var(--isi-radius);
+  font: inherit;
+  color: var(--isi-text);
+  background: var(--isi-surface);
+}
+
+.isi-input:focus,
+.isi-form input:focus,
+.isi-form select:focus,
+.isi-form textarea:focus {
+  outline: 2px solid var(--isi-cyan);
+  outline-offset: 1px;
+  border-color: var(--isi-cyan);
+}
+
+.isi-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.25rem;
+}
+
+@media (max-width: 700px) {
+  .isi-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Ratings                                                                    */
+/* -------------------------------------------------------------------------- */
+.rating-badge {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+}
+
+.rating-green {
+  background: var(--isi-green-bg);
+  color: var(--isi-green);
+}
+
+.rating-yellow {
+  background: var(--isi-yellow-bg);
+  color: var(--isi-yellow);
+}
+
+.rating-red {
+  background: var(--isi-red-bg);
+  color: var(--isi-red);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Archetype / root cause                                                     */
+/* -------------------------------------------------------------------------- */
+.isi-archetype-summary {
+  color: var(--isi-blue);
+  font-size: 1.05rem;
+}
+
+.isi-root-cause h4,
+.isi-archetype-ratings h4 {
+  color: var(--isi-blue);
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Footer (diagnostic)                                                        */
+/* -------------------------------------------------------------------------- */
+.isi-diag-footer {
+  background: var(--isi-blue-deep);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 2rem 0 1.5rem;
+  font-size: 0.88rem;
+  margin-top: 2rem;
+}
+
+.isi-diag-footer a {
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+}
+
+.isi-diag-footer a:hover {
+  color: var(--isi-gold);
+}
+
+.isi-diag-footer-inner {
+  width: min(100% - 2.5rem, var(--isi-max));
+  margin-inline: auto;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Page header band                                                           */
+/* -------------------------------------------------------------------------- */
+.isi-page-header {
+  background: linear-gradient(145deg, var(--isi-blue-deep) 0%, var(--isi-blue) 60%, var(--isi-blue-mid) 100%);
+  color: #fff;
+  padding: 2.25rem 0 2rem;
+  margin-bottom: 0;
+}
+
+.isi-page-header h1 {
+  margin: 0 0 0.5rem;
+  font-weight: 600;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  color: #fff;
+}
+
+.isi-page-header .lede {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 52ch;
+  font-weight: 400;
+}
+
+.isi-page-header .container {
+  width: min(100% - 2.5rem, var(--isi-max));
+  margin-inline: auto;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Utilities                                                                  */
+/* -------------------------------------------------------------------------- */
+.isi-muted {
+  color: var(--isi-text-muted);
+}
+
+.isi-disabled-link {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+@media (max-width: 800px) {
+  :root {
+    --isi-page-pad: 28px;
+    --isi-section-gap: 24px;
+    --isi-card-pad: 20px;
+  }
+
+  .isi-nav-step {
+    min-width: 4.5rem;
+    font-size: 0.65rem;
+  }
+}
+
+/* Print-friendly baseline (export hooks come in 3B) */
+@media print {
+  .isi-diag-nav,
+  .isi-priority-actions,
+  .isi-button {
+    display: none !important;
+  }
+
+  .isi-card {
+    box-shadow: none;
+    break-inside: avoid;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Block 3A Section 2 — .isi-nav component (isiNav.html)                      */
+/* -------------------------------------------------------------------------- */
+.isi-nav-root {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+
+.isi-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.25rem;
+  background: var(--isi-blue);
+  color: #fff;
+  padding: 0.75rem 1.25rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.isi-nav-title {
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.isi-nav-title::after {
+  content: "";
+  display: inline-block;
+  width: 0.45rem;
+  height: 0.45rem;
+  margin-left: 0.45rem;
+  border-radius: 50%;
+  background: var(--isi-gold);
+  vertical-align: 0.1rem;
+}
+
+.isi-nav-steps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.15rem;
+  flex: 1 1 auto;
+  justify-content: flex-end;
+}
+
+.isi-nav .isi-nav-step {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  min-width: 4.75rem;
+  padding: 0.4rem 0.45rem 0.5rem;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.68rem;
+  font-weight: 500;
+  border-bottom: 3px solid transparent;
+  border-radius: 4px 4px 0 0;
+  background: transparent;
+  cursor: pointer;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.isi-nav .isi-nav-emoji {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.isi-nav .isi-nav-step-future {
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 400;
+}
+
+.isi-nav .isi-nav-step-complete {
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 500;
+}
+
+.isi-nav .isi-nav-step-complete::after {
+  content: " ✓";
+  color: var(--isi-gold);
+  font-size: 0.65rem;
+}
+
+.isi-nav .isi-nav-step-active {
+  color: #fff;
+  font-weight: 700;
+  border-bottom-color: var(--isi-gold);
+}
+
+.isi-nav .isi-nav-step:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.isi-progress {
+  height: 4px;
+  background: var(--isi-border);
+  width: 100%;
+}
+
+.isi-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--isi-gold);
+  transition: width 0.25s ease;
+}
+
+@media (max-width: 900px) {
+  .isi-nav {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .isi-nav-steps {
+    width: 100%;
+    justify-content: flex-start;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+
+  .isi-nav .isi-nav-step {
+    min-width: 4.25rem;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Diagnostic page polish (Block 3A Section 3)                                */
+/* -------------------------------------------------------------------------- */
+body.isi-diagnostic {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+body.isi-diagnostic .isi-page {
+  flex: 1 0 auto;
+}
+
+.isi-button-secondary,
+.isi-button-accent {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-family: var(--isi-font);
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding: 0.65rem 1.15rem;
+  border-radius: var(--isi-radius);
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  line-height: 1.2;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.isi-footer {
+  text-align: center;
+  padding: 24px;
+  margin-top: 40px;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.4;
+  white-space: pre-line; /* or use <br> in HTML */
+}
+
+/* -------------------------------------------------------------------------- */
+/* Production form utilities (Block 4D — no site.css dependency)              */
+/* -------------------------------------------------------------------------- */
+.form-block {
+  background: var(--isi-surface, #fff);
+  border: 1px solid var(--isi-border, #d0d7de);
+  border-radius: var(--isi-radius, 8px);
+  padding: 2rem;
+  box-shadow: 0 1px 3px rgba(11, 31, 58, 0.08);
+  max-width: 560px;
+}
+
+.form-block.form-block-xl {
+  max-width: 860px;
+}
+
+.form-group {
+  margin-bottom: 1.15rem;
+}
+
+.form-group .error {
+  color: #b42318;
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+  display: none;
+}
+
+.form-group.has-error .error {
+  display: block;
+}
+
+.form-group.has-error input,
+.form-group.has-error textarea,
+.form-group.has-error select,
+.form-group.has-error .isi-input {
+  border-color: #b42318;
+}
+
+.form-success {
+  display: none;
+  background: #ecfdf3;
+  border: 1px solid #abefc6;
+  color: #067647;
+  padding: 1rem 1.15rem;
+  border-radius: var(--isi-radius, 8px);
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.form-success.is-visible {
+  display: block;
+}
+
+.isi-form-grid .form-group-span,
+.isi-form-grid .span-2 {
+  grid-column: 1 / -1;
+}
+
+.isi-form .form-soft-warn {
+  display: block;
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  color: #92400e;
+  padding: 0.85rem 1.05rem;
+  border-radius: var(--isi-radius, 8px);
+  margin-bottom: 1.15rem;
+  font-weight: 500;
+  font-size: 0.92rem;
+}
+
+.isi-form .form-soft-warn[hidden] {
+  display: none;
+}
+
+.scoring-hint {
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  color: #92400e;
+  padding: 0.85rem 1.05rem;
+  border-radius: var(--isi-radius, 8px);
+  margin: 1rem 0 0;
+  font-weight: 500;
+  font-size: 0.92rem;
+}
+
+.scoring-hint[hidden] {
+  display: none;
+}
+
+/* ========================================================================== */
+/* Block 4E — Final Polish                                                    */
+/* ========================================================================== */
+
+body.isi-diagnostic {
+  line-height: 1.65;
+}
+
+.isi-page > h2 {
+  margin: 0 0 1.25rem;
+  padding: 0;
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.isi-page > h3,
+.isi-section > h3 {
+  margin: 1.5rem 0 0.85rem;
+  color: var(--isi-blue);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.isi-page > h3:first-of-type,
+.isi-section > h3:first-child {
+  margin-top: 0;
+}
+
+.isi-section {
+  margin-bottom: var(--isi-section-gap);
+}
+
+.isi-section p {
+  margin: 0 0 1rem;
+  line-height: 1.65;
+}
+
+.isi-card {
+  border-radius: var(--isi-radius);
+  border: 1px solid var(--isi-border);
+  box-shadow: var(--isi-shadow);
+  padding: var(--isi-card-pad);
+  margin-bottom: 1rem;
+  transition: box-shadow 0.2s ease;
+}
+
+.isi-card:last-child {
+  margin-bottom: 0;
+}
+
+.isi-priority-actions {
+  gap: 0.75rem;
+  margin: 1.25rem 0 1.5rem;
+}
+
+.isi-button,
+.isi-button-primary,
+.isi-button-secondary,
+.isi-button-accent,
+.isi-button-outline,
+.btn.isi-button {
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+
+.isi-button:hover,
+.isi-button-primary:hover,
+.btn-primary.isi-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 51, 102, 0.22);
+}
+
+.isi-button-secondary:hover,
+.btn-secondary.isi-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 153, 204, 0.28);
+}
+
+.isi-button-accent:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(201, 168, 106, 0.4);
+}
+
+.isi-button:active,
+.isi-button-secondary:active,
+.isi-button-accent:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+.isi-progress {
+  height: 4px;
+  background: var(--isi-border);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+
+.isi-progress-fill {
+  transition: width 0.3s ease;
+}
+
+.isi-nav-root {
+  margin: 0;
+  padding: 0;
+}
+
+.isi-footer {
+  text-align: center;
+  padding: 28px 20px;
+  margin-top: 48px;
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
+  border-top: 1px solid var(--isi-border);
+  background: transparent;
+}
+
+/* Dev console + automation visual alignment */
+.isi-card .isi-button-secondary {
+  margin-top: 0.35rem;
+}

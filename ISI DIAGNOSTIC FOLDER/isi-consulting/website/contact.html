@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact | ISI Consulting</title>
+  <meta name="description" content="Contact ISI Consulting — discuss constraints, diagnostics, and engagement options.">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="index.html">ISI <span>Consulting</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+      <nav class="site-nav" id="primary-nav" aria-label="Primary">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="philosophy.html">Philosophy</a></li>
+          <li><a href="services/index.html">Services</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a class="nav-cta" href="schedule.html">Schedule</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <div class="container">
+        <h1>Contact</h1>
+        <p class="lede">Reach the ISI Consulting team to discuss your situation, request information, or prepare for a consultation.</p>
+      </div>
+    </div>
+
+    <section class="section section-alt">
+      <div class="container split">
+        <div>
+          <h2>Get in Touch</h2>
+          <ul class="contact-details">
+            <li>
+              <strong>Email</strong>
+              <a href="mailto:contact@isiconsulting.com">contact@isiconsulting.com</a>
+            </li>
+            <li>
+              <strong>Phone</strong>
+              (555) 010-4747
+            </li>
+            <li>
+              <strong>Hours</strong>
+              Monday–Friday, 9:00 AM – 5:00 PM ET
+            </li>
+          </ul>
+          <p class="prose">Prefer structured onboarding? Start with the <a href="forms/client-intake.html">Client Intake</a> form, then the <a href="forms/discovery.html">Discovery Questionnaire</a>, or <a href="schedule.html">schedule a consultation</a> directly.</p>
+          <p class="prose">Looking for the Growth Diagnostic Guide? <a href="forms/lead-magnet.html">Download the lead magnet →</a></p>
+          <p class="prose"><a href="forms/index.html">View all forms →</a></p>
+        </div>
+
+        <div class="form-block">
+          <form id="contactForm" class="isi-form" novalidate>
+            <h2 style="margin-top:0">Contact ISI Consulting</h2>
+            <div class="form-success" aria-live="polite">Thank you! Your message has been sent.</div>
+
+            <div class="form-group">
+              <label for="contactNameField">Name</label>
+              <input type="text" id="contactNameField" name="contactNameField" required autocomplete="name">
+              <div class="error">Please enter your name.</div>
+            </div>
+
+            <div class="form-group">
+              <label for="contactEmailField">Email</label>
+              <input type="email" id="contactEmailField" name="contactEmailField" required autocomplete="email">
+              <div class="error">Please enter a valid email address.</div>
+            </div>
+
+            <div class="form-group">
+              <label for="contactMessageField">Message</label>
+              <textarea id="contactMessageField" name="contactMessageField" required></textarea>
+              <div class="error">Please enter a message.</div>
+            </div>
+
+            <button class="btn btn-primary" type="submit" onclick="return submitContact()">Send Message</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">ISI <span>Consulting</span></div>
+          <p>Iron Sharpens Iron — transforming revenue, margin, and operational performance for industrial and project-driven companies.</p>
+        </div>
+        <div>
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="about.html">About</a></li>
+            <li><a href="philosophy.html">Philosophy</a></li>
+            <li><a href="services/index.html">Services</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Engage</h4>
+          <ul>
+            <li><a href="schedule.html">Schedule</a></li>
+            <li><a href="diagnostic/index.html">Start Diagnostic</a></li>
+            <li><a href="forms/index.html">Forms</a></li>
+            <li><a href="forms/client-intake.html">Client Intake</a></li>
+            <li><a href="forms/lead-magnet.html">Lead Magnet</a></li>
+            <li><a href="templates/resource-library.html">Resources</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="legal/nda.html">Confidentiality Notice</a></li>
+            <li><a href="legal/terms.html">Terms of Engagement</a></li>
+            <li><a href="legal/privacy.html">Privacy Policy</a></li>
+            <li><a href="legal/disclaimer.html">Consulting Disclaimer</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 ISI Consulting. All rights reserved.</span>
+        <span>contact@isiconsulting.com</span>
+      </div>
+    </div>
+  </footer>
+  <script src="js/site.js"></script>
+  <script src="js/forms.js"></script>
+</body>
+</html>
