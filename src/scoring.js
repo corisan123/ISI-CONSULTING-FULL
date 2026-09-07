@@ -11,7 +11,6 @@
   var RESULTS_KEY = "isi_scoringResults";
 
   var ABSOLUTE_MODEL_URL = "/src/data/scoringModel.json";
-  var RELATIVE_MODEL_URL = "../../src/data/scoringModel.json";
 
   var SCORE_MODEL_URL =
     (typeof window !== "undefined" && window.ISI_SCORE_MODEL_URL) ||
@@ -72,9 +71,6 @@
     var urls = [SCORE_MODEL_URL];
     if (SCORE_MODEL_URL !== ABSOLUTE_MODEL_URL) {
       urls.push(ABSOLUTE_MODEL_URL);
-    }
-    if (urls.indexOf(RELATIVE_MODEL_URL) === -1) {
-      urls.push(RELATIVE_MODEL_URL);
     }
 
     var lastErr = null;

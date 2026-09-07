@@ -73,17 +73,8 @@
     }, 700);
   }
 
-  function resolveAssetPath(relativeFromWebsite) {
-    /* forms/* pages sit one level deeper than site root pages */
-    var path = window.location.pathname || "";
-    if (path.indexOf("/forms/") !== -1) {
-      return "../" + relativeFromWebsite;
-    }
-    return relativeFromWebsite;
-  }
-
   function triggerGuideDownload() {
-    var href = resolveAssetPath("assets/isi-growth-diagnostic-guide-placeholder.txt");
+    var href = "/website/assets/isi-growth-diagnostic-guide-placeholder.txt";
     var a = document.createElement("a");
     a.href = href;
     a.download = "isi-growth-diagnostic-guide-placeholder.txt";

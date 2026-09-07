@@ -9,7 +9,6 @@
   var RESULT_KEY = "isi_prioritization";
 
   var ABSOLUTE_MODEL_URL = "/src/data/prioritizationModel.json";
-  var RELATIVE_MODEL_URL = "../../src/data/prioritizationModel.json";
 
   var MODEL_URL =
     (typeof window !== "undefined" && window.ISI_PRIORITIZATION_MODEL_URL) ||
@@ -23,9 +22,6 @@
     var urls = [MODEL_URL];
     if (MODEL_URL !== ABSOLUTE_MODEL_URL) {
       urls.push(ABSOLUTE_MODEL_URL);
-    }
-    if (urls.indexOf(RELATIVE_MODEL_URL) === -1) {
-      urls.push(RELATIVE_MODEL_URL);
     }
 
     var lastErr = null;

@@ -16,9 +16,7 @@
   ];
 
   var NAV_URLS = [
-    "/src/components/isiNav.html",
-    "../../src/components/isiNav.html",
-    "../src/components/isiNav.html"
+    "/src/components/isiNav.html"
   ];
 
   function highlightActiveStep(activeStep) {

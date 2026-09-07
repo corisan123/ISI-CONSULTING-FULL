@@ -6,9 +6,7 @@
   "use strict";
 
   var HEADER_URLS = [
-    "/src/components/isiHeader.html",
-    "../../src/components/isiHeader.html",
-    "../src/components/isiHeader.html"
+    "/src/components/isiHeader.html"
   ];
 
   function injectIsiHeader() {

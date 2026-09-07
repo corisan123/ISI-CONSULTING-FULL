@@ -10,7 +10,6 @@
   var RESULT_KEY = "isi_decisionTree";
 
   var ABSOLUTE_TREE_URL = "/src/data/decisionTree.json";
-  var RELATIVE_TREE_URL = "../../src/data/decisionTree.json";
 
   var TREE_URL =
     (typeof window !== "undefined" && window.ISI_DECISION_TREE_URL) ||
@@ -20,9 +19,6 @@
     var urls = [TREE_URL];
     if (TREE_URL !== ABSOLUTE_TREE_URL) {
       urls.push(ABSOLUTE_TREE_URL);
-    }
-    if (urls.indexOf(RELATIVE_TREE_URL) === -1) {
-      urls.push(RELATIVE_TREE_URL);
     }
 
     var lastErr = null;
