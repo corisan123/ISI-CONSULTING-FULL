@@ -1,9 +1,9 @@
 {
-  "version": "1.0",
+  "version": "1.1",
   "formId": "diagnosticInputForm",
-  "sessionStorageKey": "isi_diagnosticInput",
-  "canonicalTemplate": "../../src/data/diagnosticInput.json",
-  "note": "Runtime payload uses the flat keys below. src/data/diagnosticInput.json is the template overwritten dynamically by the diagnostic engine later.",
+  "sessionStorageKey": "isi_input",
+  "canonicalTemplate": "/src/data/diagnosticInput.json",
+  "note": "Docs-only field map. Live input is /index.html and /diagnostic/input.html.",
   "fields": [
     { "id": "diagRevenue", "key": "revenue", "type": "number", "required": true, "label": "Annual Revenue" },
     { "id": "diagMargin", "key": "margin", "type": "number", "required": true, "label": "Gross Margin %" },
@@ -15,8 +15,12 @@
     { "id": "diagCustConc", "key": "customerConcentration", "type": "number", "required": true, "label": "Customer Concentration %" },
     { "id": "diagSalesCap", "key": "salesCapacity", "type": "number", "required": true, "label": "Sales Team Capacity (FTE)" },
     { "id": "diagCTS", "key": "costToServe", "type": "number", "required": true, "label": "Cost-to-Serve %" },
-    { "id": "diagBottlenecks", "key": "bottlenecks", "type": "string", "required": true, "label": "Operational Bottlenecks" },
-    { "id": "diagLeadership", "key": "leadership", "type": "number", "required": true, "min": 1, "max": 10, "label": "Leadership Alignment Score (1–10)" }
+    { "id": "diagLeadership", "key": "leadership", "type": "number", "required": true, "min": 1, "max": 10, "label": "Leadership Alignment Score (1-10)" },
+    { "id": "diagGrowthAmbition", "key": "growthAmbition", "type": "string", "required": true, "label": "Growth posture" },
+    { "id": "diagExpansionIntent", "key": "expansionIntent", "type": "string", "required": true, "label": "New office / new revenue stream" },
+    { "id": "diagBdOpsTension", "key": "bdOpsTension", "type": "string", "required": true, "label": "BD-Ops alignment" },
+    { "id": "diagCommercialMaturity", "key": "commercialMaturity", "type": "string", "required": true, "label": "Commercial process maturity" },
+    { "id": "diagBottlenecks", "key": "bottlenecks", "type": "string", "required": true, "label": "Operational Bottlenecks" }
   ],
   "example": {
     "revenue": 0,
@@ -30,6 +34,10 @@
     "salesCapacity": 0,
     "costToServe": 0,
     "bottlenecks": "",
-    "leadership": 0
+    "leadership": 0,
+    "growthAmbition": "",
+    "expansionIntent": "",
+    "bdOpsTension": "",
+    "commercialMaturity": ""
   }
 }

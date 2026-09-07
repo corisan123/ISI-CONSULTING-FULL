@@ -1,5 +1,7 @@
 # Stage 4 — Block 4C Pipeline Integrity QA
 
+> **Historical (Stage 4, Aug 2026).** Single-archetype first-match logic is superseded by the multi-engine control tree. See [ARCHITECTURE.md](ARCHITECTURE.md).
+
 **Date:** 2026-08-23  
 **Result:** **Block 4C: PASS**
 

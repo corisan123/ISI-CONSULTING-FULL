@@ -1,5 +1,7 @@
 # ISI Consulting - Release Notes v1.0
 
+> **v1.0 = Stages 1–4 (Aug 2026).** Later work: Phase 5 multi-engine diagnostic ([ARCHITECTURE.md](ARCHITECTURE.md)), Phase 6 docs/deploy files. This file is the Stage 4 snapshot.
+
 **Date:** 2026-08-23
 **Scope:** Stages 1-4 (marketing site, diagnostic engines, UI shell, QA, deployment prep)
 

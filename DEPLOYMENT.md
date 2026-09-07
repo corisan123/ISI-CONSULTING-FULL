@@ -1,109 +1,88 @@
-# ISI Consulting - Deployment Guide (Stage 4 / Block 4D)
+# ISI Consulting — Deployment Guide
 
 **Stack:** static HTML + CSS + vanilla JS. **No build step.**
-No package manager or SPA/SSR framework required for the diagnostic.
 
-## Production layout (canonical)
+Serve the **repository root** of `ISI-CONSULTING-FULL`. Do not set the host root to `website/`. Absolute URLs (`/src/...`, `/diagnostic/...`, `/website/...`) will 404 if the server root is wrong. `file://` cannot fetch engine JSON.
 
-- `/index.html` — entry (diagnostic input)
-- `/diagnostic/` — full diagnostic flow
-- `/src/` — components, engines, styles, data, page JS
-- `/assets/` — optional static assets
-- `/website/` — Stage 1 marketing site (kept; not production entry)
+## Production layout
 
-Serve the **project root** (`isi-consulting/`), not `website/`.
+| Path | Role |
+|------|------|
+| `/index.html` | Diagnostic input (entry) |
+| `/diagnostic/*.html` | Scoring through summary |
+| `/src/engines/` | Growth, Expansion, Alignment + orchestrator |
+| `/src/data/` and `/src/data/engines/` | Models (must be published) |
+| `/src/styles/isi.css` | Diagnostic stylesheet |
+| `/src/components/` | Header / nav HTML fragments |
+| `/website/` | Marketing, forms, schedule, legal |
+| `/assets/` | Optional |
+
+Architecture: **[ARCHITECTURE.md](ARCHITECTURE.md)**.
 
 ## Local preview
 
 ```bash
-cd /path/to/isi-consulting
+cd /path/to/ISI-CONSULTING-FULL
 python3 -m http.server 8080
 ```
 
-Open `http://localhost:8080/` then walk `/diagnostic/scoring.html` through `/diagnostic/summary.html`.
-
-Absolute paths (`/src/...`, `/diagnostic/...`) require serving from project root. `file://` will not load `/src` fetches.
+Open `http://localhost:8080/`. Save Input → scoring → **Run Multi-Engine Tree** → continue through summary.
 
 ## Hosting on Vercel
 
-1. Import the Git repo (or CLI from project root).
-2. **Root Directory:** leave blank / project root (do **not** set to `website/`).
-3. **Build Command:** leave empty (no build).
-4. **Output Directory:** leave empty / `.` (static files as-is).
-5. Framework Preset: **Other**.
-6. Deploy. Entry URL serves `/index.html` as diagnostic input.
+1. Import the Git repo. **Root Directory:** blank (repo root).
+2. **Build Command:** empty. **Output Directory:** empty / `.`.
+3. Framework Preset: **Other**.
 
-Optional `vercel.json`:
-
-```json
-{
-  "cleanUrls": true,
-  "trailingSlash": false
-}
-```
+`vercel.json` at repo root enables clean URLs. Do not add a rewrite that hides `/src`.
 
 ## Hosting on Netlify
 
-1. New site from Git (or drag-and-drop the project folder).
-2. **Base directory:** project root.
-3. **Build command:** empty.
-4. **Publish directory:** `.`
-5. Deploy.
+1. Base directory: repo root. Build command: empty. Publish directory: `.`
 
-Optional `netlify.toml`:
-
-```toml
-[build]
-  publish = "."
-  command = ""
-```
+`netlify.toml` is in the repo.
 
 ## Hosting on GitHub Pages
 
-1. Push repo to GitHub.
-2. Settings > Pages > Deploy from branch.
-3. Source folder must be the **repository root** (or `docs/` if used).
-4. Project pages under a repo subpath resolve absolute `/` to the domain root. Prefer a custom domain or user/org site root for absolute paths.
+Deploy from the **repository root** (or `docs/` only if you copy the full tree). Project Pages under a subpath break absolute `/src` fetches unless you use a custom domain at site root.
 
 ## What must be published
 
 | Path | Required |
 |------|----------|
-| `index.html` | Yes - entry |
+| `index.html` | Yes |
 | `diagnostic/*.html` | Yes |
-| `src/**` (JS, CSS, components, `data/*.json`) | Yes - engines fetch JSON |
-| `assets/` | Optional |
-| `website/` | Optional for Stage 1; keep for forms/schedule links |
+| `src/**` including `src/engines/` and `src/data/engines/*.json` | Yes |
+| `website/` | If marketing/forms/schedule links matter |
+| `archive/` | No |
 
-Do **not** omit `src/data/*.json` - engines load models via fetch of `/src/data/...`.
+Network 200s after deploy:
 
-## sessionStorage keys (client-only)
+- `/src/styles/isi.css`
+- `/src/components/isiHeader.html`, `isiNav.html`
+- `/src/data/scoringModel.json`
+- `/src/data/decisionControl.json`
+- `/src/data/engines/growthModel.json`
+- `/src/data/engines/expansionModel.json`
+- `/src/data/engines/alignmentModel.json`
 
-| Key | Writer |
-|-----|--------|
-| `isi_input` | Input (`diagnostic-input.js`); dual-writes legacy `isi_diagnosticInput` |
-| `isi_scoringResults` | Scoring |
-| `isi_decisionTree` | Decision tree |
-| `isi_prioritization` | Prioritization |
-| `isi_roadmap` | Roadmap |
+## sessionStorage (client-only)
 
-Nothing is posted to a server in Stage 1-4. Export / CRM / webhook / cloud hooks are stubs.
+`isi_input`, `isi_scoringResults`, `isi_decisionTree`, `isi_engines`, `isi_prioritization`, `isi_roadmap`. Dual-write of `isi_diagnosticInput` remains for older sessions.
 
-## Smoke checklist after deploy
+## Smoke checklist
 
-1. `/` loads input form + header/nav.
-2. Save Input navigates to `/diagnostic/scoring.html`.
-3. Run Scoring; Continue through decision tree, prioritization, roadmap, dashboard, summary.
-4. Network: `/src/styles/isi.css`, `/src/components/*.html`, `/src/data/*.json` return 200.
-5. No 404s for `/src/...` or `/diagnostic/...`.
+1. `/` loads input + header/nav; strategic context selects are required.
+2. Save Input → `/diagnostic/scoring.html`; Run Scoring.
+3. Decision tree page: **Run Multi-Engine Tree** — more than one engine may activate.
+4. Priorities show firm + engine tags; roadmap phases are not identical copies.
+5. Dashboard/summary show binding constraint and activated engines.
+6. No 404s for `/src/engines/*.js` or `/src/data/engines/*.json`.
 
 ## Marketing site
 
-`website/` remains the Stage 1 marketing / forms site. Production diagnostic entry is **root** `/`.
-Links from diagnostic to Discovery / Schedule use `/website/forms/discovery.html` and `/website/schedule.html`.
+Diagnostic CTAs should point to `/diagnostic/input.html` (or `/` on this host). Discovery / Schedule: `/website/forms/discovery.html`, `/website/schedule.html`.
 
 ## Squarespace / WordPress
 
-See **INTEGRATION-SQUARESPACE-WORDPRESS.md**.
-
-Add a **Run Diagnostic** button on isiconsults.com (or WordPress) pointing to the deployed diagnostic root URL. Keep the diagnostic on its own static host.
+See **INTEGRATION-SQUARESPACE-WORDPRESS.md**. Keep the diagnostic on this static host; link “Start Diagnostic” to the deployed root.

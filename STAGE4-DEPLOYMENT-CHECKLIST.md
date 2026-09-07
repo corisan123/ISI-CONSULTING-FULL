@@ -1,5 +1,7 @@
 # Stage 4 - Block 4D Deployment Checklist
 
+> **Historical (Stage 4, Aug 2026).** Current layout, engines, and deploy steps: [README.md](README.md), [ARCHITECTURE.md](ARCHITECTURE.md), [DEPLOYMENT.md](DEPLOYMENT.md). Production diagnostic lives at repo root with `/src/engines/` and `/src/data/engines/`. `website/diagnostic/` is **not** the live flow.
+
 **Date:** 2026-08-23
 **Goal:** Production-ready static tree; root = diagnostic entry; no build tooling.
 

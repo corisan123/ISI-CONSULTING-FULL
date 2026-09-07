@@ -1,5 +1,7 @@
 # Stage 4 — QA Report (Blocks 4A + 4B)
 
+> **Historical (Stage 4, Aug 2026).** Paths such as `website/diagnostic/` and relative `../../src/data` fetches are obsolete. Current system: [ARCHITECTURE.md](ARCHITECTURE.md).
+
 **Date:** 2026-08-23  
 **Status:** PASS (with fixes applied)
 

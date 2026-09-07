@@ -1,5 +1,7 @@
 # Stage 4 — Block 4E Final Polish QA
 
+> **Historical (Stage 4, Aug 2026).** UI notes remain useful; engine structure is documented in [ARCHITECTURE.md](ARCHITECTURE.md).
+
 **Date:** 2026-08-23  
 **Result:** **Block 4E: PASS** — Stage 4 complete
 
