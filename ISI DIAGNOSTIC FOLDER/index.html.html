@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ISI Consulting — Business Diagnostic Input</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#1B2B4B',
+                        'navy-dark': '#0f1d35',
+                        'navy-light': '#2a3f66',
+                        gold: '#C9A84C',
+                        'gold-light': '#d4bc72',
+                        'gold-dark': '#a8893a',
+                        'page-bg': '#F4F6F9',
+                        'input-border': '#dce3ed',
+                        'dark-text': '#1a1a2e',
+                        'muted-text': '#6b7280',
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+                        sans: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --navy: #1B2B4B;
+            --gold: #C9A84C;
+            --gold-glow: rgba(201, 168, 76, 0.25);
+            --page-bg: #F4F6F9;
+            --input-border: #dce3ed;
+            --white: #FFFFFF;
+            --dark-text: #1a1a2e;
+            --muted: #6b7280;
+            --danger: #dc2626;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--page-bg);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--dark-text);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Custom slider styling */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(to right, var(--navy), var(--gold));
+            outline: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--gold);
+            border: 3px solid var(--white);
+            box-shadow: 0 2px 8px rgba(27, 43, 75, 0.3);
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+            box-shadow: 0 3px 12px rgba(201, 168, 76, 0.5);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--gold);
+            border: 3px solid var(--white);
+            box-shadow: 0 2px 8px rgba(27, 43, 75, 0.3);
+            cursor: pointer;
+        }
+
+        /* Focus states for inputs */
+        .form-input:focus {
+            border-color: var(--gold) !important;
+            box-shadow: 0 0 0 3px var(--gold-glow) !important;
+            outline: none;
+        }
+
+        .form-textarea:focus {
+            border-color: var(--gold) !important;
+            box-shadow: 0 0 0 3px var(--gold-glow) !important;
+            outline: none;
+        }
+
+        /* Toast animation */
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(-100%); opacity: 0; }
+        }
+
+        .toast-in {
+            animation: slideDown 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .toast-out {
+            animation: slideUp 0.35s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+        }
+
+        /* Button transitions */
+        .btn-primary {
+            transition: all 0.25s ease;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: var(--gold) !important;
+            color: var(--navy) !important;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            transition: all 0.25s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--navy) !important;
+            color: var(--gold) !important;
+        }
+
+        /* Progress step connector */
+        .step-connector {
+            height: 2px;
+            flex: 1;
+            max-width: 80px;
+        }
+
+        /* Subtle card hover */
+        .form-card {
+            transition: box-shadow 0.3s ease;
+        }
+
+        .form-card:hover {
+            box-shadow: 0 8px 40px rgba(27, 43, 75, 0.1), 0 2px 12px rgba(27, 43, 75, 0.06);
+        }
+
+        /* Error message style */
+        .field-error {
+            color: var(--danger);
+            font-size: 11px;
+            font-weight: 500;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .field-error.visible {
+            display: block;
+        }
+
+        /* Nav link hover */
+        .nav-link {
+            position: relative;
+            transition: opacity 0.2s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1.5px;
+            background: var(--gold);
+            transition: width 0.25s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Gold HR */
+        .gold-rule {
+            border: none;
+            height: 1.5px;
+            background: linear-gradient(to right, transparent, var(--gold), transparent);
+        }
+
+        /* Purpose description box */
+        .purpose-box {
+            background: rgba(27, 43, 75, 0.04);
+            border-left: 4px solid var(--gold);
+            padding: 20px;
+            border-radius: 0 8px 8px 0;
+        }
+    </style>
+</head>
+<body data-id="0" class="min-h-screen flex flex-col">
+
+    <app-icon data-id="1" hidden data-icon="gauge" data-palette="Dark"></app-icon>
+
+    <!-- Toast Notification -->
+    <div data-id="2" id="toast-notification-x7k2" class="fixed top-0 left-0 right-0 z-50 hidden">
+        <div data-id="3" class="bg-navy text-white py-4 px-6 flex items-center justify-center gap-3 shadow-lg">
+            <span data-id="4" class="text-gold text-xl font-bold">✓</span>
+            <span data-id="5" class="font-medium text-sm tracking-wide">Input saved successfully. ISI Consulting will be in touch soon.</span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav data-id="6" id="navbar-m4s9" class="bg-navy w-full sticky top-0 z-40">
+        <div data-id="7" class="max-w-7xl mx-auto flex items-center justify-between px-5 md:px-8 py-3.5">
+            <a data-id="8" href="/" class="flex items-center gap-2.5 no-underline">
+                <div data-id="9" class="w-8 h-8 rounded bg-gold flex items-center justify-center">
+                    <span data-id="10" class="text-navy font-bold text-sm font-serif">ISI</span>
+                </div>
+                <span data-id="11" class="text-white font-semibold text-lg tracking-tight">ISI Consulting</span>
+            </a>
+            <!-- Desktop Nav -->
+            <div data-id="12" class="hidden md:flex items-center gap-7">
+                <a data-id="13" href="/#about" class="nav-link text-gold text-sm font-medium tracking-wide">About</a>
+                <a data-id="14" href="/#services" class="nav-link text-gold text-sm font-medium tracking-wide">Services</a>
+                <a data-id="15" href="/#diagnostic" class="nav-link text-gold text-sm font-medium tracking-wide opacity-100 border-b border-gold pb-0.5">Diagnostic</a>
+                <a data-id="16" href="/#contact" class="nav-link text-gold text-sm font-medium tracking-wide">Schedule</a>
+            </div>
+            <!-- Mobile Menu Button -->
+            <button data-id="17" id="mobile-menu-btn-k3v1" class="md:hidden p-2 text-gold">
+                <i data-id="18" data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div data-id="19" id="mobile-menu-q8r3" class="hidden fixed inset-0 bg-navy z-50 flex flex-col p-6">
+        <div data-id="20" class="flex items-center justify-between mb-10">
+            <a data-id="21" href="/" class="flex items-center gap-2.5 no-underline">
+                <div data-id="22" class="w-8 h-8 rounded bg-gold flex items-center justify-center">
+                    <span data-id="23" class="text-navy font-bold text-sm font-serif">ISI</span>
+                </div>
+                <span data-id="24" class="text-white font-semibold text-lg">ISI Consulting</span>
+            </a>
+            <button data-id="25" id="mobile-menu-close-p2n5" class="p-2 text-gold">
+                <i data-id="26" data-lucide="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+        <div data-id="27" class="flex flex-col gap-5">
+            <a data-id="28" href="/#about" class="text-gold text-lg font-medium tracking-wide py-2 border-b border-navy-light">About</a>
+            <a data-id="29" href="/#diagnostic" class="text-gold text-lg font-medium tracking-wide py-2 border-b border-gold">Diagnostic</a>
+            <a data-id="30" href="/#services" class="text-gold text-lg font-medium tracking-wide py-2 border-b border-navy-light">Services</a>
+            <a data-id="31" href="/#contact" class="text-gold text-lg font-medium tracking-wide py-2 border-b border-navy-light">Schedule</a>
+        </div>
+    </div>
+
+    <!-- Hero Banner -->
+    <header data-id="32" id="hero-banner-b5j8" class="bg-navy w-full">
+        <div data-id="33" class="max-w-4xl mx-auto text-center py-10 md:py-12 px-5">
+            <h1 data-id="34" class="font-serif text-white text-2xl md:text-3xl font-semibold tracking-tight leading-tight">ISI Growth &amp; Turnaround Diagnostic</h1>
+            <p data-id="35" class="text-gold-light text-sm md:text-base mt-2.5 tracking-widest uppercase font-light" style="letter-spacing: 0.15em;">Diagnostic Engine v1.0 — Growth &amp; Turnaround Intelligence</p>
+        </div>
+    </header>
+
+    <!-- Progress Indicator -->
+    <section data-id="36" id="progress-indicator-r2k7" class="bg-white border-b border-input-border">
+        <div data-id="37" class="max-w-xl mx-auto flex items-center justify-center py-5 px-5 gap-0">
+            <!-- Step 1 -->
+            <div data-id="38" class="flex flex-col items-center gap-1.5">
+                <div data-id="39" class="w-9 h-9 rounded-full border-2 border-navy flex items-center justify-center">
+                    <span data-id="40" class="text-navy text-xs font-bold">1</span>
+                </div>
+                <span data-id="41" class="text-navy text-xs font-medium tracking-wide">Discovery</span>
+            </div>
+            <!-- Connector -->
+            <div data-id="42" class="step-connector bg-navy mx-2 md:mx-4"></div>
+            <!-- Step 2 (Active) -->
+            <div data-id="43" class="flex flex-col items-center gap-1.5">
+                <div data-id="44" class="w-9 h-9 rounded-full bg-gold flex items-center justify-center shadow-md" style="box-shadow: 0 0 0 4px rgba(201,168,76,0.2);">
+                    <span data-id="45" class="text-white text-xs font-bold">2</span>
+                </div>
+                <span data-id="46" class="text-gold font-semibold text-xs tracking-wide">Diagnostic Input</span>
+            </div>
+            <!-- Connector -->
+            <div data-id="47" class="step-connector bg-input-border mx-2 md:mx-4"></div>
+            <!-- Step 3 -->
+            <div data-id="48" class="flex flex-col items-center gap-1.5">
+                <div data-id="49" class="w-9 h-9 rounded-full border-2 border-input-border flex items-center justify-center">
+                    <span data-id="50" class="text-muted-text text-xs font-bold">3</span>
+                </div>
+                <span data-id="51" class="text-muted-text text-xs font-medium tracking-wide">Scoring &amp; Report</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main data-id="52" class="flex-1 py-8 md:py-12 px-4 md:px-6">
+        <div data-id="53" id="form-card-a9c1" class="form-card bg-white rounded-xl max-w-[780px] mx-auto p-6 md:p-10" style="box-shadow: 0 4px 24px rgba(27,43,75,0.07), 0 1px 4px rgba(27,43,75,0.04);">
+
+            <!-- Form Header -->
+            <div data-id="54" class="mb-6">
+                <h2 data-id="55" id="form-title-f3m8" class="text-navy font-bold text-xl md:text-2xl tracking-tight">Business Diagnostic Input</h2>
+                <p data-id="56" id="form-subtitle-g6n4" class="text-muted-text text-sm leading-relaxed mt-2.5">
+                    Master input for the Growth &amp; Turnaround Diagnostic. Enter the financial, commercial, and operational data below. If you previously completed Discovery, matching fields may be prefilled.
+                </p>
+                <hr data-id="57" class="gold-rule mt-5" />
+            </div>
+
+            <!-- Purpose Description Box -->
+            <div data-id="58" class="purpose-box mb-8">
+                <h3 data-id="59" class="text-gold font-bold text-xs uppercase tracking-widest mb-3">What This Page Is For</h3>
+                <p data-id="60" class="text-dark-text text-sm leading-relaxed mb-3">
+                    This is Step 2 of the ISI Growth &amp; Turnaround Diagnostic. You are entering the financial, commercial, and operational data that powers your personalized diagnostic report.
+                </p>
+                <p data-id="61" class="text-dark-text text-sm leading-relaxed mb-3">
+                    Your inputs are confidential and used solely to generate your ISI scoring report. Completion takes approximately 10 minutes. All fields are required for accurate scoring.
+                </p>
+                <p data-id="62" class="text-dark-text text-sm leading-relaxed">
+                    If you completed the Discovery Questionnaire (Step 1), matching fields may be pre-filled. After saving, you will be directed to your Scoring &amp; Report summary.
+                </p>
+            </div>
+
+            <!-- Form -->
+            <form data-id="63" id="diagnostic-form-h7p2" novalidate>
+
+                <!-- Row 1 -->
+                <div data-id="64" class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 mb-5">
+                    <div data-id="65">
+                        <label data-id="66" for="annual-revenue-j2q5" class="block text-navy font-bold text-xs uppercase tracking-wider mb-1">Annual Revenue</label>
+                        <span data-id="67" class="text-muted-text text-xs italic block mb-2">Enter annual revenue (number ≥ 0)</span>
+                        <input data-id="68" type="text" id="annual-revenue-j2q5" class="form-input w-full bg-white border border-input-border rounded-md py-2.5 px-3.5 text-sm text-dark-text placeholder-gray-400" placeholder="e.g. 5000000" inputmode="numeric" />
+                        <div data-id="69" class="field-error" data-for="annual-revenue-j2q5">Please enter a valid revenue (number ≥ 0)</div>
+                    </div>
+                    <div data-id="70">
+                        <label data-id="71" for="gross-margin-k4r8" class="block text-navy font-bold text-xs uppercase tracking-wider mb-1">Gross Margin %</label>
+                        <span data-id="72" class="text-muted-text text-xs italic block mb-2">Percentage between 0 and 100</span>
+                        <input data-id="73" type="text" id="gross-margin-k4r8" class="form-input w-full bg-white border border-input-border rounded-md py-2.5 px-3.5 text-sm text-dark-text placeholder-gray-400" placeholder="e.g. 42" inputmode="decimal" />
+                        <div data-id="74" class="field-error" data-for="gross-margin-k4r8">Enter a percentage between 0 and 100</div>
+                    </div>
+                </div>
+
+                <!-- Row 2 -->
+                <div data-id="75" class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 mb-5">
+                    <div data-id="76">
+                        <label data-id="77" for="ebitda-pct-l6s3" class="block text-navy font-bold text-xs uppercase tracking-wider mb-1">EBITDA %</label>
+                        <span data-id="78" class="text-muted-text text-xs italic block mb-2">Percentage between 0 and 100</span>
+                        <input data-id="79" type="text" id="ebitda-pct-l6s3" class="form-input w-full bg-white border border-input-border rounded-md py-2.5 px-3.5 text-sm text-dark-text placeholder-gray-400" placeholder="e.g. 18" inputmode="decimal" />
+                        <div data-id="80" class="field-error" data-for="ebitda-pct-l6s3">Enter a percentage between 0 and 100</div>
+                    </div>
+                    <div data-id="81">
+                        <label data-id="82" for="pipeline-value-m8t6" class="block text-navy font-bold text-xs uppercase tracking-wider mb-1">Pipeline Value</label>
+                        <span data-id="83" class="text-muted-text text-xs italic block mb-2">Total pipeline value (number ≥ 0)</span>
+                        <input data-id="84" type="text" id="pipeline-value-m8t6" class="form-input w-full bg-white border border-input-border rounded-md py-2.5 px-3.5 text-sm text-dark-text placeholder-gray-400" placeholder="e.g. 1200000" inputmode="numeric" />
+                        <div data-id="85" class="field-error" data-for="pipeline-value-m8t6">Please enter a valid value (number ≥ 0)</div>
+                    </div>
+                </div>
+
+                <!-- Row 3 -->
+                <div data-id="86" class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 mb-5">
+                    <div data-id="87">
+                        <label data-id="88" for="close-rate-n1u9" class="block text-navy font-bold text-xs uppercase tracking-wider mb-1">Close Rate %</label>
+                        <span data-id="89" class="text-muted-text text-xs italic block mb-2">Win rate percentage (0–100)</span>
+                        <input data-id="90" type="text" id="close-rate-n1u9" class="form-input w-full bg-white border border-input-border rounded-md py-2.5 px-3.5 text-sm text-dark-text placeholder-gray-400" placeholder="e.g. 28" inputmode="decimal" />
+                        <div data-id="91" class="field-error" data-for="close-rate-n1u9">Enter a percentage between 0 and 100</div>
+                    </div>
+                    <div data-id="92">
+                        <label data-id="93" for="avg-deal-size-p3v2" class="block text-navy font-bold text-xs uppercase tracking-wider mb-1">Average Deal Size</label>
+                        <span data-id="94" class="text-muted-text text-xs italic block mb-2">Average contract/deal value (number ≥ 0)</span>
+                        <input data-id="95" type="text" id="avg-deal-size-p3v2" class="form-input w-full bg-white border border-input-border rounded-md py-2.5 px-3.5 text-sm text-dark-text placeholder-gray-400" placeholder="e.g. 75000" inputmode="numeric" />
+                        <div data-id="96" class="field-error" data-for="avg-deal-size-p3v2">Please enter a valid number (≥ 0)</div>
+                    </div>
+                </div>
+
+                <!-- Row 4 -->
+                <div data-id="97" class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 mb-5">
+                    <div data-id="98">
+                        <label data-id="99" for="sales-cycle-q5w4" class="block text-navy font-bold text-xs uppercase tracking-wider mb-1">Sales Cycle (Days)</label>
+                        <span data-id="100" class="text-muted-text text-xs italic block mb-2">Average days to close (number ≥ 0)</span>
+                        <input data-id="101" type="text" id="sales-cycle-q5w4" class="form-input w-full bg-white border border-input-border rounded-md py-2.5 px-3.5 text-sm text-dark-text placeholder-gray-400" placeholder="e.g. 90" inputmode="numeric" />
+                        <div data-id="102" class="field-error" data-for="sales-cycle-q5w4">Please enter a valid number (≥ 0)</div>
+                    </div>
+                    <div data-id="103">
+                        <label data-id="104" for="cust-concentration-r7x6" class="block text-navy font-bold text-xs uppercase tracking-wider mb-1">Customer Concentration %</label>
+                        <span data-id="105" class="text-muted-text text-xs italic block mb-2">Revenue from top client (0–100)</span>
+                        <input data-id="106" type="text" id="cust-concentration-r7x6" class="form-input w-full bg-white border border-input-border rounded-md py-2.5 px-3.5 text-sm text-dark-text placeholder-gray-400" placeholder="e.g. 35" inputmode="decimal" />
+                        <div data-id="107" class="field-error" data-for="cust-concentration-r7x6">Enter a percentage between 0 and 100</div>
+                    </div>
+                </div>
+
+                <!-- Row 5 -->
+                <div data-id="108" class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 mb-5">
+                    <div data-id="109">
+                        <label data-id="110" for="sales-team-fte-s9y8" class="block text-navy font-bold text-xs uppercase tracking-wider mb-1">Sales Team Capacity (FTE)</label>
+                        <span data-id="111" class="text-muted-text text-xs italic block mb-2">Full-time equivalents (number ≥ 0)</span>
+                        <input data-id="112" type="text" id="sales-team-fte-s9y8" class="form-input w-full bg-white border border-input-border rounded-md py-2.5 px-3.5 text-sm text-dark-text placeholder-gray-400" placeholder="e.g. 8" inputmode="decimal" />
+                        <div data-id="113" class="field-error" data-for="sales-team-fte-s9y8">Please enter a valid number (≥ 0)</div>
+                    </div>
+                    <div data-id="114">
+                        <label data-id="115" for="cost-to-serve-t1z3" class="block text-navy font-bold text-xs uppercase tracking-wider mb-1">Cost-to-Serve %</label>
+                        <span data-id="116" class="text-muted-text text-xs italic block mb-2">Service delivery cost as % of revenue (0–100)</span>
+                        <input data-id="117" type="text" id="cost-to-serve-t1z3" class="form-input w-full bg-white border border-input-border rounded-md py-2.5 px-3.5 text-sm text-dark-text placeholder-gray-400" placeholder="e.g. 22" inputmode="decimal" />
+                        <div data-id="118" class="field-error" data-for="cost-to-serve-t1z3">Enter a percentage between 0 and 100</div>
+                    </div>
+                </div>
+
+                <!-- Row 6 — Leadership Alignment Slider -->
+                <div data-id="119" class="mb-6 pt-2">
+                    <label data-id="120" for="leadership-alignment-u3a5" class="block text-navy font-bold text-xs uppercase tracking-wider mb-1">Leadership Alignment Score</label>
+                    <span data-id="121" class="text-muted-text text-xs italic block mb-4">Rate alignment across leadership team</span>
+                    <div data-id="122" class="bg-page-bg rounded-lg p-5 border border-input-border">
+                        <div data-id="123" class="flex items-center justify-between mb-3">
+                            <span data-id="124" class="text-xs font-medium text-muted-text">1 — Misaligned</span>
+                            <span data-id="125" id="slider-value-v5b7" class="bg-gold text-white text-sm font-bold rounded-full w-9 h-9 flex items-center justify-center shadow-sm">5</span>
+                            <span data-id="126" class="text-xs font-medium text-muted-text">10 — Fully Aligned</span>
+                        </div>
+                        <input data-id="127" type="range" id="leadership-alignment-u3a5" min="1" max="10" value="5" step="1" class="w-full" />
+                        <div data-id="128" class="flex justify-between mt-1.5 px-0.5">
+                            <span data-id="129" class="text-xs text-gray-300">1</span>
+                            <span data-id="130" class="text-xs text-gray-300">2</span>
+                            <span data-id="131" class="text-xs text-gray-300">3</span>
+                            <span data-id="132" class="text-xs text-gray-300">4</span>
+                            <span data-id="133" class="text-xs text-gray-300">5</span>
+                            <span data-id="134" class="text-xs text-gray-300">6</span>
+                            <span data-id="135" class="text-xs text-gray-300">7</span>
+                            <span data-id="136" class="text-xs text-gray-300">8</span>
+                            <span data-id="137" class="text-xs text-gray-300">9</span>
+                            <span data-id="138" class="text-xs text-gray-300">10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 7 — Operational Bottlenecks -->
+                <div data-id="139" class="mb-8">
+                    <label data-id="140" for="op-bottlenecks-w7c9" class="block text-navy font-bold text-xs uppercase tracking-wider mb-1">Operational Bottlenecks</label>
+                    <span data-id="141" class="text-muted-text text-xs italic block mb-2">Identify constraints impacting throughput</span>
+                    <textarea data-id="142" id="op-bottlenecks-w7c9" rows="4" class="form-textarea w-full bg-white border border-input-border rounded-md py-2.5 px-3.5 text-sm text-dark-text placeholder-gray-400 resize-y" placeholder="Describe where work stalls — pipeline, fulfillment, leadership handoffs, systems, etc."></textarea>
+                    <div data-id="143" class="field-error" data-for="op-bottlenecks-w7c9">Please describe operational bottlenecks</div>
+                </div>
+
+                <!-- Buttons -->
+                <div data-id="144" class="space-y-3.5">
+                    <button data-id="145" type="submit" id="save-input-btn-x9d2" class="btn-primary w-full bg-navy text-gold font-bold text-sm tracking-wide uppercase rounded-lg py-3.5 px-6 border-2 border-navy cursor-pointer">
+                        Save Input
+                    </button>
+                    <a data-id="146" href="/diagnostic/guide/" id="discovery-link-y1e4" class="btn-secondary w-full block text-center border-2 border-navy text-navy font-semibold text-sm tracking-wide rounded-lg py-3.5 px-6 cursor-pointer no-underline">
+                        Discovery Questionnaire →
+                    </a>
+                    <div data-id="147" class="text-center pt-1">
+                        <a data-id="148" href="/contact/" id="continue-link-z3f6" class="text-gold font-medium text-sm underline underline-offset-2 hover:text-gold-dark transition-colors">Continue to Consultation →</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Confidentiality Note -->
+        <p data-id="149" class="text-center text-muted-text text-xs mt-6 max-w-md mx-auto leading-relaxed px-4">
+            <i data-id="150" data-lucide="shield-check" class="w-3.5 h-3.5 inline-block mr-1 align-text-bottom"></i>
+            All data is handled in strict confidence per ISI Consulting's privacy protocols. We do not share or sell your information.
+        </p>
+    </main>
+
+    <!-- Footer -->
+    <footer data-id="151" id="footer-a5g8" class="bg-navy text-white text-center py-8 px-5 mt-auto">
+        <div data-id="152" class="max-w-2xl mx-auto space-y-2">
+            <p data-id="153" class="text-sm font-medium tracking-wide">&copy; 2026 ISI Consulting</p>
+            <p data-id="154" class="text-xs text-gray-400">All Rights Reserved.</p>
+            <p data-id="155" class="text-xs text-gray-400">Contact: <a data-id="156" href="mailto:contact@isiconsults.com" class="text-gold hover:underline">contact@isiconsults.com</a></p>
+            <p data-id="157" class="text-xs text-gray-500">isiconsults.com</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons when DOM is ready
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof lucide !== "undefined" && typeof lucide.createIcons === "function") {
+                lucide.createIcons();
+            }
+        });
+
+        // ==================== Mobile Menu ====================
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn-k3v1');
+        const mobileMenu = document.getElementById('mobile-menu-q8r3');
+        const mobileMenuClose = document.getElementById('mobile-menu-close-p2n5');
+
+        if (mobileMenuBtn && mobileMenu && mobileMenuClose) {
+            mobileMenuBtn.addEventListener('click', function () {
+                mobileMenu.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            });
+            mobileMenuClose.addEventListener('click', function () {
+                mobileMenu.classList.add('hidden');
+                document.body.style.overflow = '';
+            });
+            // Also close menu when clicking a nav link inside mobile menu
+            mobileMenu.querySelectorAll('a').forEach(function (link) {
+                link.addEventListener('click', function () {
+                    mobileMenu.classList.add('hidden');
+                    document.body.style.overflow = '';
+                });
+            });
+        }
+
+        // ==================== Slider ====================
+        const slider = document.getElementById('leadership-alignment-u3a5');
+        const sliderValue = document.getElementById('slider-value-v5b7');
+
+        if (slider && sliderValue) {
+            slider.addEventListener('input', function () {
+                sliderValue.textContent = this.value;
+            });
+        }
+
+        // ==================== Validation ====================
+        const form = document.getElementById('diagnostic-form-h7p2');
+
+        const fieldConfigs = {
+            'annual-revenue-j2q5': { type: 'number', min: 0, required: true },
+            'gross-margin-k4r8': { type: 'percent', required: true },
+            'ebitda-pct-l6s3': { type: 'percent', required: true },
+            'pipeline-value-m8t6': { type: 'number', min: 0, required: true },
+            'close-rate-n1u9': { type: 'percent', required: true },
+            'avg-deal-size-p3v2': { type: 'number', min: 0, required: true },
+            'sales-cycle-q5w4': { type: 'number', min: 0, required: true },
+            'cust-concentration-r7x6': { type: 'percent', required: true },
+            'sales-team-fte-s9y8': { type: 'number', min: 0, required: true },
+            'cost-to-serve-t1z3': { type: 'percent', required: true },
+            'op-bottlenecks-w7c9': { type: 'text', required: true },
+        };
+
+        function validateField(id, config) {
+            const el = document.getElementById(id);
+            const errorEl = document.querySelector('.field-error[data-for="' + id + '"]');
+            if (!el || !errorEl) return true;
+
+            const val = el.value.trim();
+
+            // Required check
+            if (config.required && val === '') {
+                errorEl.classList.add('visible');
+                el.style.borderColor = '#dc2626';
+                return false;
+            }
+
+            if (config.type === 'text') {
+                errorEl.classList.remove('visible');
+                el.style.borderColor = '';
+                return true;
+            }
+
+            const num = parseFloat(val);
+
+            if (isNaN(num)) {
+                errorEl.classList.add('visible');
+                el.style.borderColor = '#dc2626';
+                return false;
+            }
+
+            if (config.type === 'number' && num < (config.min || 0)) {
+                errorEl.classList.add('visible');
+                el.style.borderColor = '#dc2626';
+                return false;
+            }
+
+            if (config.type === 'percent' && (num < 0 || num > 100)) {
+                errorEl.classList.add('visible');
+                el.style.borderColor = '#dc2626';
+                return false;
+            }
+
+            errorEl.classList.remove('visible');
+            el.style.borderColor = '';
+            return true;
+        }
+
+        // Clear error on input
+        Object.keys(fieldConfigs).forEach(function (id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', function () {
+                    const errorEl = document.querySelector('.field-error[data-for="' + id + '"]');
+                    if (errorEl) {
+                        errorEl.classList.remove('visible');
+                    }
+                    el.style.borderColor = '';
+                });
+            }
+        });
+
+        // ==================== Form Submit ====================
+        if (form) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                let allValid = true;
+
+                Object.entries(fieldConfigs).forEach(function (entry) {
+                    var id = entry[0];
+                    var config = entry[1];
+                    var isValid = validateField(id, config);
+                    if (!isValid) allValid = false;
+                });
+
+                if (allValid) {
+                    // Disable the submit button and update text to prevent double submission
+                    var submitBtn = document.getElementById('save-input-btn-x9d2');
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.textContent = 'Input Saved ✓';
+                    }
+                    showToast();
+                } else {
+                    // Scroll to first error
+                    var firstError = document.querySelector('.field-error.visible');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+        }
+
+        // ==================== Toast ====================
+        function showToast() {
+            var toast = document.getElementById('toast-notification-x7k2');
+            if (!toast) return;
+
+            toast.classList.remove('hidden');
+            toast.firstElementChild.classList.remove('toast-out');
+            toast.firstElementChild.classList.add('toast-in');
+
+            setTimeout(function () {
+                toast.firstElementChild.classList.remove('toast-in');
+                toast.firstElementChild.classList.add('toast-out');
+                setTimeout(function () {
+                    toast.classList.add('hidden');
+                }, 350);
+            }, 3500);
+        }
+    </script>
+
+</body>
+</html>
