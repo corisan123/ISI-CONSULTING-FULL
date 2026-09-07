@@ -1,75 +1,26 @@
 /**
- * ISI Consulting — roadmap.js (Block 2E Section 1)
- * Ranked priorities → 30/60/90/180 phases → isi_roadmap.
+ * ISI Consulting — roadmap.js (Phase 5A)
+ * Phased 30/60/90/180 plan from merged engine initiatives (distinct per phase).
  */
 (function (global) {
   "use strict";
 
-  var PRIORITY_KEY = "isi_prioritization";
   var RESULT_KEY = "isi_roadmap";
 
-  var ABSOLUTE_MODEL_URL = "/src/data/roadmapModel.json";
-
-  var MODEL_URL =
-    (typeof window !== "undefined" && window.ISI_ROADMAP_MODEL_URL) ||
-    ABSOLUTE_MODEL_URL;
-
-  async function fetchRoadmapModel() {
-    var urls = [MODEL_URL];
-    if (MODEL_URL !== ABSOLUTE_MODEL_URL) {
-      urls.push(ABSOLUTE_MODEL_URL);
-    }
-
-    var lastErr = null;
-    for (var i = 0; i < urls.length; i++) {
-      try {
-        var res = await fetch(urls[i]);
-        if (!res.ok) {
-          lastErr = new Error("HTTP " + res.status + " for " + urls[i]);
-          continue;
-        }
-        return await res.json();
-      } catch (err) {
-        lastErr = err;
-      }
-    }
-    throw lastErr || new Error("Unable to load roadmap model");
-  }
-
   async function buildRoadmap() {
-    var priorities;
-    try {
-      var raw = sessionStorage.getItem(PRIORITY_KEY);
-      if (!raw) {
-        console.warn("No isi_prioritization in sessionStorage.");
-        return;
-      }
-      priorities = JSON.parse(raw);
-    } catch (err) {
-      console.warn("Unable to read prioritization results:", err);
+    var k = global.ISI && global.ISI.kit;
+    var tree = k ? k.readSession("isi_decisionTree") : null;
+    var priorities = k ? k.readSession("isi_prioritization") : null;
+    var roadmap;
+
+    if (tree && tree.roadmap && tree.roadmap.length) {
+      roadmap = tree.roadmap;
+    } else if (priorities && priorities.length && k) {
+      roadmap = k.phaseRoadmap(priorities);
+    } else {
+      console.warn("No isi_prioritization in sessionStorage.");
       return;
     }
-
-    if (!priorities) return;
-
-    var model;
-    try {
-      model = await fetchRoadmapModel();
-    } catch (err) {
-      console.warn("Failed to load roadmap model:", err);
-      alert("Could not load the roadmap model.");
-      return;
-    }
-
-    var roadmap = (model.phases || []).map(function (phase) {
-      return {
-        phase: phase.name,
-        focus: phase.focus,
-        initiatives: priorities.slice(0, 2).map(function (p) {
-          return p.name;
-        })
-      };
-    });
 
     try {
       sessionStorage.setItem(RESULT_KEY, JSON.stringify(roadmap));
@@ -83,38 +34,34 @@
   }
 
   function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
+    return global.ISI && global.ISI.kit
+      ? global.ISI.kit.escapeHtml(str)
+      : String(str);
+  }
+
+  function labelOf(i) {
+    if (typeof i === "string") return i;
+    return (i && i.name) || "";
   }
 
   function displayRoadmap() {
     var container = document.getElementById("roadmapOutput");
     if (!container) return;
 
-    var raw;
-    try {
-      raw = sessionStorage.getItem(RESULT_KEY);
-    } catch (err) {
-      return;
-    }
-    if (!raw) return;
-
-    var roadmap;
-    try {
-      roadmap = JSON.parse(raw);
-    } catch (err) {
-      return;
-    }
+    var k = global.ISI && global.ISI.kit;
+    var roadmap = k ? k.readSession(RESULT_KEY) : null;
     if (!roadmap) return;
 
     container.innerHTML = roadmap
       .map(function (r) {
-        var items = (r.initiatives || [])
+        var source = r.items && r.items.length ? r.items : r.initiatives || [];
+        var items = source
           .map(function (i) {
-            return "<li>" + escapeHtml(i) + "</li>";
+            var extra =
+              typeof i === "object" && i.engineName
+                ? ' <span class="isi-tag">' + escapeHtml(i.engineName) + "</span>"
+                : "";
+            return "<li>" + escapeHtml(labelOf(i)) + extra + "</li>";
           })
           .join("");
         return (

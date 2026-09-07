@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Diagnostic Archetype | ISI Consulting</title>
-  <meta name="description" content="ISI Consulting Decision Tree Engine — classify scoring results into a diagnostic archetype with root-cause analysis.">
+  <title>Decision Tree Control System | ISI Consulting</title>
+  <meta name="description" content="Live ISI decision tree: quantitative, qualitative, and strategic branches that activate Growth, Expansion, and Alignment engines.">
   <link rel="stylesheet" href="/src/styles/isi.css">
 </head>
 <body>
@@ -17,19 +17,19 @@
 
 
   <div class="isi-page">
-    <h2>Diagnostic Archetype</h2>
+    <h2>Decision Tree Control System</h2>
     <div class="isi-section">
-      <p>Root-cause classification from your scoring ratings. The decision tree runs only when you click <strong>Run Decision Tree</strong>. It reads <code>isi_scoringResults</code> from this browser session. If you already ran it, prior results appear below on load.</p>
+      <p>The decision tree is the control system for three service engines — Bain Growth, Deloitte Expansion, and McKinsey Alignment. It reads vital signs plus strategic context, activates every matching domain, and merges narratives, initiatives, and scenarios. Run after scoring.</p>
       <p id="decisionTreeNoScoring" class="scoring-hint" hidden>
         No scoring results found.
         <a href="/diagnostic/scoring.html">Run Diagnostic Scoring</a> first, then return here.
       </p>
       <div class="isi-priority-actions">
-        <button type="button" class="isi-button" id="runDecisionTreeBtn" onclick="runAndDisplayDecisionTree()">Run Decision Tree</button>
+        <button type="button" class="isi-button" id="runDecisionTreeBtn" onclick="runAndDisplayDecisionTree()">Run Multi-Engine Tree</button>
       </div>
     </div>
 
-    <h3>Root-Cause Analysis</h3>
+    <h3>Control output</h3>
     <div id="decisionTreeResults" class="isi-card" aria-live="polite"></div>
 
     <div class="isi-priority-actions">
@@ -44,6 +44,11 @@
     Contact: support@truthcollective.io
   </footer>
 
+  <script src="/src/engines/isiEngineKit.js"></script>
+  <script src="/src/engines/growthEngine.js"></script>
+  <script src="/src/engines/expansionEngine.js"></script>
+  <script src="/src/engines/alignmentEngine.js"></script>
+  <script src="/src/engines/engineOrchestrator.js"></script>
   <script src="/src/decisionTree.js"></script>
   <script>
     (function () {

@@ -1,46 +1,5 @@
 {
-  "initiatives": [
-    {
-      "id": "rev_pipeline",
-      "name": "Pipeline Velocity Reset",
-      "drivers": ["revenue_stalled"],
-      "roi": 0.35,
-      "effort": 0.4
-    },
-    {
-      "id": "rev_close_rate",
-      "name": "Close Rate Optimization",
-      "drivers": ["revenue_stalled"],
-      "roi": 0.45,
-      "effort": 0.5
-    },
-    {
-      "id": "margin_repair",
-      "name": "Margin Repair Program",
-      "drivers": ["margin_collapse"],
-      "roi": 0.55,
-      "effort": 0.6
-    },
-    {
-      "id": "ops_cts",
-      "name": "Cost-to-Serve Reduction",
-      "drivers": ["ops_bottleneck"],
-      "roi": 0.50,
-      "effort": 0.5
-    },
-    {
-      "id": "ops_capacity",
-      "name": "Sales Capacity Expansion",
-      "drivers": ["ops_bottleneck"],
-      "roi": 0.40,
-      "effort": 0.4
-    },
-    {
-      "id": "leadership_alignment",
-      "name": "Leadership Alignment Reset",
-      "drivers": ["leadership_misalignment"],
-      "roi": 0.60,
-      "effort": 0.3
-    }
-  ]
+  "version": "5A-modular",
+  "note": "Initiative libraries moved to /src/data/engines/growthModel.json, expansionModel.json, and alignmentModel.json.",
+  "initiatives": []
 }

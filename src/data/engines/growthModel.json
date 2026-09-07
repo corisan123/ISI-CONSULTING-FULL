@@ -1,0 +1,375 @@
+{
+  "version": "5A",
+  "engineId": "growth",
+  "firm": "Bain",
+  "family": "Full Potential / Commercial Excellence",
+  "thresholds": { "green": 75, "yellow": 50 },
+  "modules": [
+    {
+      "id": "growthStrategy",
+      "name": "Growth Strategy",
+      "framework": "Bain Full Potential — where to play / how to win",
+      "findings": {
+        "Red": "No explicit growth thesis. Activity is being mistaken for strategy.",
+        "Yellow": "A growth intent exists, but it is not sequenced against a binding constraint.",
+        "Green": "The core growth thesis is clear enough to allocate capital and attention."
+      }
+    },
+    {
+      "id": "marketPositioning",
+      "name": "Market Positioning",
+      "framework": "Bain Founder's Mentality / relative win rate",
+      "findings": {
+        "Red": "Win rate and offer clarity are not defending share.",
+        "Yellow": "Positioning is uneven — some segments win, the rest leak.",
+        "Green": "The company knows where it wins and can say why."
+      }
+    },
+    {
+      "id": "pricingStrategy",
+      "name": "Pricing Strategy",
+      "framework": "Bain / McKinsey pricing waterfall and pockets of growth",
+      "findings": {
+        "Red": "Discounting and mix are destroying contribution after the sale.",
+        "Yellow": "Price architecture exists but is not enforced at the deal desk.",
+        "Green": "Pricing and mix are protecting margin while still converting."
+      }
+    },
+    {
+      "id": "salesProcessMaturity",
+      "name": "Sales Process Maturity",
+      "framework": "ISI Sales Process Maturity + Bain commercial excellence",
+      "findings": {
+        "Red": "Hero selling. CRM is a graveyard. Forecasts are stories.",
+        "Yellow": "A process exists; managers do not inspect it weekly.",
+        "Green": "Qualification, stages, and forecast have one definition of done."
+      }
+    },
+    {
+      "id": "pipelineVelocity",
+      "name": "Pipeline Velocity",
+      "framework": "Bain commercial excellence — coverage, conversion, cycle",
+      "findings": {
+        "Red": "Coverage and cycle time cannot produce the number.",
+        "Yellow": "Pipeline looks large; aging and stage quality are weak.",
+        "Green": "Velocity is measurable and inspected, not hoped."
+      }
+    },
+    {
+      "id": "customerSegmentation",
+      "name": "Customer Segmentation",
+      "framework": "Bain NPS / Elements of Value — who is worth serving",
+      "findings": {
+        "Red": "Concentration and poor mix put the book at risk.",
+        "Yellow": "Some accounts are treasures; they are treated like everyone else.",
+        "Green": "ICP and account tiers drive pursuit, service, and price."
+      }
+    },
+    {
+      "id": "channelStrategy",
+      "name": "Channel Strategy",
+      "framework": "Bain route-to-market",
+      "findings": {
+        "Red": "Coverage model does not match where demand actually sits.",
+        "Yellow": "Direct vs partner is unresolved; sellers improvise.",
+        "Green": "Channel choices match economics and relationship intensity."
+      }
+    },
+    {
+      "id": "gtmArchitecture",
+      "name": "GTM Architecture",
+      "framework": "Bain Results Delivery — commercial operating system",
+      "findings": {
+        "Red": "GTM is a pile of tools and meetings, not a system.",
+        "Yellow": "Pieces of a GTM system exist; they do not connect.",
+        "Green": "Roles, cadence, CRM, and capacity form one commercial OS."
+      }
+    }
+  ],
+  "archetypes": [
+    {
+      "id": "growth_engine_stalled",
+      "name": "Growth Engine Stalled",
+      "min": 0,
+      "max": 50,
+      "headline": "The revenue engine is not producing share. Fix the commercial system before adding cost.",
+      "situation": "Pipeline quality, win rate, and process maturity are below a repeatable growth band.",
+      "implication": "Hiring more sellers or spending more on demand will amplify noise, not bookings.",
+      "recommendation": "Install commercial excellence: qualification, velocity, pricing pockets, and a weekly inspect cadence.",
+      "rootCause": [
+        "Win rate and pipeline quality cannot defend or grow share",
+        "Commercial process is not a managed system",
+        "Pricing and mix are leaking after the handshake",
+        "Coverage is not matched to the ICP"
+      ]
+    },
+    {
+      "id": "constrained_growth",
+      "name": "Constrained Growth",
+      "min": 50,
+      "max": 75,
+      "headline": "Growth is available in the core — it is gated by a few commercial constraints, not by ambition.",
+      "situation": "The engine is not in crisis, but it is not Green. Conversion, mix, or process is the governor.",
+      "implication": "Unfocused initiative load will stall both the number and the team.",
+      "recommendation": "Pick three commercial priorities. Sequence velocity and mix before expansion bets.",
+      "rootCause": [
+        "Ambition is ahead of commercial operating-system maturity",
+        "A handful of modules are Yellow and jointly cap growth",
+        "ICP and pricing are not fully enforced",
+        "The core can grow if the binding constraint is isolated"
+      ]
+    },
+    {
+      "id": "commercial_full_potential",
+      "name": "Commercial Full Potential",
+      "min": 75,
+      "max": 101,
+      "headline": "The core commercial engine is healthy. The question is where incremental growth is earned.",
+      "situation": "Process, velocity, and positioning are in a healthy band.",
+      "implication": "The risk is unfocused adjacency, not a broken engine.",
+      "recommendation": "Protect the core OS. Treat new streams and offices as Horizon-2 bets with gates.",
+      "rootCause": [
+        "The core can fund disciplined growth",
+        "Full potential is in mix, key accounts, and where to play next",
+        "Expansion is optional, not a rescue mission",
+        "Initiative load is the main risk"
+      ]
+    }
+  ],
+  "initiatives": [
+    {
+      "id": "gr_pipeline_quality",
+      "name": "Pipeline Quality and Velocity Reset",
+      "firm": "Bain",
+      "family": "Commercial Excellence",
+      "category": "revenue",
+      "summary": "Rebuild stage definitions, aging rules, and weekly pipeline inspection so coverage is real.",
+      "drivers": ["growth_engine_stalled", "constrained_growth", "pipelineVelocity", "pipeline_stall", "gtmArchitecture"],
+      "roi": 0.42,
+      "effort": 0.35,
+      "horizon": "30",
+      "impacts": { "revenue": 0.16, "margin": 0.02, "operations": 0.02, "leadership": 0.04 }
+    },
+    {
+      "id": "gr_win_rate",
+      "name": "Win-Rate Engine (Proposal to Close)",
+      "firm": "McKinsey",
+      "family": "Commercial Excellence",
+      "category": "revenue",
+      "summary": "Isolate where deals die and install a win-plan standard.",
+      "drivers": ["growth_engine_stalled", "constrained_growth", "marketPositioning", "market_share_loss"],
+      "roi": 0.48,
+      "effort": 0.45,
+      "horizon": "60",
+      "impacts": { "revenue": 0.18, "margin": 0.05, "operations": 0.01, "leadership": 0.03 }
+    },
+    {
+      "id": "gr_pricing_pockets",
+      "name": "Pricing Pocket and Discount Discipline",
+      "firm": "McKinsey",
+      "family": "Pricing Waterfall",
+      "category": "margin",
+      "summary": "Recover leaked price through list, discount, terms, and giveaways.",
+      "drivers": ["growth_engine_stalled", "constrained_growth", "pricingStrategy", "pricing_pressure"],
+      "roi": 0.55,
+      "effort": 0.4,
+      "horizon": "60",
+      "impacts": { "revenue": 0.06, "margin": 0.2, "operations": 0.02, "leadership": 0.04 }
+    },
+    {
+      "id": "gr_icp_focus",
+      "name": "ICP and Mix Refocus",
+      "firm": "Bain",
+      "family": "Customer Strategy",
+      "category": "revenue",
+      "summary": "Concentrate pursuit where win rate, margin, and cost-to-serve actually work.",
+      "drivers": ["growth_engine_stalled", "constrained_growth", "customerSegmentation", "client_churn_concentration", "marketPositioning"],
+      "roi": 0.5,
+      "effort": 0.35,
+      "horizon": "30",
+      "impacts": { "revenue": 0.12, "margin": 0.1, "operations": 0.04, "leadership": 0.03 }
+    },
+    {
+      "id": "gr_forecast_truth",
+      "name": "Forecast Integrity Cadence",
+      "firm": "Deloitte",
+      "family": "Revenue Operations",
+      "category": "revenue",
+      "summary": "Replace hopeful forecasts with commit/upside rules and a weekly commercial stand-up.",
+      "drivers": ["growth_engine_stalled", "salesProcessMaturity", "gtm_immaturity", "gtmArchitecture"],
+      "roi": 0.38,
+      "effort": 0.3,
+      "horizon": "30",
+      "impacts": { "revenue": 0.1, "margin": 0.02, "operations": 0.02, "leadership": 0.08 }
+    },
+    {
+      "id": "gr_crm_hygiene",
+      "name": "CRM as System of Record",
+      "firm": "Deloitte",
+      "family": "Revenue Operations",
+      "category": "revenue",
+      "summary": "Required fields, stage exit criteria, and manager inspection.",
+      "drivers": ["growth_engine_stalled", "salesProcessMaturity", "gtm_immaturity", "gtmArchitecture"],
+      "roi": 0.36,
+      "effort": 0.45,
+      "horizon": "60",
+      "impacts": { "revenue": 0.09, "margin": 0.01, "operations": 0.03, "leadership": 0.05 }
+    },
+    {
+      "id": "gr_qualification",
+      "name": "Qualification Gate before Estimating",
+      "firm": "ISI",
+      "family": "Sales Process Maturity",
+      "category": "revenue",
+      "summary": "Stop spending proposal effort on unqualified work.",
+      "drivers": ["growth_engine_stalled", "pipelineVelocity", "salesProcessMaturity", "gtm_immaturity"],
+      "roi": 0.44,
+      "effort": 0.3,
+      "horizon": "30",
+      "impacts": { "revenue": 0.08, "margin": 0.08, "operations": 0.1, "leadership": 0.04 }
+    },
+    {
+      "id": "gr_seller_capacity",
+      "name": "Seller Capacity and Territory Design",
+      "firm": "Bain",
+      "family": "Commercial Excellence",
+      "category": "revenue",
+      "summary": "Match coverage to opportunity density. Hire only after cadence is real.",
+      "drivers": ["constrained_growth", "channelStrategy", "gtmArchitecture"],
+      "roi": 0.4,
+      "effort": 0.5,
+      "horizon": "90",
+      "impacts": { "revenue": 0.15, "margin": 0.02, "operations": 0.06, "leadership": 0.03 }
+    },
+    {
+      "id": "gr_cycle_time",
+      "name": "Sales Cycle Compression",
+      "firm": "McKinsey",
+      "family": "Commercial Excellence",
+      "category": "revenue",
+      "summary": "Remove wait states: estimating SLA, decision-maker map, proposal factory.",
+      "drivers": ["growth_engine_stalled", "pipelineVelocity", "pipeline_stall"],
+      "roi": 0.41,
+      "effort": 0.4,
+      "horizon": "60",
+      "impacts": { "revenue": 0.14, "margin": 0.03, "operations": 0.05, "leadership": 0.02 }
+    },
+    {
+      "id": "gr_offer_clarity",
+      "name": "Offer Architecture and Value Narrative",
+      "firm": "Bain",
+      "family": "Elements of Value",
+      "category": "revenue",
+      "summary": "Clarify what is sold, to whom, and why it wins.",
+      "drivers": ["growth_engine_stalled", "constrained_growth", "commercial_full_potential", "marketPositioning", "growthStrategy"],
+      "roi": 0.39,
+      "effort": 0.35,
+      "horizon": "60",
+      "impacts": { "revenue": 0.11, "margin": 0.06, "operations": 0.02, "leadership": 0.04 }
+    },
+    {
+      "id": "gr_key_account",
+      "name": "Key Account Growth System",
+      "firm": "McKinsey",
+      "family": "Customer Strategy",
+      "category": "revenue",
+      "summary": "Named owner and quarterly growth plan for accounts that already pay.",
+      "drivers": ["constrained_growth", "commercial_full_potential", "customerSegmentation", "client_churn_concentration"],
+      "roi": 0.46,
+      "effort": 0.4,
+      "horizon": "90",
+      "impacts": { "revenue": 0.13, "margin": 0.04, "operations": 0.03, "leadership": 0.03 }
+    },
+    {
+      "id": "gr_channel_partner",
+      "name": "Partner and Channel Motion",
+      "firm": "Deloitte",
+      "family": "Go-to-Market",
+      "category": "revenue",
+      "summary": "Add a controlled partner motion only where direct coverage cannot reach economically.",
+      "drivers": ["commercial_full_potential", "constrained_growth", "channelStrategy"],
+      "roi": 0.34,
+      "effort": 0.55,
+      "horizon": "180",
+      "impacts": { "revenue": 0.12, "margin": 0.02, "operations": 0.04, "leadership": 0.02 }
+    },
+    {
+      "id": "gr_core_productivity",
+      "name": "Core Productivity before Headcount",
+      "firm": "Bain",
+      "family": "Full Potential",
+      "category": "revenue",
+      "summary": "Squeeze qualified meetings and proposals from the current team before adding cost.",
+      "drivers": ["growth_engine_stalled", "constrained_growth", "channelStrategy", "gtmArchitecture"],
+      "roi": 0.44,
+      "effort": 0.35,
+      "horizon": "60",
+      "impacts": { "revenue": 0.12, "margin": 0.06, "operations": 0.03, "leadership": 0.04 }
+    },
+    {
+      "id": "gr_nps_referral",
+      "name": "Referral and Proof Engine",
+      "firm": "Bain",
+      "family": "Net Promoter System",
+      "category": "revenue",
+      "summary": "Turn delivery proof into a systematic referral motion.",
+      "drivers": ["constrained_growth", "commercial_full_potential", "customerSegmentation"],
+      "roi": 0.4,
+      "effort": 0.3,
+      "horizon": "90",
+      "impacts": { "revenue": 0.1, "margin": 0.03, "operations": 0.02, "leadership": 0.03 }
+    },
+    {
+      "id": "gr_demand_system",
+      "name": "Demand System (Not Random Activity)",
+      "firm": "Deloitte",
+      "family": "Go-to-Market",
+      "category": "revenue",
+      "summary": "Replace random marketing with a measured funnel into the same ICP and CRM.",
+      "drivers": ["constrained_growth", "growth_engine_stalled", "gtmArchitecture", "pipeline_stall"],
+      "roi": 0.35,
+      "effort": 0.5,
+      "horizon": "180",
+      "impacts": { "revenue": 0.11, "margin": 0.02, "operations": 0.02, "leadership": 0.03 }
+    },
+    {
+      "id": "gr_fractional_bd",
+      "name": "Fractional BD Leadership Seat",
+      "firm": "ISI",
+      "family": "Fractional Business Development",
+      "category": "revenue",
+      "summary": "Operator-owned commercial cadence when a full-time VP is not yet justified.",
+      "drivers": ["growth_engine_stalled", "constrained_growth", "gtm_immaturity", "gtmArchitecture", "growthStrategy"],
+      "roi": 0.5,
+      "effort": 0.45,
+      "horizon": "60",
+      "impacts": { "revenue": 0.16, "margin": 0.04, "operations": 0.03, "leadership": 0.1 }
+    },
+    {
+      "id": "gr_value_map",
+      "name": "Commercial Value Leak Map",
+      "firm": "Deloitte",
+      "family": "Enterprise Value Map",
+      "category": "margin",
+      "summary": "Quantify leaks: price, mix, cost-to-serve, and concentration. Assign an owner to each.",
+      "drivers": ["pricing_pressure", "pricingStrategy", "customerSegmentation", "growth_engine_stalled"],
+      "roi": 0.56,
+      "effort": 0.4,
+      "horizon": "30",
+      "impacts": { "revenue": 0.03, "margin": 0.18, "operations": 0.06, "leadership": 0.07 }
+    },
+    {
+      "id": "gr_mix_shift",
+      "name": "Margin Mix Shift",
+      "firm": "Bain",
+      "family": "Full Potential",
+      "category": "margin",
+      "summary": "Grow work that prints contribution; reprice or sunset work that does not.",
+      "drivers": ["pricing_pressure", "constrained_growth", "pricingStrategy", "customerSegmentation"],
+      "roi": 0.52,
+      "effort": 0.45,
+      "horizon": "90",
+      "impacts": { "revenue": 0.05, "margin": 0.17, "operations": 0.05, "leadership": 0.04 }
+    }
+  ]
+}

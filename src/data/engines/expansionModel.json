@@ -1,0 +1,336 @@
+{
+  "version": "5A",
+  "engineId": "expansion",
+  "firm": "Deloitte",
+  "family": "Monitor Deloitte Growth & Innovation / Operating Model",
+  "thresholds": { "green": 75, "yellow": 50 },
+  "modules": [
+    {
+      "id": "marketEntry",
+      "name": "Market Entry",
+      "framework": "Monitor Deloitte market-entry / McKinsey Three Horizons",
+      "findings": {
+        "Red": "Entry is a hope. TAM, ICP, and competitive map are not gated.",
+        "Yellow": "A thesis exists; kill-criteria and capital envelope do not.",
+        "Green": "Entry has a thesis, owner, and gates before spend scales."
+      }
+    },
+    {
+      "id": "newOfficeLaunch",
+      "name": "New Office Launch",
+      "framework": "Deloitte operating-model clone / P&L seat",
+      "findings": {
+        "Red": "A second site will invent a second company.",
+        "Yellow": "Some standards can travel; leadership and estimating cannot yet.",
+        "Green": "The operating kit is cloneable: CRM, cadence, delivery promise."
+      }
+    },
+    {
+      "id": "newRevenueStream",
+      "name": "New Revenue Stream Design",
+      "framework": "McKinsey core vs adjacency (Zook/Bain core is cousin) — Horizon 2 offer",
+      "findings": {
+        "Red": "New offer logic is 'more things for more people.'",
+        "Yellow": "Adjacency is named but not piloted with kill-criteria.",
+        "Green": "Same customer new offer, or new customer same capability — not both at once."
+      }
+    },
+    {
+      "id": "productStrategy",
+      "name": "Product / Offer Strategy",
+      "framework": "Deloitte innovation / offer architecture",
+      "findings": {
+        "Red": "The core offer is stagnating and the new bet is undefined.",
+        "Yellow": "Offers proliferate without a portfolio thesis.",
+        "Green": "Core, adjacent, and option bets are separate with owners."
+      }
+    },
+    {
+      "id": "operationalScaling",
+      "name": "Operational Scaling",
+      "framework": "Deloitte operating model 2.0 — scale without a second bottleneck",
+      "findings": {
+        "Red": "The core cannot absorb more volume, let alone a new site or stream.",
+        "Yellow": "Scale is possible if the constraint is named and subordinated.",
+        "Green": "Throughput can fund a gated expansion."
+      }
+    },
+    {
+      "id": "orgDesign",
+      "name": "Org Design",
+      "framework": "Deloitte human capital / McKinsey structure–systems",
+      "findings": {
+        "Red": "No P&L leader, no seats, no decision rights for the new bet.",
+        "Yellow": "Roles are sketched; they collide with the core team.",
+        "Green": "Horizon-2 has a named leader who does not steal core oxygen."
+      }
+    },
+    {
+      "id": "capitalAllocation",
+      "name": "Capital Allocation",
+      "framework": "Deloitte Enterprise Value Map / Bain ring-fenced growth capital",
+      "findings": {
+        "Red": "Expansion spend is hiding inside the core P&L.",
+        "Yellow": "A budget exists; monthly burn and stage gates do not.",
+        "Green": "Expansion is a separate envelope with a kill switch."
+      }
+    },
+    {
+      "id": "innovationReadiness",
+      "name": "Innovation Readiness",
+      "framework": "Monitor Deloitte sense-and-respond / Three Horizons governance",
+      "findings": {
+        "Red": "The culture treats every new idea as a rescue of the core.",
+        "Yellow": "Pilots happen; they rarely die or scale on evidence.",
+        "Green": "Options are funded small, reviewed hard, scaled or killed."
+      }
+    }
+  ],
+  "archetypes": [
+    {
+      "id": "expansion_not_ready",
+      "name": "Expansion Not Ready",
+      "min": 0,
+      "max": 50,
+      "headline": "Do not open the next office or stream until the core can fund it.",
+      "situation": "Market-entry, operating kit, and capital gates are missing while ambition is high.",
+      "implication": "A new site or offer will export today's bottleneck and burn cash.",
+      "recommendation": "Install a business-case gate, ring-fence capital, and clone the operating kit before launch.",
+      "rootCause": [
+        "Horizon-2 is being used to escape a weak Horizon-1",
+        "No named P&L leader or kill-criteria",
+        "Operating standards will not survive a second site",
+        "Capital is not ring-fenced from the core"
+      ]
+    },
+    {
+      "id": "expansion_conditional",
+      "name": "Conditional Expansion",
+      "min": 50,
+      "max": 75,
+      "headline": "Expansion is viable as a gated pilot — not as a second company.",
+      "situation": "A thesis exists. Org, capital, and operating clone are incomplete.",
+      "implication": "If you scale spend now, you will staff a hope.",
+      "recommendation": "Time-box a Horizon-2 pilot. Same customer or same capability — not both.",
+      "rootCause": [
+        "Ambition is real; the operating kit is not fully portable",
+        "Pilot design is weaker than the narrative",
+        "Core constraint still competes with the new bet",
+        "Decision rights for kill/scale are fuzzy"
+      ]
+    },
+    {
+      "id": "expansion_ready",
+      "name": "Expansion Ready",
+      "min": 75,
+      "max": 101,
+      "headline": "The core can fund a disciplined Horizon-2. Treat it as a managed option.",
+      "situation": "Entry thesis, kit, and capital envelope are strong enough to launch gated.",
+      "implication": "The risk is unfocused adjacency, not unreadiness.",
+      "recommendation": "Launch with a named leader, shared services, and a 18-month cash curve.",
+      "rootCause": [
+        "Core is healthy enough to export a standard",
+        "Adjacency logic can be made explicit",
+        "Capital can be ring-fenced",
+        "Governance can kill or scale on evidence"
+      ]
+    }
+  ],
+  "initiatives": [
+    {
+      "id": "ex_office_case",
+      "name": "New Office Business Case Gate",
+      "firm": "McKinsey",
+      "family": "Three Horizons",
+      "category": "expansion",
+      "summary": "No geography until TAM, ICP, leader, and 18-month cash curve are explicit.",
+      "drivers": ["expansion_not_ready", "expansion_conditional", "newOfficeLaunch", "new_office", "marketEntry"],
+      "roi": 0.5,
+      "effort": 0.35,
+      "horizon": "30",
+      "impacts": { "revenue": 0.04, "margin": 0.06, "operations": 0.04, "leadership": 0.08 }
+    },
+    {
+      "id": "ex_office_kit",
+      "name": "New Office Operating Kit",
+      "firm": "Deloitte",
+      "family": "Operating Model",
+      "category": "expansion",
+      "summary": "Clone estimating, CRM, cadence, and delivery standards before site two invents a new firm.",
+      "drivers": ["expansion_not_ready", "expansion_conditional", "newOfficeLaunch", "new_office", "operationalScaling"],
+      "roi": 0.47,
+      "effort": 0.5,
+      "horizon": "90",
+      "impacts": { "revenue": 0.08, "margin": 0.05, "operations": 0.12, "leadership": 0.07 }
+    },
+    {
+      "id": "ex_office_leader",
+      "name": "Named P&L Leader for New Geography",
+      "firm": "Bain",
+      "family": "Results Delivery",
+      "category": "expansion",
+      "summary": "A new office without a single accountable leader becomes a cost center with a sales story.",
+      "drivers": ["expansion_not_ready", "newOfficeLaunch", "orgDesign", "new_office"],
+      "roi": 0.45,
+      "effort": 0.4,
+      "horizon": "60",
+      "impacts": { "revenue": 0.07, "margin": 0.04, "operations": 0.05, "leadership": 0.12 }
+    },
+    {
+      "id": "ex_stream_thesis",
+      "name": "New Revenue Stream Thesis",
+      "firm": "McKinsey",
+      "family": "Core vs Adjacency",
+      "category": "expansion",
+      "summary": "Same customer new offer, or new customer same capability — never both at once.",
+      "drivers": ["expansion_not_ready", "expansion_conditional", "expansion_ready", "newRevenueStream", "new_revenue_stream", "productStrategy"],
+      "roi": 0.52,
+      "effort": 0.35,
+      "horizon": "30",
+      "impacts": { "revenue": 0.06, "margin": 0.05, "operations": 0.03, "leadership": 0.07 }
+    },
+    {
+      "id": "ex_stream_pilot",
+      "name": "Horizon-2 Pilot with Kill Criteria",
+      "firm": "McKinsey",
+      "family": "Three Horizons",
+      "category": "expansion",
+      "summary": "Time-boxed pilot with revenue, margin, and capacity gates.",
+      "drivers": ["expansion_conditional", "expansion_ready", "newRevenueStream", "innovationReadiness", "new_revenue_stream"],
+      "roi": 0.49,
+      "effort": 0.45,
+      "horizon": "90",
+      "impacts": { "revenue": 0.1, "margin": 0.04, "operations": 0.06, "leadership": 0.06 }
+    },
+    {
+      "id": "ex_capital_ringfence",
+      "name": "Ring-Fence Expansion Capital",
+      "firm": "Bain",
+      "family": "Full Potential",
+      "category": "expansion",
+      "summary": "Protect core cash. Expansion spend is a separate envelope with a monthly burn review.",
+      "drivers": ["expansion_not_ready", "capitalAllocation", "market_entry"],
+      "roi": 0.43,
+      "effort": 0.3,
+      "horizon": "30",
+      "impacts": { "revenue": 0.02, "margin": 0.1, "operations": 0.03, "leadership": 0.08 }
+    },
+    {
+      "id": "ex_shared_services",
+      "name": "Shared Services for Multi-Site",
+      "firm": "Deloitte",
+      "family": "Operating Model",
+      "category": "expansion",
+      "summary": "Finance, estimating, and CRM stay central until volume is proven.",
+      "drivers": ["expansion_conditional", "expansion_ready", "operationalScaling", "newOfficeLaunch"],
+      "roi": 0.4,
+      "effort": 0.5,
+      "horizon": "180",
+      "impacts": { "revenue": 0.05, "margin": 0.08, "operations": 0.1, "leadership": 0.04 }
+    },
+    {
+      "id": "ex_market_map",
+      "name": "Market Entry and Competitive Map",
+      "firm": "Monitor Deloitte",
+      "family": "Market Entry",
+      "category": "expansion",
+      "summary": "Where you will win, where you will not, and who already owns the relationships.",
+      "drivers": ["expansion_not_ready", "expansion_conditional", "marketEntry", "market_entry", "new_office"],
+      "roi": 0.37,
+      "effort": 0.35,
+      "horizon": "60",
+      "impacts": { "revenue": 0.07, "margin": 0.03, "operations": 0.02, "leadership": 0.05 }
+    },
+    {
+      "id": "ex_cross_sell",
+      "name": "Adjacent Offer Cross-Sell Play",
+      "firm": "Bain",
+      "family": "Customer Strategy",
+      "category": "expansion",
+      "summary": "Launch the new stream through existing accounts before hunting new logos.",
+      "drivers": ["expansion_conditional", "expansion_ready", "newRevenueStream", "new_revenue_stream", "productStrategy"],
+      "roi": 0.46,
+      "effort": 0.4,
+      "horizon": "90",
+      "impacts": { "revenue": 0.12, "margin": 0.05, "operations": 0.04, "leadership": 0.03 }
+    },
+    {
+      "id": "ex_product_portfolio",
+      "name": "Offer Portfolio Thesis",
+      "firm": "Deloitte",
+      "family": "Innovation",
+      "category": "expansion",
+      "summary": "Core, adjacent, and option offers — three lists, three owners, one capital envelope.",
+      "drivers": ["expansion_not_ready", "expansion_conditional", "productStrategy", "new_revenue_stream"],
+      "roi": 0.41,
+      "effort": 0.4,
+      "horizon": "60",
+      "impacts": { "revenue": 0.06, "margin": 0.05, "operations": 0.03, "leadership": 0.06 }
+    },
+    {
+      "id": "ex_scale_constraint",
+      "name": "Name the Scale Constraint First",
+      "firm": "ISI",
+      "family": "Operational Alignment",
+      "category": "expansion",
+      "summary": "If the core bottleneck is estimating or delivery, a new office exports the same wait.",
+      "drivers": ["expansion_not_ready", "operationalScaling", "market_entry"],
+      "roi": 0.48,
+      "effort": 0.3,
+      "horizon": "30",
+      "impacts": { "revenue": 0.03, "margin": 0.04, "operations": 0.14, "leadership": 0.05 }
+    },
+    {
+      "id": "ex_h2_governance",
+      "name": "Horizon-2 Governance Cadence",
+      "firm": "McKinsey",
+      "family": "Three Horizons",
+      "category": "expansion",
+      "summary": "Monthly option review: evidence, burn, kill/scale. Do not bury it in the core ops meeting.",
+      "drivers": ["expansion_conditional", "expansion_ready", "innovationReadiness", "orgDesign"],
+      "roi": 0.44,
+      "effort": 0.3,
+      "horizon": "60",
+      "impacts": { "revenue": 0.04, "margin": 0.03, "operations": 0.04, "leadership": 0.12 }
+    },
+    {
+      "id": "ex_talent_seats",
+      "name": "Critical Seats for the New Bet",
+      "firm": "McKinsey",
+      "family": "Org Design",
+      "category": "expansion",
+      "summary": "Name the seats the strategy requires. Vacancy is a strategic risk.",
+      "drivers": ["expansion_not_ready", "expansion_conditional", "orgDesign"],
+      "roi": 0.42,
+      "effort": 0.5,
+      "horizon": "90",
+      "impacts": { "revenue": 0.06, "margin": 0.03, "operations": 0.06, "leadership": 0.12 }
+    },
+    {
+      "id": "ex_cash_curve",
+      "name": "18-Month Expansion Cash Curve",
+      "firm": "Bain",
+      "family": "Results Delivery",
+      "category": "expansion",
+      "summary": "Bookings, burn, and breakeven on one page. No curve, no launch.",
+      "drivers": ["expansion_not_ready", "capitalAllocation", "marketEntry", "new_office"],
+      "roi": 0.5,
+      "effort": 0.35,
+      "horizon": "30",
+      "impacts": { "revenue": 0.03, "margin": 0.08, "operations": 0.03, "leadership": 0.09 }
+    },
+    {
+      "id": "ex_customer_pilot",
+      "name": "Design Partner / First-Five Customers",
+      "firm": "Monitor Deloitte",
+      "family": "Innovation",
+      "category": "expansion",
+      "summary": "Five named design partners before a brochure. Evidence over theater.",
+      "drivers": ["expansion_conditional", "expansion_ready", "newRevenueStream", "productStrategy", "new_revenue_stream"],
+      "roi": 0.47,
+      "effort": 0.4,
+      "horizon": "90",
+      "impacts": { "revenue": 0.09, "margin": 0.04, "operations": 0.05, "leadership": 0.05 }
+    }
+  ]
+}

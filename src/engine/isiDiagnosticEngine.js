@@ -61,10 +61,21 @@ const isiDiagnosticEngine = {
     }
   },
 
+  getEngines() {
+    try {
+      var raw = sessionStorage.getItem("isi_engines");
+      return raw ? JSON.parse(raw) : null;
+    } catch (err) {
+      return null;
+    }
+  },
+
   getSummary() {
     return {
+      input: this.getInput(),
       scoring: this.getScoring(),
       decision: this.getDecisionTree(),
+      engines: this.getEngines(),
       priorities: this.getPrioritization(),
       roadmap: this.getRoadmap()
     };

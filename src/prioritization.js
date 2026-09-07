@@ -1,87 +1,25 @@
 /**
- * ISI Consulting — prioritization.js (Block 2D)
- * Filter initiatives by archetype → priority score → rank → isi_prioritization.
+ * ISI Consulting — prioritization.js (Phase 5A)
+ * Unified ranked list from activated engines (or re-merge from isi_engines).
  */
 (function (global) {
   "use strict";
 
-  var DECISION_KEY = "isi_decisionTree";
   var RESULT_KEY = "isi_prioritization";
 
-  var ABSOLUTE_MODEL_URL = "/src/data/prioritizationModel.json";
-
-  var MODEL_URL =
-    (typeof window !== "undefined" && window.ISI_PRIORITIZATION_MODEL_URL) ||
-    ABSOLUTE_MODEL_URL;
-
   function calculatePriority(roi, effort) {
-    return roi * 100 - effort * 50;
-  }
-
-  async function fetchPrioritizationModel() {
-    var urls = [MODEL_URL];
-    if (MODEL_URL !== ABSOLUTE_MODEL_URL) {
-      urls.push(ABSOLUTE_MODEL_URL);
-    }
-
-    var lastErr = null;
-    for (var i = 0; i < urls.length; i++) {
-      try {
-        var res = await fetch(urls[i]);
-        if (!res.ok) {
-          lastErr = new Error("HTTP " + res.status + " for " + urls[i]);
-          continue;
-        }
-        return await res.json();
-      } catch (err) {
-        lastErr = err;
-      }
-    }
-    throw lastErr || new Error("Unable to load prioritization model");
+    return Number(roi) * 100 - Number(effort) * 50;
   }
 
   async function runPrioritizationEngine() {
-    var decision;
-    try {
-      var raw = sessionStorage.getItem(DECISION_KEY);
-      if (!raw) {
-        console.warn("No isi_decisionTree in sessionStorage.");
-        return;
-      }
-      decision = JSON.parse(raw);
-    } catch (err) {
-      console.warn("Unable to read decision tree result:", err);
+    var k = global.ISI && global.ISI.kit;
+    var tree = k ? k.readSession("isi_decisionTree") : null;
+    var ranked = (tree && tree.initiatives) || [];
+
+    if (!ranked.length) {
+      console.warn("No multi-engine initiatives. Run the decision tree first.");
       return;
     }
-
-    if (!decision || !decision.id) return;
-
-    var model;
-    try {
-      model = await fetchPrioritizationModel();
-    } catch (err) {
-      console.warn("Failed to load prioritization model:", err);
-      alert("Could not load the prioritization model.");
-      return;
-    }
-
-    var initiatives = (model.initiatives || []).filter(function (i) {
-      return i.drivers && i.drivers.indexOf(decision.id) !== -1;
-    });
-
-    var ranked = initiatives
-      .map(function (i) {
-        return {
-          id: i.id,
-          name: i.name,
-          roi: i.roi,
-          effort: i.effort,
-          priorityScore: calculatePriority(i.roi, i.effort)
-        };
-      })
-      .sort(function (a, b) {
-        return b.priorityScore - a.priorityScore;
-      });
 
     try {
       sessionStorage.setItem(RESULT_KEY, JSON.stringify(ranked));
@@ -95,36 +33,22 @@
   }
 
   function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
+    return global.ISI && global.ISI.kit
+      ? global.ISI.kit.escapeHtml(str)
+      : String(str);
   }
 
   function displayPriorities() {
     var container = document.getElementById("priorityList");
     if (!container) return;
 
-    var raw;
-    try {
-      raw = sessionStorage.getItem(RESULT_KEY);
-    } catch (err) {
-      return;
-    }
-    if (!raw) return;
-
-    var priorities;
-    try {
-      priorities = JSON.parse(raw);
-    } catch (err) {
-      return;
-    }
+    var k = global.ISI && global.ISI.kit;
+    var priorities = k ? k.readSession(RESULT_KEY) : null;
     if (!priorities) return;
 
     if (!Array.isArray(priorities) || !priorities.length) {
       container.innerHTML =
-        "<p>No initiatives mapped to this archetype yet.</p>";
+        "<p>No initiatives yet. Run the decision tree so engines can activate and merge their libraries.</p>";
       return;
     }
 
@@ -135,13 +59,21 @@
           "<h3>" +
           escapeHtml(p.name) +
           "</h3>" +
+          '<p><span class="isi-tag">' +
+          escapeHtml(p.firm || "") +
+          "</span> <span class=\"isi-tag\">" +
+          escapeHtml(p.engineName || p.engineId || "") +
+          "</span> Horizon " +
+          escapeHtml(String(p.horizon || "")) +
+          "</p>" +
+          "<p>" +
+          escapeHtml(p.summary || "") +
+          "</p>" +
           "<p>Priority Score: " +
           Number(p.priorityScore).toFixed(1) +
-          "</p>" +
-          "<p>ROI Potential: " +
+          " · ROI " +
           (Number(p.roi) * 100).toFixed(0) +
-          "%</p>" +
-          "<p>Effort Level: " +
+          "% · Effort " +
           (Number(p.effort) * 100).toFixed(0) +
           "%</p>" +
           "</div>"

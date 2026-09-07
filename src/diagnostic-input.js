@@ -22,9 +22,20 @@
     diagCustConc: "customerConcentration",
     diagSalesCap: "salesCapacity",
     diagCTS: "costToServe",
-    diagBottlenecks: "bottlenecks",
-    diagLeadership: "leadership"
+    diagLeadership: "leadership",
+    diagGrowthAmbition: "growthAmbition",
+    diagExpansionIntent: "expansionIntent",
+    diagBdOpsTension: "bdOpsTension",
+    diagCommercialMaturity: "commercialMaturity",
+    diagBottlenecks: "bottlenecks"
   };
+
+  var SELECT_IDS = [
+    "diagGrowthAmbition",
+    "diagExpansionIntent",
+    "diagBdOpsTension",
+    "diagCommercialMaturity"
+  ];
 
   var REQUIRED_IDS = Object.keys(FIELD_MAP);
 
@@ -82,10 +93,18 @@
       "Note: " + messages.join(" ") + " Values were still saved.";
   }
 
-  function parseLooseNumber(raw, preferPct) {
+  function parseLooseNumber(raw, preferPct, asDays) {
     if (raw == null) return null;
     var s = String(raw).trim();
     if (!s) return null;
+    if (asDays && /month/i.test(s)) {
+      var nums = s.match(/\d+(?:\.\d+)?/g);
+      if (nums && nums.length) {
+        var a = Number(nums[0]);
+        var b = nums[1] != null ? Number(nums[1]) : a;
+        if (isFinite(a) && isFinite(b)) return Math.round(((a + b) / 2) * 30);
+      }
+    }
     if (preferPct) {
       var pct = s.match(/(\d+(?:\.\d+)?)\s*%/);
       if (pct) {
@@ -94,10 +113,15 @@
       }
     }
     var cleaned = s.replace(/[$,%\s,]/g, "");
-    var m = cleaned.match(/-?\d+(\.\d+)?/);
+    var m = cleaned.match(/(-?\d+(?:\.\d+)?)([kmb])?/i);
     if (!m) return null;
-    var n = Number(m[0]);
-    return isFinite(n) ? n : null;
+    var n = Number(m[1]);
+    if (!isFinite(n)) return null;
+    var suf = (m[2] || "").toLowerCase();
+    if (suf === "k") n *= 1000;
+    else if (suf === "m") n *= 1000000;
+    else if (suf === "b") n *= 1000000000;
+    return n;
   }
 
   function prefillFromDiscovery() {
@@ -150,7 +174,7 @@
         destId === "diagCustConc" ||
         destId === "diagCTS"
       );
-      var n = parseLooseNumber(src, preferPct);
+      var n = parseLooseNumber(src, preferPct, destId === "diagSalesCycle");
       if (n != null) el.value = String(n);
     });
   }
@@ -169,7 +193,11 @@
       salesCapacity: Number(document.getElementById("diagSalesCap").value),
       costToServe: Number(document.getElementById("diagCTS").value),
       bottlenecks: document.getElementById("diagBottlenecks").value,
-      leadership: Number(document.getElementById("diagLeadership").value)
+      leadership: Number(document.getElementById("diagLeadership").value),
+      growthAmbition: val("diagGrowthAmbition"),
+      expansionIntent: val("diagExpansionIntent"),
+      bdOpsTension: val("diagBdOpsTension"),
+      commercialMaturity: val("diagCommercialMaturity")
     };
   }
 
@@ -184,6 +212,14 @@
         ok = false;
         return;
       }
+      if (SELECT_IDS.indexOf(id) !== -1) {
+        if (!raw) {
+          showError(id);
+          ok = false;
+        }
+        return;
+      }
+
       if (id === "diagBottlenecks") {
         if (!raw) {
           showError(id);

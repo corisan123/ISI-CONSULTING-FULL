@@ -1,0 +1,375 @@
+{
+  "version": "5A",
+  "engineId": "alignment",
+  "firm": "McKinsey",
+  "family": "7S / OHI / Operating Model Transformation",
+  "thresholds": { "green": 75, "yellow": 50 },
+  "modules": [
+    {
+      "id": "crossFunctional",
+      "name": "Cross-Functional Alignment",
+      "framework": "McKinsey 7S — systems and staff across BD and operations",
+      "findings": {
+        "Red": "Sales sells what operations cannot staff. Handoffs fail.",
+        "Yellow": "Forums exist; one capacity plan does not.",
+        "Green": "BD and ops share one plan, one promise, one backlog."
+      }
+    },
+    {
+      "id": "leadershipCapability",
+      "name": "Leadership Capability",
+      "framework": "McKinsey Organizational Health (OHI) / Influence Model",
+      "findings": {
+        "Red": "Cadence and decision rights do not convert strategy into weekly work.",
+        "Yellow": "Leaders meet; they do not decide with owners and dates.",
+        "Green": "A visible operating rhythm holds people to commitments."
+      }
+    },
+    {
+      "id": "executionDiscipline",
+      "name": "Execution Discipline",
+      "framework": "McKinsey transformation office / implementation excellence",
+      "findings": {
+        "Red": "Initiatives spawn without a tracker, owner, or done-definition.",
+        "Yellow": "Work is tracked; red items do not get resources.",
+        "Green": "A lightweight TO keeps the stack honest."
+      }
+    },
+    {
+      "id": "operatingModel",
+      "name": "Operating Model Redesign",
+      "framework": "McKinsey / Deloitte operating model — process, structure, governance",
+      "findings": {
+        "Red": "Cost-to-serve and bottlenecks are the business model.",
+        "Yellow": "The constraint is known; it is not subordinated.",
+        "Green": "Throughput, cost, and commitment sit on one design."
+      }
+    },
+    {
+      "id": "cultureIncentives",
+      "name": "Culture and Incentives",
+      "framework": "McKinsey Influence Model — role modeling, reinforcement",
+      "findings": {
+        "Red": "Commission pays for sold work that destroys margin or delivery.",
+        "Yellow": "Incentives are mixed; delivery has no score.",
+        "Green": "Sell-and-deliver is one score."
+      }
+    },
+    {
+      "id": "governanceCadence",
+      "name": "Governance Cadence",
+      "framework": "McKinsey 7S — superordinate goals and weekly operating review",
+      "findings": {
+        "Red": "No weekly operating review. Strategy lives in decks.",
+        "Yellow": "Meetings happen; they do not produce decisions.",
+        "Green": "Weekly ops, monthly strategy, quarterly capital."
+      }
+    },
+    {
+      "id": "costExcellence",
+      "name": "Cost and Throughput Excellence",
+      "framework": "Deloitte Enterprise Value Map / lean constraint",
+      "findings": {
+        "Red": "Costs rise with complexity; rework is hidden capacity.",
+        "Yellow": "Cost-to-serve is visible; it is not redesigned.",
+        "Green": "Constraint and CTS are managed as operating levers."
+      }
+    },
+    {
+      "id": "capabilityBuilding",
+      "name": "Capability Building",
+      "framework": "McKinsey capability building / critical seats",
+      "findings": {
+        "Red": "The strategy requires seats the org does not have.",
+        "Yellow": "Skills exist in heroes, not in the system.",
+        "Green": "Critical seats and standard work can carry the model."
+      }
+    }
+  ],
+  "archetypes": [
+    {
+      "id": "operating_model_broken",
+      "name": "Operating Model Broken",
+      "min": 0,
+      "max": 50,
+      "headline": "BD and operations are two companies. Growth will move the bottleneck, not remove it.",
+      "situation": "Handoffs, cost-to-serve, and leadership cadence cannot support the commercial promise.",
+      "implication": "More pipeline without one plan will raise overtime, rework, and margin leakage.",
+      "recommendation": "One capacity plan, one handoff standard, one weekly forum, incentive realignment.",
+      "rootCause": [
+        "Sales and delivery do not share a capacity truth",
+        "Estimating and scope control are the hidden factory",
+        "Leadership cadence is too weak to hold commitments",
+        "Incentives pay for sold work, not delivered contribution"
+      ]
+    },
+    {
+      "id": "alignment_strained",
+      "name": "Alignment Strained",
+      "min": 50,
+      "max": 75,
+      "headline": "The operating model almost works — until volume, mix, or a tough job hits.",
+      "situation": "Forums and good intent exist. Decision rights, CTS, and incentives still leak.",
+      "implication": "You will keep fighting the same fires every quarter.",
+      "recommendation": "Codify RACI, visual constraint, and a sell-and-deliver score.",
+      "rootCause": [
+        "Cross-functional alignment is personal, not systemic",
+        "Execution discipline is inconsistent",
+        "Cost-to-serve is not an owned lever",
+        "Governance produces discussion more than decisions"
+      ]
+    },
+    {
+      "id": "aligned_execution",
+      "name": "Aligned Execution",
+      "min": 75,
+      "max": 101,
+      "headline": "The operating model can carry growth. Protect it as you scale.",
+      "situation": "Cadence, handoffs, and cost discipline are in a healthy band.",
+      "implication": "The risk is initiative overload and incentive drift, not a broken core.",
+      "recommendation": "Keep one KPI stack. Add seats before adding promises.",
+      "rootCause": [
+        "BD and ops can share one plan",
+        "Leadership cadence is real",
+        "Cost and throughput are visible",
+        "Scale requires capability, not a new philosophy"
+      ]
+    }
+  ],
+  "initiatives": [
+    {
+      "id": "al_one_plan",
+      "name": "One Plan: Capacity vs Commitment",
+      "firm": "Deloitte",
+      "family": "Operating Model",
+      "category": "alignment",
+      "summary": "Publish a weekly capacity vs. backlog view. Sales cannot sell what ops cannot staff.",
+      "drivers": ["operating_model_broken", "alignment_strained", "crossFunctional", "bd_ops_split", "operatingModel"],
+      "roi": 0.58,
+      "effort": 0.35,
+      "horizon": "30",
+      "impacts": { "revenue": 0.06, "margin": 0.08, "operations": 0.16, "leadership": 0.1 }
+    },
+    {
+      "id": "al_handoff",
+      "name": "Commercial-to-Delivery Handoff Standard",
+      "firm": "ISI",
+      "family": "BD–Ops Alignment",
+      "category": "alignment",
+      "summary": "A deal is not won until scope, margin, and date survive a joint review.",
+      "drivers": ["operating_model_broken", "crossFunctional", "bd_ops_split", "costExcellence"],
+      "roi": 0.54,
+      "effort": 0.35,
+      "horizon": "30",
+      "impacts": { "revenue": 0.04, "margin": 0.12, "operations": 0.14, "leadership": 0.08 }
+    },
+    {
+      "id": "al_estimating",
+      "name": "Estimating SLA and Truth Book",
+      "firm": "Deloitte",
+      "family": "Operating Model",
+      "category": "alignment",
+      "summary": "Time-box estimating, version it, and feed actuals back into the book.",
+      "drivers": ["operating_model_broken", "alignment_strained", "operatingModel", "rising_costs", "executionDiscipline"],
+      "roi": 0.5,
+      "effort": 0.45,
+      "horizon": "60",
+      "impacts": { "revenue": 0.08, "margin": 0.1, "operations": 0.12, "leadership": 0.04 }
+    },
+    {
+      "id": "al_forum",
+      "name": "Weekly BD–Ops Alignment Forum",
+      "firm": "McKinsey",
+      "family": "7S Alignment",
+      "category": "alignment",
+      "summary": "45 minutes: at-risk jobs, oversold capacity, next-week commitments.",
+      "drivers": ["operating_model_broken", "alignment_strained", "crossFunctional", "governanceCadence", "bd_ops_split", "leadership_gap"],
+      "roi": 0.52,
+      "effort": 0.25,
+      "horizon": "30",
+      "impacts": { "revenue": 0.03, "margin": 0.05, "operations": 0.1, "leadership": 0.14 }
+    },
+    {
+      "id": "al_promise",
+      "name": "Delivery Promise System",
+      "firm": "Bain",
+      "family": "Results Delivery",
+      "category": "alignment",
+      "summary": "Only dates operations has signed can appear in proposals.",
+      "drivers": ["operating_model_broken", "crossFunctional", "executionDiscipline", "bd_ops_split"],
+      "roi": 0.48,
+      "effort": 0.4,
+      "horizon": "60",
+      "impacts": { "revenue": 0.05, "margin": 0.07, "operations": 0.13, "leadership": 0.06 }
+    },
+    {
+      "id": "al_incentives",
+      "name": "Incentive Alignment (Sell and Deliver)",
+      "firm": "McKinsey",
+      "family": "Influence Model",
+      "category": "alignment",
+      "summary": "Do not pay full commission on jobs that destroy margin or delivery.",
+      "drivers": ["operating_model_broken", "alignment_strained", "cultureIncentives", "bd_ops_split", "leadership_gap"],
+      "roi": 0.51,
+      "effort": 0.5,
+      "horizon": "90",
+      "impacts": { "revenue": 0.03, "margin": 0.14, "operations": 0.08, "leadership": 0.1 }
+    },
+    {
+      "id": "al_visual",
+      "name": "Visual Management of the Constraint",
+      "firm": "ISI",
+      "family": "Operational Alignment",
+      "category": "operations",
+      "summary": "Make the bottleneck visible to sellers and floor leaders from the same board.",
+      "drivers": ["operating_model_broken", "operatingModel", "costExcellence", "rising_costs"],
+      "roi": 0.4,
+      "effort": 0.3,
+      "horizon": "30",
+      "impacts": { "revenue": 0.02, "margin": 0.04, "operations": 0.12, "leadership": 0.06 }
+    },
+    {
+      "id": "al_scope",
+      "name": "Scope Control and Change Orders",
+      "firm": "Deloitte",
+      "family": "Enterprise Value Map",
+      "category": "margin",
+      "summary": "Unpriced scope is the silent margin killer.",
+      "drivers": ["operating_model_broken", "alignment_strained", "costExcellence", "rising_costs", "crossFunctional"],
+      "roi": 0.53,
+      "effort": 0.4,
+      "horizon": "60",
+      "impacts": { "revenue": 0.04, "margin": 0.16, "operations": 0.08, "leadership": 0.05 }
+    },
+    {
+      "id": "al_cts",
+      "name": "Cost-to-Serve Reduction Program",
+      "firm": "Bain",
+      "family": "Full Potential",
+      "category": "margin",
+      "summary": "Separate high-cost customers and job types. Redesign service or reprice.",
+      "drivers": ["operating_model_broken", "alignment_strained", "costExcellence", "rising_costs", "operatingModel"],
+      "roi": 0.5,
+      "effort": 0.55,
+      "horizon": "90",
+      "impacts": { "revenue": 0.02, "margin": 0.16, "operations": 0.1, "leadership": 0.03 }
+    },
+    {
+      "id": "al_constraint",
+      "name": "Constraint Mapping (TOC)",
+      "firm": "ISI",
+      "family": "Operational Alignment",
+      "category": "operations",
+      "summary": "Find the one constraint that sets throughput. Subordinate everything else.",
+      "drivers": ["operating_model_broken", "operatingModel", "costExcellence", "rising_costs", "execution_drift"],
+      "roi": 0.49,
+      "effort": 0.4,
+      "horizon": "30",
+      "impacts": { "revenue": 0.05, "margin": 0.06, "operations": 0.18, "leadership": 0.04 }
+    },
+    {
+      "id": "al_rework",
+      "name": "Rework and First-Time-Right",
+      "firm": "Deloitte",
+      "family": "Operating Model",
+      "category": "operations",
+      "summary": "Rework is hidden capacity. Measure it, then redesign the handoff that causes it.",
+      "drivers": ["operating_model_broken", "alignment_strained", "costExcellence", "executionDiscipline"],
+      "roi": 0.44,
+      "effort": 0.45,
+      "horizon": "60",
+      "impacts": { "revenue": 0.03, "margin": 0.1, "operations": 0.14, "leadership": 0.03 }
+    },
+    {
+      "id": "al_cadence",
+      "name": "Leadership Cadence Reset",
+      "firm": "McKinsey",
+      "family": "OHI / 7S",
+      "category": "leadership",
+      "summary": "Weekly operating review, monthly strategy, quarterly capital. Decision rights written down.",
+      "drivers": ["operating_model_broken", "alignment_strained", "leadershipCapability", "governanceCadence", "leadership_gap"],
+      "roi": 0.6,
+      "effort": 0.3,
+      "horizon": "30",
+      "impacts": { "revenue": 0.04, "margin": 0.05, "operations": 0.06, "leadership": 0.2 }
+    },
+    {
+      "id": "al_three_priorities",
+      "name": "Three-Priority Rule",
+      "firm": "Bain",
+      "family": "Results Delivery",
+      "category": "leadership",
+      "summary": "Leadership may run three enterprise priorities. Everything else is a project.",
+      "drivers": ["alignment_strained", "aligned_execution", "executionDiscipline", "leadership_gap", "governanceCadence"],
+      "roi": 0.57,
+      "effort": 0.25,
+      "horizon": "30",
+      "impacts": { "revenue": 0.03, "margin": 0.04, "operations": 0.04, "leadership": 0.18 }
+    },
+    {
+      "id": "al_raci",
+      "name": "Decision Rights (RACI) for Commercial and Ops",
+      "firm": "Deloitte",
+      "family": "Operating Model",
+      "category": "leadership",
+      "summary": "Who can commit a date, a price, and a scope.",
+      "drivers": ["operating_model_broken", "alignment_strained", "leadershipCapability", "crossFunctional", "bd_ops_split"],
+      "roi": 0.5,
+      "effort": 0.3,
+      "horizon": "60",
+      "impacts": { "revenue": 0.03, "margin": 0.06, "operations": 0.08, "leadership": 0.16 }
+    },
+    {
+      "id": "al_to",
+      "name": "Lightweight Transformation Office",
+      "firm": "Bain",
+      "family": "Results Delivery",
+      "category": "leadership",
+      "summary": "One tracker, one owner, biweekly red/yellow/green on the initiative stack.",
+      "drivers": ["operating_model_broken", "alignment_strained", "executionDiscipline", "execution_drift", "governanceCadence"],
+      "roi": 0.48,
+      "effort": 0.4,
+      "horizon": "60",
+      "impacts": { "revenue": 0.05, "margin": 0.06, "operations": 0.05, "leadership": 0.15 }
+    },
+    {
+      "id": "al_kpi_stack",
+      "name": "One KPI Stack Across BD and Ops",
+      "firm": "McKinsey",
+      "family": "7S Alignment",
+      "category": "alignment",
+      "summary": "Five enterprise KPIs. Separate scoreboards make alignment theater.",
+      "drivers": ["alignment_strained", "aligned_execution", "governanceCadence", "crossFunctional", "bd_ops_split"],
+      "roi": 0.45,
+      "effort": 0.3,
+      "horizon": "60",
+      "impacts": { "revenue": 0.03, "margin": 0.04, "operations": 0.08, "leadership": 0.12 }
+    },
+    {
+      "id": "al_standard_work",
+      "name": "Standard Work on the Critical Path",
+      "firm": "McKinsey",
+      "family": "Capability Building",
+      "category": "operations",
+      "summary": "Document and coach the few processes that actually move throughput.",
+      "drivers": ["alignment_strained", "aligned_execution", "capabilityBuilding", "operatingModel"],
+      "roi": 0.36,
+      "effort": 0.4,
+      "horizon": "90",
+      "impacts": { "revenue": 0.02, "margin": 0.05, "operations": 0.12, "leadership": 0.05 }
+    },
+    {
+      "id": "al_cash_13w",
+      "name": "13-Week Cash and Booking Bridge",
+      "firm": "Bain",
+      "family": "Full Potential",
+      "category": "margin",
+      "summary": "Stabilize first: bookings, billings, cash. Growth talk waits until the bridge is honest.",
+      "drivers": ["operating_model_broken", "costExcellence", "rising_costs", "leadership_gap"],
+      "roi": 0.58,
+      "effort": 0.35,
+      "horizon": "30",
+      "impacts": { "revenue": 0.04, "margin": 0.1, "operations": 0.04, "leadership": 0.1 }
+    }
+  ]
+}

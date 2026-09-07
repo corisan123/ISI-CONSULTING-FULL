@@ -1009,6 +1009,55 @@ body.isi-diagnostic {
 }
 
 /* Dev console + automation visual alignment */
+.isi-form-subhead {
+  margin: 0.5rem 0 0.35rem;
+  color: var(--isi-blue);
+  font-size: 1.05rem;
+}
+
+.isi-form-help {
+  margin: 0 0 0.5rem;
+  color: var(--isi-muted, #5b6573);
+  font-size: 0.92rem;
+}
+
+.isi-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 0.12rem 0.45rem;
+  border: 1px solid var(--isi-border);
+  border-radius: 999px;
+  margin-right: 0.35rem;
+  color: var(--isi-blue);
+}
+
+.isi-branch-grid,
+.isi-scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.isi-branch-card,
+.isi-engine-card,
+.isi-scenario,
+.isi-narrative {
+  margin-bottom: 1rem;
+}
+
+.isi-module-list {
+  margin: 0.5rem 0 0;
+  padding-left: 1.15rem;
+}
+
+.isi-module-list li {
+  margin: 0.35rem 0;
+}
+
 .isi-card .isi-button-secondary {
   margin-top: 0.35rem;
 }

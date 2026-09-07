@@ -1,25 +1,16 @@
 /**
- * ISI Consulting — summary.js (Block 2E Section 3)
- * Unified executive summary from scoring, decision tree, priorities, roadmap.
+ * ISI Consulting — summary.js (Phase 5A)
+ * Client-ready narrative from merged engines, initiatives, and roadmap.
  */
 (function (global) {
   "use strict";
 
   function buildSummary() {
-    var scoring;
-    var decision;
-    var priorities;
-    var roadmap;
-
-    try {
-      scoring = JSON.parse(sessionStorage.getItem("isi_scoringResults"));
-      decision = JSON.parse(sessionStorage.getItem("isi_decisionTree"));
-      priorities = JSON.parse(sessionStorage.getItem("isi_prioritization"));
-      roadmap = JSON.parse(sessionStorage.getItem("isi_roadmap"));
-    } catch (err) {
-      console.warn("Summary: failed to parse session data:", err);
-      return null;
-    }
+    var k = global.ISI && global.ISI.kit;
+    var scoring = k ? k.readSession("isi_scoringResults") : null;
+    var decision = k ? k.readSession("isi_decisionTree") : null;
+    var priorities = k ? k.readSession("isi_prioritization") : null;
+    var roadmap = k ? k.readSession("isi_roadmap") : null;
 
     if (!scoring || !decision || !priorities || !roadmap) return null;
 
@@ -28,17 +19,18 @@
       rootCause: decision.rootCause || [],
       scores: scoring.scores,
       ratings: scoring.ratings,
-      topPriorities: priorities.slice(0, 3),
-      roadmap: roadmap
+      topPriorities: (priorities || []).slice(0, 5),
+      roadmap: roadmap,
+      narrative: decision.narrative || null,
+      engines: decision.engines || [],
+      scenarios: decision.scenarios || []
     };
   }
 
   function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
+    return global.ISI && global.ISI.kit
+      ? global.ISI.kit.escapeHtml(str)
+      : String(str);
   }
 
   function displaySummary() {
@@ -51,6 +43,32 @@
         "<p>Complete scoring, decision tree, prioritization, and roadmap first.</p>";
       return;
     }
+
+    var narrativeHtml = summary.narrative
+      ? "<p><strong>" +
+        escapeHtml(summary.narrative.headline || "") +
+        "</strong></p><p>" +
+        escapeHtml(summary.narrative.situation || "") +
+        "</p><p>" +
+        escapeHtml(summary.narrative.implication || "") +
+        "</p><p>" +
+        escapeHtml(summary.narrative.recommendation || "") +
+        "</p>"
+      : "<p>" + escapeHtml(summary.archetype) + "</p>";
+
+    var enginesHtml = (summary.engines || [])
+      .map(function (e) {
+        return (
+          "<li>" +
+          escapeHtml(e.shortName || e.name) +
+          " (" +
+          escapeHtml(e.firm) +
+          "): " +
+          escapeHtml(e.archetype.name) +
+          "</li>"
+        );
+      })
+      .join("");
 
     var rootCauseHtml = (summary.rootCause || [])
       .map(function (rc) {
@@ -66,9 +84,11 @@
 
     var roadmapHtml = (summary.roadmap || [])
       .map(function (r) {
-        var items = (r.initiatives || [])
+        var source = r.items && r.items.length ? r.items : r.initiatives || [];
+        var items = source
           .map(function (i) {
-            return "<li>" + escapeHtml(i) + "</li>";
+            var name = typeof i === "string" ? i : i.name;
+            return "<li>" + escapeHtml(name || "") + "</li>";
           })
           .join("");
         return (
@@ -101,10 +121,14 @@
 
     container.innerHTML =
       '<div class="isi-card">' +
-      "<h3>Diagnostic Archetype</h3>" +
-      "<p>" +
-      escapeHtml(summary.archetype) +
-      "</p>" +
+      "<h3>Executive narrative</h3>" +
+      narrativeHtml +
+      "</div>" +
+      '<div class="isi-card">' +
+      "<h3>Engines activated</h3>" +
+      "<ul>" +
+      enginesHtml +
+      "</ul>" +
       "</div>" +
       '<div class="isi-card">' +
       "<h3>Root-Cause Analysis</h3>" +

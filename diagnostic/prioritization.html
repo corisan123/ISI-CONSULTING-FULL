@@ -19,7 +19,7 @@
   <div class="isi-page">
     <h2>Priority Recommendations</h2>
     <div class="isi-section">
-      <p>What to fix first — ranked by ROI potential and effort from your diagnostic archetype and scoring.</p>
+      <p>Unified initiative list from every activated engine, ranked by ROI, effort, and domain match.</p>
       <div class="isi-priority-actions">
         <button class="isi-button" type="button" onclick="runPrioritizationEngine()">Generate Priorities</button>
       </div>
@@ -40,6 +40,11 @@
     Contact: support@truthcollective.io
   </footer>
 
+  <script src="/src/engines/isiEngineKit.js"></script>
+  <script src="/src/engines/growthEngine.js"></script>
+  <script src="/src/engines/expansionEngine.js"></script>
+  <script src="/src/engines/alignmentEngine.js"></script>
+  <script src="/src/engines/engineOrchestrator.js"></script>
   <script src="/src/prioritization.js"></script>
   <script>
     window.onload = displayPriorities;

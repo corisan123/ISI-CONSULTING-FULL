@@ -1,0 +1,136 @@
+{
+  "version": "5A-modular",
+  "thresholds": { "green": 75, "yellow": 50 },
+  "engines": [
+    {
+      "id": "growth",
+      "name": "Revenue Growth & Problem Diagnosis",
+      "shortName": "Growth Engine",
+      "firm": "Bain",
+      "family": "Growth Engine",
+      "offering": 1,
+      "scriptNote": "Activate when the core is losing share, stalling, or needs a growth thesis."
+    },
+    {
+      "id": "expansion",
+      "name": "New Offices, Startups & Revenue Streams",
+      "shortName": "Expansion Engine",
+      "firm": "Deloitte",
+      "family": "Growth & Innovation",
+      "offering": 2,
+      "scriptNote": "Activate when the client intends a new market, office, or offer."
+    },
+    {
+      "id": "alignment",
+      "name": "BD + Operational Excellence Alignment",
+      "shortName": "Alignment Engine",
+      "firm": "McKinsey",
+      "family": "Org & Ops Transformation",
+      "offering": 3,
+      "scriptNote": "Activate when execution, cost, leadership, or BD–Ops handoff is the constraint."
+    }
+  ],
+  "domainDetectors": [
+    {
+      "id": "market_share_loss",
+      "label": "Market share / win-rate pressure",
+      "engine": "growth",
+      "module": "marketPositioning",
+      "branch": "quantitative"
+    },
+    {
+      "id": "client_churn_concentration",
+      "label": "Client concentration / retention risk",
+      "engine": "growth",
+      "module": "customerSegmentation",
+      "branch": "quantitative"
+    },
+    {
+      "id": "pricing_pressure",
+      "label": "Pricing and margin pressure",
+      "engine": "growth",
+      "module": "pricingStrategy",
+      "branch": "quantitative"
+    },
+    {
+      "id": "pipeline_stall",
+      "label": "Pipeline velocity stall",
+      "engine": "growth",
+      "module": "pipelineVelocity",
+      "branch": "quantitative"
+    },
+    {
+      "id": "gtm_immaturity",
+      "label": "GTM / sales-process immaturity",
+      "engine": "growth",
+      "module": "salesProcessMaturity",
+      "branch": "qualitative"
+    },
+    {
+      "id": "new_office",
+      "label": "New office / geography launch",
+      "engine": "expansion",
+      "module": "newOfficeLaunch",
+      "branch": "strategic"
+    },
+    {
+      "id": "new_revenue_stream",
+      "label": "New revenue stream / product bet",
+      "engine": "expansion",
+      "module": "newRevenueStream",
+      "branch": "strategic"
+    },
+    {
+      "id": "market_entry",
+      "label": "Market entry without a core that can fund it",
+      "engine": "expansion",
+      "module": "marketEntry",
+      "branch": "strategic"
+    },
+    {
+      "id": "rising_costs",
+      "label": "Rising cost-to-serve / operating drag",
+      "engine": "alignment",
+      "module": "operatingModel",
+      "branch": "quantitative"
+    },
+    {
+      "id": "bd_ops_split",
+      "label": "BD ↔ Ops misalignment",
+      "engine": "alignment",
+      "module": "crossFunctional",
+      "branch": "qualitative"
+    },
+    {
+      "id": "leadership_gap",
+      "label": "Leadership cadence and capability gap",
+      "engine": "alignment",
+      "module": "leadershipCapability",
+      "branch": "qualitative"
+    },
+    {
+      "id": "execution_drift",
+      "label": "Execution discipline gap",
+      "engine": "alignment",
+      "module": "executionDiscipline",
+      "branch": "quantitative"
+    }
+  ],
+  "scenarioTemplates": [
+    {
+      "id": "stabilize",
+      "name": "Stabilize the binding constraint",
+      "weight": 0.7
+    },
+    {
+      "id": "growth",
+      "name": "Grow the core",
+      "weight": 1.0
+    },
+    {
+      "id": "combined",
+      "name": "Integrated multi-engine program",
+      "weight": 0.9
+    }
+  ]
+}

@@ -1,102 +1,65 @@
 /**
- * ISI Consulting — decisionTree.js (Block 2C Section 2)
- * Reads scoring ratings → evaluates archetypes → stores isi_decisionTree.
- * Display helpers retained for decisionTree.html (Block 2C UI).
+ * ISI Consulting — decision tree control system (Phase 5A)
+ * Live modeling tool: quantitative + qualitative + strategic branches,
+ * multi-engine activation, scenarios, narrative.
  */
 (function (global) {
   "use strict";
 
   var SCORING_KEY = "isi_scoringResults";
   var RESULT_KEY = "isi_decisionTree";
+  var ENGINES_KEY = "isi_engines";
 
-  var ABSOLUTE_TREE_URL = "/src/data/decisionTree.json";
-
-  var TREE_URL =
-    (typeof window !== "undefined" && window.ISI_DECISION_TREE_URL) ||
-    ABSOLUTE_TREE_URL;
-
-  async function fetchDecisionTree() {
-    var urls = [TREE_URL];
-    if (TREE_URL !== ABSOLUTE_TREE_URL) {
-      urls.push(ABSOLUTE_TREE_URL);
-    }
-
-    var lastErr = null;
-    for (var i = 0; i < urls.length; i++) {
-      try {
-        var res = await fetch(urls[i]);
-        if (!res.ok) {
-          lastErr = new Error("HTTP " + res.status + " for " + urls[i]);
-          continue;
-        }
-        return await res.json();
-      } catch (err) {
-        lastErr = err;
+  function evaluateTree(ratings) {
+    ratings = ratings || {};
+    var order = [
+      { key: "margin", id: "margin_collapse", name: "Margin Collapse" },
+      { key: "revenue", id: "revenue_stalled", name: "Revenue Engine Stalled" },
+      { key: "operations", id: "ops_bottleneck", name: "Operational Bottleneck" },
+      { key: "leadership", id: "leadership_misalignment", name: "Leadership Misalignment" }
+    ];
+    for (var i = 0; i < order.length; i++) {
+      if (ratings[order[i].key] === "Red") {
+        return { id: order[i].id, name: order[i].name, rootCause: [] };
       }
     }
-    throw lastErr || new Error("Unable to load decision tree");
-  }
-
-  function evaluateTree(ratings, archetypes) {
-    for (var i = 0; i < archetypes.length; i++) {
-      var arch = archetypes[i];
-      var match = true;
-      var conditions = arch.conditions || {};
-
-      for (var key in conditions) {
-        if (!Object.prototype.hasOwnProperty.call(conditions, key)) continue;
-        var condition = conditions[key];
-
-        if (Array.isArray(condition)) {
-          if (condition.indexOf(ratings[key]) === -1) {
-            match = false;
-            break;
-          }
-        } else if (ratings[key] !== condition) {
-          match = false;
-          break;
-        }
-      }
-
-      if (match) return arch;
+    var allGreen = ["revenue", "margin", "operations", "leadership"].every(function (k) {
+      return ratings[k] === "Green";
+    });
+    if (allGreen) {
+      return { id: "healthy_growth", name: "Healthy Growth Platform", rootCause: [] };
     }
-
-    return {
-      id: "unclassified",
-      name: "Unclassified Pattern",
-      rootCause: ["Mixed signals across categories"]
-    };
+    return { id: "constrained_growth", name: "Constrained Growth", rootCause: [] };
   }
 
   async function runDecisionTree() {
-    var scoring;
-    try {
-      var raw = sessionStorage.getItem(SCORING_KEY);
-      if (!raw) {
-        console.warn("No isi_scoringResults in sessionStorage.");
-        return;
-      }
-      scoring = JSON.parse(raw);
-    } catch (err) {
-      console.warn("Unable to read scoring results:", err);
-      return;
+    var k = global.ISI && global.ISI.kit;
+    if (!k || typeof global.ISI.orchestrate !== "function") {
+      alert("Multi-engine control system failed to load.");
+      return null;
     }
 
-    if (!scoring || !scoring.ratings) return;
-
-    var tree;
-    try {
-      tree = await fetchDecisionTree();
-    } catch (err) {
-      console.warn("Failed to load decision tree:", err);
-      alert("Could not load the decision tree model.");
-      return;
+    var scoring = k.readScoring();
+    if (!scoring || !scoring.ratings) {
+      console.warn("No isi_scoringResults in sessionStorage.");
+      return null;
     }
 
-    var selected = evaluateTree(scoring.ratings, tree.archetypes || []);
+    var input = k.readInput() || {};
+    var selected;
+    try {
+      selected = await global.ISI.orchestrate({ input: input, scoring: scoring });
+    } catch (err) {
+      console.warn("Decision control failed:", err);
+      alert("Could not run the multi-engine decision tree.");
+      return null;
+    }
 
     try {
       sessionStorage.setItem(RESULT_KEY, JSON.stringify(selected));
+      sessionStorage.setItem(ENGINES_KEY, JSON.stringify(selected.engines || []));
+      sessionStorage.setItem("isi_prioritization", JSON.stringify(selected.initiatives || []));
+      sessionStorage.setItem("isi_roadmap", JSON.stringify(selected.roadmap || []));
     } catch (err) {
       console.warn("sessionStorage unavailable:", err);
     }
@@ -106,92 +69,162 @@
   }
 
   function ratingClass(rating) {
-    var r = String(rating || "").toLowerCase();
-    if (r === "green") return "rating-green";
-    if (r === "yellow") return "rating-yellow";
-    return "rating-red";
+    return global.ISI && global.ISI.kit
+      ? global.ISI.kit.ratingClass(rating)
+      : "rating-red";
   }
 
   function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
+    return global.ISI && global.ISI.kit
+      ? global.ISI.kit.escapeHtml(str)
+      : String(str);
+  }
+
+  function branchBlock(title, rows) {
+    if (!rows || !rows.length) return "";
+    var html = '<div class="isi-branch-card"><h4>' + escapeHtml(title) + "</h4><ul>";
+    rows.forEach(function (row) {
+      html +=
+        "<li><strong>" +
+        escapeHtml(row.engine) +
+        ":</strong> " +
+        escapeHtml(row.reason) +
+        "</li>";
+    });
+    html += "</ul></div>";
+    return html;
   }
 
   function displayDecisionTree() {
     var container = document.getElementById("decisionTreeResults");
     if (!container) return;
 
-    var raw;
-    try {
-      raw = sessionStorage.getItem(RESULT_KEY);
-    } catch (err) {
-      return;
-    }
-    if (!raw) return;
-
-    var selected;
-    try {
-      selected = JSON.parse(raw);
-    } catch (err) {
-      return;
-    }
+    var selected = global.ISI && global.ISI.kit
+      ? global.ISI.kit.readSession(RESULT_KEY)
+      : null;
     if (!selected || !selected.name) return;
-
-    var scoringRaw = null;
-    var scoring = null;
-    try {
-      scoringRaw = sessionStorage.getItem(SCORING_KEY);
-      if (scoringRaw) scoring = JSON.parse(scoringRaw);
-    } catch (err) {
-      scoring = null;
-    }
 
     var html = "";
     html += '<div class="isi-archetype">';
     html += "<h3>" + escapeHtml(selected.name) + "</h3>";
     html +=
-      '<p class="isi-archetype-summary"><strong>You are here: ' +
-      escapeHtml(selected.name) +
+      '<p class="isi-archetype-summary"><strong>' +
+      escapeHtml((selected.narrative && selected.narrative.headline) || selected.name) +
       "</strong></p>";
+    html +=
+      "<p>Activated engines: " +
+      escapeHtml((selected.activated || []).join(", ") || "growth") +
+      "</p>";
     html += "</div>";
 
-    html += '<div class="isi-root-cause">';
-    html += "<h4>Root causes</h4><ul>";
-    var causes = selected.rootCause || [];
-    for (var i = 0; i < causes.length; i++) {
-      html += "<li>" + escapeHtml(causes[i]) + "</li>";
+    if (selected.narrative) {
+      html += '<div class="isi-narrative isi-card">';
+      html += "<h4>Strategic narrative</h4>";
+      html += "<p>" + escapeHtml(selected.narrative.situation || "") + "</p>";
+      html += "<p>" + escapeHtml(selected.narrative.implication || "") + "</p>";
+      html += "<p><strong>Recommendation.</strong> " + escapeHtml(selected.narrative.recommendation || "") + "</p>";
+      html += "</div>";
     }
+
+    html += '<div class="isi-branch-grid">';
+    html += branchBlock("Quantitative branches", selected.branches && selected.branches.quantitative);
+    html += branchBlock("Qualitative branches", selected.branches && selected.branches.qualitative);
+    html += branchBlock("Strategic branches", selected.branches && selected.branches.strategic);
+    html += "</div>";
+
+    (selected.engines || []).forEach(function (eng) {
+      html += '<div class="isi-engine-card isi-card">';
+      html +=
+        "<h3>" +
+        escapeHtml(eng.shortName || eng.name) +
+        ' <span class="isi-tag">' +
+        escapeHtml(eng.firm) +
+        "</span> <span class=\"rating-badge " +
+        ratingClass(eng.rating) +
+        '">' +
+        escapeHtml(eng.rating) +
+        "</span> " +
+        Number(eng.score).toFixed(1) +
+        "</h3>";
+      html +=
+        "<p><strong>" +
+        escapeHtml(eng.archetype.name) +
+        "</strong> — " +
+        escapeHtml(eng.family) +
+        "</p>";
+      html += '<ul class="isi-module-list">';
+      (eng.modules || []).forEach(function (m) {
+        html +=
+          "<li>" +
+          escapeHtml(m.name) +
+          ': <span class="rating-badge ' +
+          ratingClass(m.rating) +
+          '">' +
+          escapeHtml(m.rating) +
+          "</span> " +
+          Number(m.score).toFixed(0) +
+          (m.finding ? " — " + escapeHtml(m.finding) : "") +
+          "</li>";
+      });
+      html += "</ul></div>";
+    });
+
+    if (selected.scenarios && selected.scenarios.length) {
+      html += "<h4>Scenario modeling</h4>";
+      html += '<div class="isi-scenario-grid">';
+      selected.scenarios.forEach(function (sc) {
+        var proj = sc.projected || { scores: {}, ratings: {} };
+        html += '<div class="isi-card isi-scenario">';
+        html += "<h3>" + escapeHtml(sc.name) + "</h3>";
+        html += "<p>" + escapeHtml(sc.description || "") + "</p>";
+        html += "<p><strong>180-day projection</strong></p><ul>";
+        ["revenue", "margin", "operations", "leadership"].forEach(function (key) {
+          var label = key.charAt(0).toUpperCase() + key.slice(1);
+          html +=
+            "<li>" +
+            escapeHtml(label) +
+            ': <span class="rating-badge ' +
+            ratingClass(proj.ratings[key]) +
+            '">' +
+            escapeHtml(proj.ratings[key] || "—") +
+            "</span> " +
+            (proj.scores[key] != null ? Number(proj.scores[key]).toFixed(1) : "") +
+            "</li>";
+        });
+        html += "</ul></div>";
+      });
+      html += "</div>";
+    }
+
+    html += '<div class="isi-root-cause"><h4>Root causes</h4><ul>';
+    (selected.rootCause || []).forEach(function (c) {
+      html += "<li>" + escapeHtml(c) + "</li>";
+    });
     html += "</ul></div>";
 
-    if (scoring && scoring.ratings) {
-      var cats = [
+    if (selected.ratings) {
+      html += '<div class="isi-archetype-ratings"><h4>Shared vital signs</h4>';
+      [
         { key: "revenue", label: "Revenue Engine" },
         { key: "margin", label: "Margin Health" },
         { key: "operations", label: "Operations" },
         { key: "leadership", label: "Leadership" }
-      ];
-      html += '<div class="isi-archetype-ratings"><h4>Category ratings</h4>';
-      for (var j = 0; j < cats.length; j++) {
-        var c = cats[j];
-        var rating = scoring.ratings[c.key];
+      ].forEach(function (c) {
         var score =
-          scoring.scores && scoring.scores[c.key] != null
-            ? Number(scoring.scores[c.key]).toFixed(1)
+          selected.scores && selected.scores[c.key] != null
+            ? Number(selected.scores[c.key]).toFixed(1)
             : null;
         html +=
           '<p class="scoring-line">' +
           escapeHtml(c.label) +
           ': <span class="rating-badge ' +
-          ratingClass(rating) +
+          ratingClass(selected.ratings[c.key]) +
           '">' +
-          escapeHtml(rating) +
+          escapeHtml(selected.ratings[c.key] || "") +
           "</span>";
         if (score !== null) html += " (" + score + ")";
         html += "</p>";
-      }
+      });
       html += "</div>";
     }
 

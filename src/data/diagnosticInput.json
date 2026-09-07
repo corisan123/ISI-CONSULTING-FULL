@@ -10,5 +10,9 @@
   "salesCapacity": 0,
   "costToServe": 0,
   "bottlenecks": "",
-  "leadership": 0
+  "leadership": 0,
+  "growthAmbition": "",
+  "expansionIntent": "",
+  "bdOpsTension": "",
+  "commercialMaturity": ""
 }

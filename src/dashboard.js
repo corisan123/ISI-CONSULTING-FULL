@@ -1,25 +1,16 @@
 /**
- * ISI Consulting — dashboard.js (Block 2E Section 2)
- * Unified executive snapshot from scoring, decision tree, priorities, roadmap.
+ * ISI Consulting — dashboard.js (Phase 5A)
+ * Executive snapshot across activated engines, narrative, and roadmap.
  */
 (function (global) {
   "use strict";
 
   function buildDashboard() {
-    var scoring;
-    var decision;
-    var priorities;
-    var roadmap;
-
-    try {
-      scoring = JSON.parse(sessionStorage.getItem("isi_scoringResults"));
-      decision = JSON.parse(sessionStorage.getItem("isi_decisionTree"));
-      priorities = JSON.parse(sessionStorage.getItem("isi_prioritization"));
-      roadmap = JSON.parse(sessionStorage.getItem("isi_roadmap"));
-    } catch (err) {
-      console.warn("Dashboard: failed to parse session data:", err);
-      return null;
-    }
+    var k = global.ISI && global.ISI.kit;
+    var scoring = k ? k.readSession("isi_scoringResults") : null;
+    var decision = k ? k.readSession("isi_decisionTree") : null;
+    var priorities = k ? k.readSession("isi_prioritization") : null;
+    var roadmap = k ? k.readSession("isi_roadmap") : null;
 
     if (!scoring || !decision || !priorities || !roadmap) return null;
 
@@ -27,24 +18,24 @@
       categories: scoring.ratings,
       scores: scoring.scores,
       archetype: decision.name,
+      narrative: decision.narrative || null,
+      engines: decision.engines || [],
+      activated: decision.activated || [],
       topPriority: (priorities[0] && priorities[0].name) || "No priorities available",
       nextPhase: (roadmap[0] && roadmap[0].phase) || "No roadmap available"
     };
   }
 
   function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
+    return global.ISI && global.ISI.kit
+      ? global.ISI.kit.escapeHtml(str)
+      : String(str);
   }
 
   function ratingClass(rating) {
-    var r = String(rating || "").toLowerCase();
-    if (r === "green") return "rating-green";
-    if (r === "yellow") return "rating-yellow";
-    return "rating-red";
+    return global.ISI && global.ISI.kit
+      ? global.ISI.kit.ratingClass(rating)
+      : "rating-red";
   }
 
   function displayDashboard() {
@@ -76,12 +67,38 @@
       );
     }
 
+    var engineHtml = (dashboard.engines || [])
+      .map(function (e) {
+        return (
+          "<li>" +
+          escapeHtml(e.shortName || e.name) +
+          ' <span class="isi-tag">' +
+          escapeHtml(e.firm) +
+          '</span> <span class="rating-badge ' +
+          ratingClass(e.rating) +
+          '">' +
+          escapeHtml(e.rating) +
+          "</span> — " +
+          escapeHtml(e.archetype.name) +
+          "</li>"
+        );
+      })
+      .join("");
+
+    var narrative = dashboard.narrative
+      ? "<p>" + escapeHtml(dashboard.narrative.headline || "") + "</p>"
+      : "<p>" + escapeHtml(dashboard.archetype) + "</p>";
+
     container.innerHTML =
       '<div class="isi-card">' +
-      "<h3>Overall Diagnostic Archetype</h3>" +
-      "<p>" +
-      escapeHtml(dashboard.archetype) +
-      "</p>" +
+      "<h3>Binding constraint</h3>" +
+      narrative +
+      "</div>" +
+      '<div class="isi-card">' +
+      "<h3>Activated engines</h3>" +
+      "<ul>" +
+      (engineHtml || "<li>None</li>") +
+      "</ul>" +
       "</div>" +
       '<div class="isi-card">' +
       "<h3>Category Ratings</h3>" +
