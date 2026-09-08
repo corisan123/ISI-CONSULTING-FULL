@@ -42,6 +42,25 @@ Open `http://localhost:8080/`. Save Input → scoring → **Run Multi-Engine Tre
 
 `netlify.toml` is in the repo.
 
+## Hosting on Cloudflare Pages
+
+**Do not** set Root Directory to `isi-consulting/website`, `website/`, or `src/`. Those are not the production app.
+
+| Cloudflare setting | Value |
+|--------------------|--------|
+| Repository | `corisan123/ISI-CONSULTING-FULL` (this repo) |
+| Production branch | `main` |
+| Framework preset | **None** |
+| Root directory | **empty** (repository root `/`) |
+| Build command | **empty** / skipped |
+| Build output directory | **`/`** (same as `.` — there is no compiled `dist/`) |
+
+The live `index.html` lives at the **repository root**, not inside `/src` and not inside `/website`. Absolute URLs (`/src/ui/theme.css`, `/diagnostic/packet.html`, `/src/packet/packetEngine.js`) only work if Pages publishes the whole repo from `/`.
+
+After connect: Pages → project → **Settings → Builds & deployment**. Clear any leftover Root Directory (`isi-consulting/website`). Save. **Retry deployment** from `main` after the full tree is pushed.
+
+Network 200s unique to later phases: `/src/ui/theme.css`, `/diagnostic/packet.html`, `/src/packet/packetEngine.js`.
+
 ## Hosting on GitHub Pages
 
 Deploy from the **repository root** (or `docs/` only if you copy the full tree). Project Pages under a subpath break absolute `/src` fetches unless you use a custom domain at site root.

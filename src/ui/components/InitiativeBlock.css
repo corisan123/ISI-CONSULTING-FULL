@@ -1,0 +1,68 @@
+/**
+ * InitiativeBlock — second-pass visual (Phase 7)
+ * Tokens only from theme.css.
+ */
+
+.tc-initiative {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-8);
+  background: var(--color-surface);
+  color: var(--color-navy);
+  font-family: var(--font-body);
+  padding: var(--space-16) var(--space-24);
+  margin: 0 0 var(--space-16);
+  border: 1px solid var(--neutral-200);
+  border-left: 4px solid var(--color-gold);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xs);
+  box-sizing: border-box;
+}
+
+.tc-initiative:last-child {
+  margin-bottom: 0;
+}
+
+.tc-initiative__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12) var(--space-16);
+  flex-wrap: wrap;
+}
+
+.tc-initiative__title {
+  margin: 0;
+  flex: 1 1 12rem;
+  font-family: var(--font-heading);
+  font-size: var(--text-h5-size);
+  font-weight: var(--text-h5-weight);
+  line-height: var(--text-h5-line);
+  letter-spacing: var(--text-h5-tracking);
+  color: var(--color-navy);
+}
+
+.tc-initiative__body {
+  margin: 0;
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+  line-height: var(--text-body-line);
+  letter-spacing: var(--text-body-tracking);
+  color: var(--neutral-700);
+}
+
+.tc-initiative__impact {
+  margin: 0;
+  padding-top: var(--space-4);
+  font-size: var(--text-caption-size);
+  font-weight: var(--text-caption-weight);
+  line-height: var(--text-caption-line);
+  letter-spacing: var(--text-caption-tracking);
+  text-transform: uppercase;
+  color: var(--color-navy-light);
+}
+
+.tc-roadmap-phase .tc-initiative {
+  margin-bottom: 0;
+}

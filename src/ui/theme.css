@@ -1,0 +1,374 @@
+/**
+ * Truth Collective — theme.css (Phase 7)
+ * CSS variables matching src/ui/designSystem.js.
+ * Navy #00044A + golds #FFD60A / #FFBF1C. Does not change engine logic.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
+@import url("./components/Card.css");
+@import url("./components/Panel.css");
+@import url("./components/Metric.css");
+@import url("./components/InitiativeBlock.css");
+@import url("./components/RoadmapPhase.css");
+@import url("./components/ScoreBar.css");
+@import url("./components/EngineTag.css");
+@import url("./layouts/layouts.css");
+@import url("./pages/results.css");
+@import url("../narrative/narrative.css");
+
+:root {
+  /* Brand — navy */
+  --color-navy: #00044a;
+  --color-navy-dark: #00022e;
+  --color-navy-mid: #0a1258;
+  --color-navy-light: #1c2570;
+  --color-navy-muted: #2a337a;
+
+  /* Brand — gold */
+  --color-gold: #ffd60a;
+  --color-gold-dark: #ffbf1c;
+  --color-gold-light: #ffe566;
+  --color-gold-muted: #e6c008;
+
+  /* Surfaces */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-surface: #ffffff;
+  --color-background: #f5f6fa;
+  --color-background-dark: #00044a;
+
+  /* Legacy aliases */
+  --primaryNavy: var(--color-navy);
+  --primaryGold: var(--color-gold);
+  --navyDark: var(--color-navy-dark);
+  --navyLight: var(--color-navy-light);
+  --goldDark: var(--color-gold-dark);
+  --goldLight: var(--color-gold-light);
+  --neutralGray: var(--neutral-500);
+  --backgroundLight: var(--color-background);
+  --backgroundDark: var(--color-background-dark);
+
+  /* Neutrals */
+  --neutral-0: #ffffff;
+  --neutral-50: #f5f6fa;
+  --neutral-100: #eef0f6;
+  --neutral-200: #e2e5ee;
+  --neutral-300: #c5cad6;
+  --neutral-400: #9aa3b2;
+  --neutral-500: #6b7280;
+  --neutral-600: #4b5563;
+  --neutral-700: #374151;
+  --neutral-800: #1f2937;
+  --neutral-900: #111827;
+
+  /* Semantic */
+  --color-success: #067647;
+  --color-success-bg: #ecfdf3;
+  --color-warning: #b54708;
+  --color-warning-bg: #fffaeb;
+  --color-danger: #b42318;
+  --color-danger-bg: #fef3f2;
+  --color-info: #1c2570;
+  --color-info-bg: #eef0ff;
+
+  /* Typography */
+  --font-heading: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --headingFont: var(--font-heading);
+  --bodyFont: var(--font-body);
+  --monoFont: var(--font-mono);
+
+  --text-h1-size: 32px;
+  --text-h1-weight: 700;
+  --text-h1-line: 1.2;
+  --text-h1-tracking: -0.02em;
+  --text-h2-size: 28px;
+  --text-h2-weight: 700;
+  --text-h2-line: 1.25;
+  --text-h2-tracking: -0.02em;
+  --text-h3-size: 24px;
+  --text-h3-weight: 600;
+  --text-h3-line: 1.3;
+  --text-h3-tracking: -0.01em;
+  --text-h4-size: 20px;
+  --text-h4-weight: 600;
+  --text-h4-line: 1.35;
+  --text-h4-tracking: 0;
+  --text-h5-size: 18px;
+  --text-h5-weight: 600;
+  --text-h5-line: 1.4;
+  --text-h5-tracking: 0;
+  --text-h6-size: 16px;
+  --text-h6-weight: 600;
+  --text-h6-line: 1.4;
+  --text-h6-tracking: 0.02em;
+  --text-body-size: 16px;
+  --text-body-weight: 400;
+  --text-body-line: 1.6;
+  --text-body-tracking: 0;
+  --text-caption-size: 12px;
+  --text-caption-weight: 500;
+  --text-caption-line: 1.4;
+  --text-caption-tracking: 0.04em;
+
+  /* Spacing */
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+  --spaceXS: var(--space-4);
+  --spaceSM: var(--space-8);
+  --spaceMD: var(--space-16);
+  --spaceLG: var(--space-24);
+  --spaceXL: var(--space-32);
+
+  /* Radius */
+  --radius-none: 0;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius: var(--radius-md);
+
+  /* Shadow */
+  --shadow-xs: 0 1px 2px rgba(0, 4, 74, 0.06);
+  --shadow-sm: 0 2px 8px rgba(0, 4, 74, 0.08);
+  --shadow-md: 0 8px 24px rgba(0, 4, 74, 0.12);
+  --shadow-lg: 0 16px 40px rgba(0, 4, 74, 0.16);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Type scale                                                                 */
+/* -------------------------------------------------------------------------- */
+
+.tc-h1,
+.tc-h2,
+.tc-h3,
+.tc-h4,
+.tc-h5,
+.tc-h6 {
+  font-family: var(--font-heading);
+  color: var(--color-navy);
+  margin: 0;
+}
+
+.tc-h1 {
+  font-size: var(--text-h1-size);
+  font-weight: var(--text-h1-weight);
+  line-height: var(--text-h1-line);
+  letter-spacing: var(--text-h1-tracking);
+}
+
+.tc-h2 {
+  font-size: var(--text-h2-size);
+  font-weight: var(--text-h2-weight);
+  line-height: var(--text-h2-line);
+  letter-spacing: var(--text-h2-tracking);
+}
+
+.tc-h3 {
+  font-size: var(--text-h3-size);
+  font-weight: var(--text-h3-weight);
+  line-height: var(--text-h3-line);
+  letter-spacing: var(--text-h3-tracking);
+}
+
+.tc-h4 {
+  font-size: var(--text-h4-size);
+  font-weight: var(--text-h4-weight);
+  line-height: var(--text-h4-line);
+  letter-spacing: var(--text-h4-tracking);
+}
+
+.tc-h5 {
+  font-size: var(--text-h5-size);
+  font-weight: var(--text-h5-weight);
+  line-height: var(--text-h5-line);
+  letter-spacing: var(--text-h5-tracking);
+}
+
+.tc-h6 {
+  font-size: var(--text-h6-size);
+  font-weight: var(--text-h6-weight);
+  line-height: var(--text-h6-line);
+  letter-spacing: var(--text-h6-tracking);
+}
+
+.tc-body {
+  font-family: var(--font-body);
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+  line-height: var(--text-body-line);
+  letter-spacing: var(--text-body-tracking);
+  color: var(--color-navy);
+}
+
+.tc-caption {
+  font-family: var(--font-body);
+  font-size: var(--text-caption-size);
+  font-weight: var(--text-caption-weight);
+  line-height: var(--text-caption-line);
+  letter-spacing: var(--text-caption-tracking);
+  text-transform: uppercase;
+  color: var(--neutral-500);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Dark theme — near-black navy, gold for highlights only                     */
+/* -------------------------------------------------------------------------- */
+
+[data-theme="dark"] {
+  background-color: var(--color-navy-dark);
+  color: var(--neutral-50);
+}
+
+[data-theme="dark"] .tc-h1,
+[data-theme="dark"] .tc-h2,
+[data-theme="dark"] .tc-h3,
+[data-theme="dark"] .tc-h4,
+[data-theme="dark"] .tc-h5,
+[data-theme="dark"] .tc-h6,
+[data-theme="dark"] .tc-body {
+  color: var(--neutral-50);
+}
+
+[data-theme="dark"] .tc-card,
+[data-theme="dark"] .card,
+[data-theme="dark"] .tc-panel,
+[data-theme="dark"] .panel,
+[data-theme="dark"] .tc-initiative,
+[data-theme="dark"] .initiativeBlock,
+[data-theme="dark"] .tc-roadmap-phase,
+[data-theme="dark"] .roadmapPhase {
+  background: var(--color-navy);
+  border-color: rgba(255, 214, 10, 0.12);
+  color: var(--neutral-50);
+}
+
+[data-theme="dark"] .tc-initiative {
+  border-left-color: var(--color-gold);
+}
+
+[data-theme="dark"] .tc-initiative__title,
+[data-theme="dark"] .initiativeBlock h3,
+[data-theme="dark"] .initiativeBlock .initiative-title,
+[data-theme="dark"] .tc-roadmap-phase__title,
+[data-theme="dark"] .roadmapPhase h3,
+[data-theme="dark"] .roadmapPhase .phase-title,
+[data-theme="dark"] .tc-card__title,
+[data-theme="dark"] .tc-panel__title {
+  color: var(--color-white);
+}
+
+[data-theme="dark"] .tc-card__body,
+[data-theme="dark"] .tc-initiative__body,
+[data-theme="dark"] .tc-panel__subtitle,
+[data-theme="dark"] .tc-roadmap-phase__focus,
+[data-theme="dark"] .roadmapPhase .phase-focus {
+  color: rgba(245, 246, 250, 0.65);
+}
+
+[data-theme="dark"] .tc-metric,
+[data-theme="dark"] .metric {
+  background: var(--color-navy-dark);
+  border: 1px solid rgba(255, 214, 10, 0.2);
+}
+
+[data-theme="dark"] .tc-metric__label,
+[data-theme="dark"] .metric .metric-label {
+  color: var(--color-gold);
+}
+
+[data-theme="dark"] .tc-score-bar__track {
+  background: var(--color-navy-muted);
+}
+
+[data-theme="dark"] .tc-score-bar__value {
+  color: var(--neutral-50);
+}
+
+/* Existing diagnostic chrome → brand tokens */
+.isi-header {
+  background: var(--color-navy);
+  color: var(--color-white);
+  font-family: var(--font-body);
+}
+
+.isi-header-title {
+  color: var(--color-white);
+}
+
+.isi-header-subtitle {
+  color: var(--color-gold);
+}
+
+.isi-nav {
+  background: var(--color-navy);
+  color: var(--color-white);
+}
+
+.isi-nav-title::after {
+  background: var(--color-gold);
+}
+
+.isi-nav .isi-nav-step-active {
+  color: var(--color-gold);
+  border-bottom-color: var(--color-gold);
+}
+
+.tc-page .isi-card,
+.tc-page .form-block {
+  background: var(--color-surface);
+  border: 1px solid var(--neutral-200);
+  border-top: 4px solid var(--color-gold);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  color: var(--color-navy);
+  padding: var(--space-24) var(--space-32);
+}
+
+.tc-card .isi-card,
+.tc-card .form-block {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  max-width: none;
+  border-radius: 0;
+}
+
+.tc-page .isi-section {
+  margin-bottom: var(--space-24);
+}
+
+.tc-page .isi-page > h3,
+.tc-diagnostic-layout__content > h3 {
+  font-family: var(--font-heading);
+  font-size: var(--text-h4-size);
+  font-weight: var(--text-h4-weight);
+  color: var(--color-navy);
+  margin: 0 0 var(--space-12);
+}
+
+.tc-page .isi-button:not(.isi-button-secondary):not(.isi-button-accent):not(.isi-button-outline) {
+  background: var(--color-navy);
+  border-color: var(--color-navy);
+  color: var(--color-white);
+}
+
+.tc-page .isi-button-accent {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-navy);
+}
+
+.tc-page .isi-priority-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-12);
+  margin-top: var(--space-16);
+}

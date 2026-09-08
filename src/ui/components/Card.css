@@ -1,0 +1,43 @@
+/**
+ * Card — second-pass visual (Phase 7)
+ * Tokens only from theme.css.
+ */
+
+.tc-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-12);
+  background: var(--color-surface);
+  color: var(--color-navy);
+  font-family: var(--font-body);
+  padding: var(--space-24) var(--space-32);
+  border: 1px solid var(--neutral-200);
+  border-top: 4px solid var(--color-gold);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  box-sizing: border-box;
+}
+
+.tc-card__title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--text-h4-size);
+  font-weight: var(--text-h4-weight);
+  line-height: var(--text-h4-line);
+  letter-spacing: var(--text-h4-tracking);
+  color: var(--color-navy);
+}
+
+.tc-card__body {
+  margin: 0;
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+  line-height: var(--text-body-line);
+  letter-spacing: var(--text-body-tracking);
+  color: var(--neutral-700);
+}
+
+.tc-card.tc-diagnostic-layout__content {
+  min-width: 0;
+}

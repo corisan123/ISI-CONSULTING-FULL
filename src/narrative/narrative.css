@@ -1,0 +1,56 @@
+/**
+ * Narrative surfaces — Phase 8
+ * Tokens only from theme.css.
+ */
+
+.tc-narrative {
+  margin-bottom: var(--space-24);
+}
+
+.tc-narrative__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.tc-narrative__lead {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--text-h5-size);
+  font-weight: var(--text-h5-weight);
+  line-height: var(--text-h5-line);
+  color: var(--color-navy);
+}
+
+.tc-narrative__insights {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.tc-narrative__insights li {
+  margin: 0;
+  padding-left: var(--space-12);
+  border-left: 2px solid var(--color-gold);
+  color: var(--neutral-700);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line);
+}
+
+.tc-narrative__rationale,
+.tc-narrative__next {
+  margin: 0;
+  max-width: 42rem;
+  font-size: var(--text-body-size);
+  line-height: 1.7;
+  color: var(--neutral-700);
+}
+
+.tc-narrative__next {
+  color: var(--color-navy);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--neutral-200);
+}

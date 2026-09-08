@@ -1,0 +1,43 @@
+/**
+ * EngineTag — second-pass visual (Phase 7)
+ * Tokens only from theme.css.
+ */
+
+.tc-engine-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  gap: var(--space-4);
+  min-height: 1.75rem;
+  padding: var(--space-4) var(--space-12);
+  background: var(--color-navy);
+  color: var(--color-gold);
+  border: 1px solid var(--color-gold);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: var(--text-caption-size);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tc-engine-tag--growth {
+  background: var(--color-navy);
+  color: var(--color-gold);
+  border-color: var(--color-gold);
+}
+
+.tc-engine-tag--expansion {
+  background: var(--color-navy-light);
+  color: var(--color-gold-light);
+  border-color: var(--color-gold-light);
+}
+
+.tc-engine-tag--alignment {
+  background: var(--color-navy-dark);
+  color: var(--color-gold-dark);
+  border-color: var(--color-gold-dark);
+}

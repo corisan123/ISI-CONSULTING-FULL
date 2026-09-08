@@ -6,6 +6,8 @@
   <title>Execution Roadmap | ISI Consulting</title>
   <meta name="description" content="30/60/90/180-day execution roadmap from the ISI diagnostic.">
   <link rel="stylesheet" href="/src/styles/isi.css">
+  <link rel="stylesheet" href="/src/ui/theme.css">
+  <script type="module" src="/src/ui/designSystem.js"></script>
 </head>
 <body>
   <script src="/src/components/isiHeader.js"></script>
@@ -73,11 +75,9 @@
   <script src="/src/engines/expansionEngine.js"></script>
   <script src="/src/engines/alignmentEngine.js"></script>
   <script src="/src/engines/engineOrchestrator.js"></script>
-  <script src="/src/roadmap.js"></script>
+  <script type="module" src="/src/roadmap.js"></script>
   <script src="/src/export.js"></script>
   <script src="/src/saveShare.js"></script>
-  <script>
-    window.onload = displayRoadmap;
-  </script>
+  <script type="module" src="/src/pages/roadmap.js"></script>
 </body>
 </html>

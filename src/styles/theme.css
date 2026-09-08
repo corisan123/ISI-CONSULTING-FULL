@@ -1,0 +1,4 @@
+/**
+ * Legacy path — Truth Collective theme now lives at /src/ui/theme.css
+ */
+@import url("/src/ui/theme.css");

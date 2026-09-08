@@ -6,6 +6,8 @@
   <title>Executive Summary | ISI Consulting</title>
   <meta name="description" content="Client-ready executive summary of the ISI Growth &amp; Turnaround Diagnostic.">
   <link rel="stylesheet" href="/src/styles/isi.css">
+  <link rel="stylesheet" href="/src/ui/theme.css">
+  <script type="module" src="/src/ui/designSystem.js"></script>
 </head>
 <body>
   <script src="/src/components/isiHeader.js"></script>
@@ -27,7 +29,8 @@
 
     <div class="isi-priority-actions">
       <a href="/diagnostic/dashboard.html" class="isi-button-secondary">Back to Dashboard</a>
-      <a href="/website/schedule.html" class="isi-button">Schedule a Consultation</a>
+      <a href="/diagnostic/packet.html" class="isi-button">Open Client Packet</a>
+      <a href="/website/schedule.html" class="isi-button-accent">Schedule a Consultation</a>
     </div>
 
     <div class="isi-section">
@@ -77,11 +80,9 @@
   <script src="/src/engines/expansionEngine.js"></script>
   <script src="/src/engines/alignmentEngine.js"></script>
   <script src="/src/engines/engineOrchestrator.js"></script>
-  <script src="/src/summary.js"></script>
+  <script type="module" src="/src/summary.js"></script>
   <script src="/src/export.js"></script>
   <script src="/src/saveShare.js"></script>
-  <script>
-    window.onload = displaySummary;
-  </script>
+  <script type="module" src="/src/pages/summary.js"></script>
 </body>
 </html>

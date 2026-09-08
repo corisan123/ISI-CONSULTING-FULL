@@ -1,0 +1,63 @@
+/**
+ * ScoreBar — second-pass visual (Phase 7)
+ * Tokens only from theme.css. Width is set by the component.
+ */
+
+.tc-score-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  width: 100%;
+  font-family: var(--font-body);
+}
+
+.tc-score-bar__label {
+  flex: 0 0 8rem;
+  min-width: 8rem;
+  font-size: var(--text-caption-size);
+  font-weight: var(--text-caption-weight);
+  line-height: var(--text-caption-line);
+  letter-spacing: var(--text-caption-tracking);
+  text-transform: uppercase;
+  color: var(--color-navy);
+}
+
+.tc-score-bar__track {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 10px;
+  background: var(--color-navy-muted);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.tc-score-bar__fill {
+  height: 100%;
+  width: 0;
+  background: var(--color-gold);
+  border-radius: var(--radius-sm);
+}
+
+.tc-score-bar__fill[data-tone="success"] {
+  background: var(--color-gold);
+}
+
+.tc-score-bar__fill[data-tone="warning"] {
+  background: var(--color-gold-dark);
+}
+
+.tc-score-bar__fill[data-tone="danger"] {
+  background: var(--color-danger);
+}
+
+.tc-score-bar__value {
+  flex: 0 0 3rem;
+  min-width: 3rem;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: var(--text-caption-size);
+  font-weight: 500;
+  line-height: 1;
+  color: var(--color-navy);
+  font-variant-numeric: tabular-nums;
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Client Diagnostic Packet | ISI Consulting</title>
+  <meta name="description" content="Confidential ISI Consulting client packet — narrative, results, roadmap, ROI, and engagement terms.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="/src/styles/isi.css">
+  <link rel="stylesheet" href="/src/ui/theme.css">
+  <link rel="stylesheet" href="/src/packet/packet.css">
+  <script type="module" src="/src/ui/designSystem.js"></script>
+</head>
+<body>
+  <script src="/src/components/isiHeader.js"></script>
+  <script>injectIsiHeader();</script>
+  <script src="/src/engine/isiConfig.js"></script>
+  <script src="/src/engine/isiDiagnosticEngine.js"></script>
+  <script src="/src/engines/isiEngineKit.js"></script>
+
+  <div class="isi-page">
+    <h2>Client Diagnostic Packet</h2>
+    <div class="isi-section">
+      <p>Private deliverable for client leadership. Text in this packet is non-selectable; narrative is canvas-rendered and bound to a hashed token.</p>
+    </div>
+    <div id="packetOutput" class="isi-section" aria-live="polite"></div>
+    <div class="isi-priority-actions">
+      <button type="button" class="isi-button" onclick="window.print()">Print packet</button>
+      <a href="/diagnostic/summary.html" class="isi-button-secondary">Back to Summary</a>
+    </div>
+  </div>
+
+  <footer class="isi-footer">
+    © 2026 ISI Consulting — The Truth Collective<br>
+    Diagnostic Engine v1.0 — All Rights Reserved<br>
+    Contact: support@truthcollective.io
+  </footer>
+
+  <script type="module" src="/src/pages/packet.js"></script>
+</body>
+</html>

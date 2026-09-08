@@ -1,0 +1,53 @@
+/**
+ * Panel — second-pass visual (Phase 7)
+ * Tokens only from theme.css.
+ */
+
+.tc-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-12);
+  background: var(--color-background);
+  color: var(--color-navy);
+  font-family: var(--font-body);
+  padding: var(--space-24) var(--space-32);
+  border: 1px solid var(--neutral-200);
+  border-top: 3px solid var(--color-gold);
+  border-left: 4px solid var(--color-navy);
+  border-radius: var(--radius-md);
+  box-sizing: border-box;
+}
+
+.tc-panel--compact {
+  padding: var(--space-16) var(--space-24);
+  gap: var(--space-8);
+}
+
+.tc-panel__title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--text-h3-size);
+  font-weight: var(--text-h3-weight);
+  line-height: var(--text-h3-line);
+  letter-spacing: var(--text-h3-tracking);
+  color: var(--color-navy);
+}
+
+.tc-panel__subtitle {
+  margin: 0;
+  font-size: var(--text-body-size);
+  font-weight: var(--text-body-weight);
+  line-height: var(--text-body-line);
+  color: var(--neutral-500);
+}
+
+.tc-panel__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+  min-width: 0;
+  color: var(--neutral-700);
+  font-size: var(--text-body-size);
+  line-height: var(--text-body-line);
+}
