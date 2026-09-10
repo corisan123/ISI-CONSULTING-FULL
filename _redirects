@@ -7,7 +7,8 @@
 # or the two redirects loop. Destinations below are real files; CF may then
 # strip .html.
 
-# Public homepage (does not depend on renaming root index.html).
+# Public homepage. A real root index.html is required so Cloudflare does not
+# serve the diagnostic form at /. That stub redirects here; these rules are backup.
 /                 /website/index.html   302
 /index.html       /website/index.html   302
 /home             /website/index.html   302

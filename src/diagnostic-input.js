@@ -8,7 +8,9 @@
 
   var STORAGE_KEY = "isi_input";
   var STORAGE_KEY_LEGACY = "isi_diagnosticInput";
+  var DRAFT_KEY = "isi_inputDraft";
   var DISCOVERY_KEY = "isi_discovery";
+  var draftTimer = null;
 
   /** DOM id → canonical engine key (matches src/data/diagnosticInput.json) */
   var FIELD_MAP = {
@@ -122,6 +124,64 @@
     else if (suf === "m") n *= 1000000;
     else if (suf === "b") n *= 1000000000;
     return n;
+  }
+
+  function readJson(key) {
+    try {
+      var raw = sessionStorage.getItem(key);
+      return raw ? JSON.parse(raw) : null;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  function writeJson(key, obj) {
+    try {
+      sessionStorage.setItem(key, JSON.stringify(obj));
+    } catch (err) {
+      console.warn("sessionStorage unavailable:", err);
+    }
+  }
+
+  function collectDraft() {
+    var draft = { savedAt: Date.now() };
+    Object.keys(FIELD_MAP).forEach(function (id) {
+      draft[id] = val(id);
+    });
+    return draft;
+  }
+
+  function saveDraft() {
+    if (!document.getElementById("diagnosticInputForm")) return;
+    var draft = collectDraft();
+    var hasValue = Object.keys(FIELD_MAP).some(function (id) {
+      return !!draft[id];
+    });
+    if (!hasValue && !readJson(DRAFT_KEY)) return;
+    writeJson(DRAFT_KEY, draft);
+  }
+
+  function scheduleDraft() {
+    if (draftTimer) clearTimeout(draftTimer);
+    draftTimer = setTimeout(saveDraft, 250);
+  }
+
+  function applyMappedValues(source, fromCanonical, allowEmpty) {
+    if (!source || typeof source !== "object") return;
+    Object.keys(FIELD_MAP).forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      var value = fromCanonical ? source[FIELD_MAP[id]] : source[id];
+      if (value == null) return;
+      if (!allowEmpty && value === "") return;
+      el.value = String(value);
+    });
+  }
+
+  function restoreForm() {
+    applyMappedValues(readJson(STORAGE_KEY) || readJson(STORAGE_KEY_LEGACY), true, false);
+    applyMappedValues(readJson(DRAFT_KEY), false, true);
+    prefillFromDiscovery();
   }
 
   function prefillFromDiscovery() {
@@ -283,6 +343,7 @@
     } catch (err) {
       console.warn("sessionStorage unavailable:", err);
     }
+    writeJson(DRAFT_KEY, collectDraft());
 
     if (result.softWarnings.length) {
       showSoftWarn(result.softWarnings);
@@ -300,10 +361,19 @@
       e.preventDefault();
       submitDiagnosticInput();
     });
+    form.addEventListener("input", scheduleDraft);
+    form.addEventListener("change", saveDraft);
+    window.addEventListener("pagehide", saveDraft);
+    window.addEventListener("pageshow", function () {
+      restoreForm();
+    });
+    document.querySelectorAll('a[href^="/diagnostic/"]').forEach(function (link) {
+      link.addEventListener("click", saveDraft);
+    });
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    prefillFromDiscovery();
+    restoreForm();
     bindForm();
   });
 
