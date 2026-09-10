@@ -22,7 +22,7 @@
   <div class="isi-page">
     <h2>Decision Tree Control System</h2>
     <div class="isi-section">
-      <p>The decision tree is the control system for three service engines — Bain Growth, Deloitte Expansion, and McKinsey Alignment. It reads vital signs plus strategic context, activates every matching domain, and merges narratives, initiatives, and scenarios. Run after scoring.</p>
+      <p>The diagram below is the live control tree. Each node is a real test against this client's scores and inputs. Gold is the path taken. Gray was tested and not taken. Multiple engines can activate at once — this is not a single-leaf CART tree.</p>
       <p id="decisionTreeNoScoring" class="scoring-hint" hidden>
         No scoring results found.
         <a href="/diagnostic/scoring.html">Run Diagnostic Scoring</a> first, then return here.
@@ -31,6 +31,9 @@
         <button type="button" class="isi-button" id="runDecisionTreeBtn" onclick="runAndDisplayDecisionTree()">Run Multi-Engine Tree</button>
       </div>
     </div>
+
+    <h3>Live decision tree</h3>
+    <div id="decisionTreeVisual" class="isi-tree-stage" aria-live="polite"></div>
 
     <h3>Control output</h3>
     <div id="decisionTreeResults" class="isi-card" aria-live="polite"></div>

@@ -14,7 +14,8 @@ export var firm = {
   copyright: "© 2026 ISI Consulting. All rights reserved.",
   confidentiality:
     "CONFIDENTIAL — Prepared solely for the named client. Unauthorized copy, distribution, or reverse-engineering of this packet is prohibited.",
-  website: "isiconsults.com"
+  website: "isiconsults.com",
+  calendly: "https://calendly.com/contact-isi-consults"
 };
 
 export default firm;

@@ -80,6 +80,313 @@
       : String(str);
   }
 
+  function liveDetection() {
+    if (!global.ISI || typeof global.ISI.detectDomains !== "function") return null;
+    var k = global.ISI.kit;
+    var scoring = k && k.readScoring ? k.readScoring() : null;
+    if (!scoring || !scoring.ratings) return null;
+    return global.ISI.detectDomains({
+      input: (k && k.readInput && k.readInput()) || {},
+      scoring: scoring
+    });
+  }
+
+  function svgEsc(str) {
+    return String(str || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function box(x, y, w, h, title, sub, state, id) {
+    var fill =
+      state === "on" ? "#fff8e8" : state === "bind" ? "#003366" : state === "root" ? "#002244" : "#ffffff";
+    var stroke = state === "on" || state === "bind" || state === "root" ? "#c9a86a" : "#c5ccd6";
+    var titleFill = state === "bind" || state === "root" ? "#ffffff" : "#1a2332";
+    var subFill = state === "bind" || state === "root" ? "rgba(255,255,255,0.72)" : "#5a6577";
+    var sw = state === "on" || state === "bind" || state === "root" ? "2.25" : "1.25";
+    return (
+      '<g class="isi-tree-node isi-tree-node--' +
+      svgEsc(state) +
+      '" data-node="' +
+      svgEsc(id) +
+      '" transform="translate(' +
+      x +
+      "," +
+      y +
+      ')">' +
+      '<rect width="' +
+      w +
+      '" height="' +
+      h +
+      '" rx="8" fill="' +
+      fill +
+      '" stroke="' +
+      stroke +
+      '" stroke-width="' +
+      sw +
+      '"/>' +
+      '<text x="12" y="24" fill="' +
+      titleFill +
+      '" font-size="13" font-weight="700" font-family="Inter, system-ui, sans-serif">' +
+      svgEsc(title) +
+      "</text>" +
+      '<text x="12" y="42" fill="' +
+      subFill +
+      '" font-size="11" font-family="Inter, system-ui, sans-serif">' +
+      svgEsc(sub) +
+      "</text>" +
+      "</g>"
+    );
+  }
+
+  function link(x1, y1, x2, y2, on, dashed) {
+    var color = on ? "#c9a86a" : "#c5ccd6";
+    var width = on ? "2.5" : "1.25";
+    var dash = dashed ? ' stroke-dasharray="6 5"' : "";
+    return (
+      '<path d="M' +
+      x1 +
+      " " +
+      y1 +
+      " C" +
+      (x1 + 48) +
+      " " +
+      y1 +
+      "," +
+      (x2 - 48) +
+      " " +
+      y2 +
+      "," +
+      x2 +
+      " " +
+      y2 +
+      '" fill="none" stroke="' +
+      color +
+      '" stroke-width="' +
+      width +
+      '"' +
+      dash +
+      "/>"
+    );
+  }
+
+  function renderOverviewSvg(detection, selected) {
+    var walk = (detection && detection.walk) || [];
+    var activated = (detection && detection.activated) || [];
+    var ratings = (detection && detection.ratings) || {};
+    var branchMeta = (global.ISI && global.ISI.branchMeta) || [
+      { id: "quantitative", label: "Quantitative" },
+      { id: "qualitative", label: "Qualitative" },
+      { id: "strategic", label: "Strategic" }
+    ];
+    var engineMeta = (global.ISI && global.ISI.engineMeta) || [
+      { id: "growth", label: "Growth" },
+      { id: "expansion", label: "Expansion" },
+      { id: "alignment", label: "Alignment" }
+    ];
+
+    function firedCount(branch) {
+      return walk.filter(function (n) {
+        return n.branch === branch && n.fired;
+      }).length;
+    }
+    function totalCount(branch) {
+      return walk.filter(function (n) {
+        return n.branch === branch;
+      }).length;
+    }
+    function branchOn(branch) {
+      return firedCount(branch) > 0;
+    }
+    function engineOn(id) {
+      return activated.indexOf(id) !== -1;
+    }
+    function branchToEngine(branch, engine) {
+      return walk.some(function (n) {
+        return n.branch === branch && n.engine === engine && n.fired;
+      });
+    }
+
+    var vital =
+      "Rev " +
+      (ratings.revenue || "—") +
+      " · Mar " +
+      (ratings.margin || "—") +
+      " · Ops " +
+      (ratings.operations || "—") +
+      " · Lead " +
+      (ratings.leadership || "—");
+
+    var bindName = (selected && selected.name) || (detection && detection.defaulted ? "Growth (default)" : "Binding constraint");
+    if (bindName.length > 28) bindName = bindName.slice(0, 26) + "…";
+
+    var html = '<svg class="isi-tree-svg" viewBox="0 0 980 360" role="img" aria-labelledby="isiTreeTitle isiTreeDesc">';
+    html += '<title id="isiTreeTitle">Live diagnostic decision tree</title>';
+    html +=
+      '<desc id="isiTreeDesc">Path from client scores through quantitative, qualitative, and strategic tests into Growth, Expansion, and Alignment engines, ending at the binding constraint.</desc>';
+
+    html += link(180, 170, 250, 62, branchOn("quantitative") || !!(detection && detection.defaulted), detection && detection.defaulted && !branchOn("quantitative"));
+    html += link(180, 180, 250, 168, branchOn("qualitative"));
+    html += link(180, 190, 250, 274, branchOn("strategic"));
+
+    function pairExists(branch, engine) {
+      return walk.some(function (n) {
+        return n.branch === branch && n.engine === engine;
+      });
+    }
+
+    branchMeta.forEach(function (b) {
+      engineMeta.forEach(function (e) {
+        if (!pairExists(b.id, e.id)) return;
+        var by = b.id === "quantitative" ? 62 : b.id === "qualitative" ? 168 : 274;
+        var ey = e.id === "growth" ? 62 : e.id === "expansion" ? 168 : 274;
+        var on = branchToEngine(b.id, e.id);
+        var isDefault =
+          detection && detection.defaulted && b.id === "quantitative" && e.id === "growth";
+        html += link(400, by, 500, ey, on || isDefault, isDefault && !on);
+      });
+    });
+
+    engineMeta.forEach(function (e) {
+      var ey = e.id === "growth" ? 62 : e.id === "expansion" ? 168 : 274;
+      html += link(650, ey, 740, 180, engineOn(e.id), detection && detection.defaulted && e.id === "growth");
+    });
+
+    html += box(20, 140, 160, 80, "Client scores", vital, "root", "root");
+    html += box(
+      250,
+      30,
+      150,
+      64,
+      "Quantitative",
+      firedCount("quantitative") + " of " + totalCount("quantitative") + " fired",
+      branchOn("quantitative") ? "on" : "off",
+      "quantitative"
+    );
+    html += box(
+      250,
+      136,
+      150,
+      64,
+      "Qualitative",
+      firedCount("qualitative") + " of " + totalCount("qualitative") + " fired",
+      branchOn("qualitative") ? "on" : "off",
+      "qualitative"
+    );
+    html += box(
+      250,
+      242,
+      150,
+      64,
+      "Strategic",
+      firedCount("strategic") + " of " + totalCount("strategic") + " fired",
+      branchOn("strategic") ? "on" : "off",
+      "strategic"
+    );
+    html += box(500, 30, 150, 64, "Growth", "Bain", engineOn("growth") ? "on" : "off", "growth");
+    html += box(500, 136, 150, 64, "Expansion", "Deloitte", engineOn("expansion") ? "on" : "off", "expansion");
+    html += box(500, 242, 150, 64, "Alignment", "McKinsey", engineOn("alignment") ? "on" : "off", "alignment");
+    html += box(740, 140, 220, 80, "Binding constraint", bindName, "bind", "binding");
+    html += "</svg>";
+    return html;
+  }
+
+  function renderWalkList(detection) {
+    var walk = (detection && detection.walk) || [];
+    var branchMeta = (global.ISI && global.ISI.branchMeta) || [];
+    var html = '<ol class="isi-dtree">';
+    branchMeta.forEach(function (branch) {
+      var rows = walk.filter(function (n) {
+        return n.branch === branch.id;
+      });
+      var fired = rows.filter(function (n) {
+        return n.fired;
+      }).length;
+      html += '<li class="isi-dtree-branch">';
+      html +=
+        '<div class="isi-dtree-branch__head"><span class="isi-dtree-branch__name">' +
+        escapeHtml(branch.label) +
+        '</span><span class="isi-dtree-branch__q">' +
+        escapeHtml(branch.question || "") +
+        '</span><span class="isi-dtree-branch__count">' +
+        fired +
+        " of " +
+        rows.length +
+        " taken</span></div>";
+      html += '<ol class="isi-dtree-tests">';
+      rows.forEach(function (n) {
+        html +=
+          '<li class="isi-dtree-test' +
+          (n.fired ? " is-fired" : " is-idle") +
+          '" data-test="' +
+          escapeHtml(n.id) +
+          '">';
+        html +=
+          '<span class="isi-dtree-test__gate" aria-hidden="true">' + (n.fired ? "Yes" : "No") + "</span>";
+        html += '<div class="isi-dtree-test__body">';
+        html += "<strong>" + escapeHtml(n.question) + "</strong>";
+        html += '<p class="isi-dtree-test__meta">' + escapeHtml(n.label) + " → " + escapeHtml(n.engine) + "</p>";
+        html += '<p class="isi-dtree-test__evidence">' + escapeHtml(n.evidence) + "</p>";
+        html += "</div></li>";
+      });
+      html += "</ol></li>";
+    });
+    html += "</ol>";
+    if (detection && detection.defaulted) {
+      html +=
+        '<p class="isi-tree-default">No test fired. Growth still runs so every client gets a commercial diagnosis (dashed path on the diagram).</p>';
+    }
+    return html;
+  }
+
+  function ensureVisualHost() {
+    var host = document.getElementById("decisionTreeVisual");
+    if (host) return host;
+    var results = document.getElementById("decisionTreeResults");
+    host = document.createElement("div");
+    host.id = "decisionTreeVisual";
+    host.className = "isi-tree-stage";
+    host.setAttribute("aria-live", "polite");
+    if (results && results.parentNode) {
+      results.parentNode.insertBefore(host, results);
+    }
+    return host;
+  }
+
+  function renderLiveTree(selected) {
+    var host = ensureVisualHost();
+    if (!host) return;
+
+    var detection = liveDetection();
+    var idleWalk = null;
+    if (!detection && global.ISI && typeof global.ISI.detectDomains === "function") {
+      idleWalk = global.ISI.detectDomains({ input: {}, scoring: { ratings: {}, scores: {} } });
+    }
+    var model = detection || idleWalk;
+    if (!model) {
+      host.innerHTML =
+        '<p class="scoring-hint">The visual tree loads with the control system. Refresh this page if the diagram is missing.</p>';
+      return;
+    }
+
+    var caption = detection
+      ? "Gold is the path this client's scores and inputs take. Gray branches were tested and not taken. Each Yes/No row is the live evidence for that test."
+      : "Complete scoring, then return. The diagram is the real control tree — every test will light when this client's data hits a threshold.";
+
+    var html = "";
+    html += '<div class="isi-tree-legend" aria-hidden="true">';
+    html += '<span class="isi-tree-legend__item isi-tree-legend__item--on">Taken path</span>';
+    html += '<span class="isi-tree-legend__item isi-tree-legend__item--off">Tested, not taken</span>';
+    html += '<span class="isi-tree-legend__item isi-tree-legend__item--bind">Binding constraint</span>';
+    html += "</div>";
+    html += '<p class="isi-tree-caption">' + escapeHtml(caption) + "</p>";
+    html += '<div class="isi-tree-svg-wrap">' + renderOverviewSvg(model, selected) + "</div>";
+    html += renderWalkList(model);
+    host.innerHTML = html;
+  }
+
   function branchBlock(title, rows) {
     if (!rows || !rows.length) return "";
     var html = '<div class="isi-branch-card"><h4>' + escapeHtml(title) + "</h4><ul>";
@@ -96,12 +403,13 @@
   }
 
   function displayDecisionTree() {
-    var container = document.getElementById("decisionTreeResults");
-    if (!container) return;
-
     var selected = global.ISI && global.ISI.kit
       ? global.ISI.kit.readSession(RESULT_KEY)
       : null;
+    renderLiveTree(selected);
+
+    var container = document.getElementById("decisionTreeResults");
+    if (!container) return;
     if (!selected || !selected.name) return;
 
     var html = "";

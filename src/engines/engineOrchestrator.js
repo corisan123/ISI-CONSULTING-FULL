@@ -26,6 +26,323 @@
     });
   }
 
+  function dash(v, suffix) {
+    if (v == null || v === "" || (typeof v === "number" && isNaN(v))) return "—";
+    return String(v) + (suffix || "");
+  }
+
+  /**
+   * Every test in the live tree. detect() and the SVG walk the same catalog
+   * so the drawing cannot drift from the control system.
+   */
+  var TREE_TESTS = [
+    {
+      id: "win_rate",
+      branch: "quantitative",
+      label: "Revenue engine / win rate",
+      question: "Is the revenue engine failing to carry share?",
+      engine: "growth",
+      domain: "market_share_loss",
+      reason: "Win rate / revenue engine is not carrying share.",
+      eval: function (input, r) {
+        var fired = isRY(r.revenue) || Number(input.closeRate) < 30;
+        return {
+          fired: fired,
+          evidence:
+            "Revenue " +
+            dash(r.revenue) +
+            ", close rate " +
+            dash(input.closeRate, "%") +
+            ". Fires on Red/Yellow or close rate < 30%."
+        };
+      }
+    },
+    {
+      id: "concentration",
+      branch: "quantitative",
+      label: "Client concentration",
+      question: "Does account mix create retention risk?",
+      engine: "growth",
+      domain: "client_churn_concentration",
+      reason: "Account concentration creates retention and mix risk.",
+      eval: function (input) {
+        var fired = Number(input.customerConcentration) >= 40;
+        return {
+          fired: fired,
+          evidence:
+            "Top-account concentration " +
+            dash(input.customerConcentration, "%") +
+            ". Fires at ≥ 40%."
+        };
+      }
+    },
+    {
+      id: "pricing_pressure",
+      branch: "quantitative",
+      label: "Pricing / margin leak",
+      question: "Are pricing and margin leaking value?",
+      engine: "growth",
+      domain: "pricing_pressure",
+      reason: "Pricing and margin are leaking value.",
+      eval: function (input, r) {
+        var fired = isRY(r.margin) || Number(input.margin) < 30;
+        return {
+          fired: fired,
+          evidence:
+            "Margin rating " +
+            dash(r.margin) +
+            ", gross margin " +
+            dash(input.margin, "%") +
+            ". Fires on Red/Yellow or margin < 30%."
+        };
+      }
+    },
+    {
+      id: "pipeline_stall",
+      branch: "quantitative",
+      label: "Pipeline velocity",
+      question: "Is cycle time too slow for the growth target?",
+      engine: "growth",
+      domain: "pipeline_stall",
+      reason: "Pipeline velocity is too slow for the growth target.",
+      eval: function (input, r, s) {
+        var fired = Number(input.salesCycle) >= 90 || (s.revenue != null && s.revenue < 75);
+        return {
+          fired: fired,
+          evidence:
+            "Sales cycle " +
+            dash(input.salesCycle, " days") +
+            ", revenue score " +
+            (s.revenue != null ? Number(s.revenue).toFixed(1) : "—") +
+            ". Fires at ≥ 90 days or revenue score < 75."
+        };
+      }
+    },
+    {
+      id: "expansion_while_constrained",
+      branch: "quantitative",
+      label: "Expansion vs constrained core",
+      question: "Is expansion requested while the core is still Red/Yellow?",
+      engine: "expansion",
+      domain: "market_entry",
+      reason: "Expansion is requested while the core engine is still constrained.",
+      eval: function (input, r) {
+        var intent = input.expansionIntent || "none";
+        var fired =
+          intent !== "none" &&
+          intent &&
+          (isRY(r.operations) || isRY(r.leadership) || isRY(r.margin));
+        return {
+          fired: fired,
+          evidence:
+            "Expansion intent " +
+            dash(intent) +
+            "; ops " +
+            dash(r.operations) +
+            ", leadership " +
+            dash(r.leadership) +
+            ", margin " +
+            dash(r.margin) +
+            "."
+        };
+      }
+    },
+    {
+      id: "rising_costs",
+      branch: "quantitative",
+      label: "Cost-to-serve / throughput",
+      question: "Are cost-to-serve and throughput dragging the P&L?",
+      engine: "alignment",
+      domain: "rising_costs",
+      reason: "Cost-to-serve and throughput are dragging the P&L.",
+      eval: function (input, r) {
+        var fired = isRY(r.operations) || Number(input.costToServe) >= 20;
+        return {
+          fired: fired,
+          evidence:
+            "Operations " +
+            dash(r.operations) +
+            ", cost-to-serve " +
+            dash(input.costToServe, "%") +
+            ". Fires on Red/Yellow or cost-to-serve ≥ 20%."
+        };
+      }
+    },
+    {
+      id: "execution_drift",
+      branch: "quantitative",
+      label: "Execution discipline",
+      question: "Is execution protecting delivery and margin?",
+      engine: "alignment",
+      domain: "execution_drift",
+      reason: "Execution discipline is not protecting delivery or margin.",
+      eval: function (input, r) {
+        var fired = isRY(r.operations) || isRY(r.margin);
+        return {
+          fired: fired,
+          evidence:
+            "Operations " +
+            dash(r.operations) +
+            ", margin " +
+            dash(r.margin) +
+            ". Fires if either is Red/Yellow."
+        };
+      }
+    },
+    {
+      id: "gtm_immaturity",
+      branch: "qualitative",
+      label: "GTM / sales-process maturity",
+      question: "Can the commercial process support a repeatable GTM?",
+      engine: "growth",
+      domain: "gtm_immaturity",
+      reason: "Commercial process maturity cannot support a repeatable GTM.",
+      eval: function (input) {
+        var fired = input.commercialMaturity === "ad_hoc" || input.commercialMaturity === "emerging";
+        return {
+          fired: fired,
+          evidence:
+            "Commercial maturity " +
+            dash(input.commercialMaturity) +
+            ". Fires on ad hoc or emerging."
+        };
+      }
+    },
+    {
+      id: "bd_ops_split",
+      branch: "qualitative",
+      label: "BD ↔ operations handoff",
+      question: "Are BD and operations on one capacity plan?",
+      engine: "alignment",
+      domain: "bd_ops_split",
+      reason: "BD and operations are not on one capacity plan.",
+      eval: function (input) {
+        var fired = input.bdOpsTension === "strained" || input.bdOpsTension === "broken";
+        return {
+          fired: fired,
+          evidence:
+            "BD–Ops tension " +
+            dash(input.bdOpsTension) +
+            ". Fires on strained or broken."
+        };
+      }
+    },
+    {
+      id: "leadership_gap",
+      branch: "qualitative",
+      label: "Leadership cadence",
+      question: "Can leadership convert strategy into weekly execution?",
+      engine: "alignment",
+      domain: "leadership_gap",
+      reason: "Leadership cadence cannot convert strategy into weekly execution.",
+      eval: function (input, r) {
+        var fired = isRY(r.leadership) || Number(input.leadership) <= 6;
+        return {
+          fired: fired,
+          evidence:
+            "Leadership rating " +
+            dash(r.leadership) +
+            ", score " +
+            dash(input.leadership) +
+            " / 10. Fires on Red/Yellow or ≤ 6."
+        };
+      }
+    },
+    {
+      id: "growth_posture",
+      branch: "strategic",
+      label: "Growth posture",
+      question: "Is the firm asking for grow or expand?",
+      engine: "growth",
+      domain: "market_share_loss",
+      reason: "Growth posture requires a commercial excellence program.",
+      eval: function (input) {
+        var fired = input.growthAmbition === "grow" || input.growthAmbition === "expand";
+        return {
+          fired: fired,
+          evidence:
+            "Growth ambition " +
+            dash(input.growthAmbition) +
+            ". Fires on grow or expand."
+        };
+      }
+    },
+    {
+      id: "new_office",
+      branch: "strategic",
+      label: "New office / geography",
+      question: "Is a new office or geography in scope?",
+      engine: "expansion",
+      domain: "new_office",
+      reason: "Client intends a new office / geography.",
+      eval: function (input) {
+        var intent = input.expansionIntent || "none";
+        var fired = intent === "new_office" || intent === "both";
+        return {
+          fired: fired,
+          evidence: "Expansion intent " + dash(intent) + ". Fires on new office or both."
+        };
+      }
+    },
+    {
+      id: "new_revenue_stream",
+      branch: "strategic",
+      label: "New revenue stream",
+      question: "Is a new offer or stream in scope?",
+      engine: "expansion",
+      domain: "new_revenue_stream",
+      reason: "Client intends a new revenue stream or offer.",
+      eval: function (input) {
+        var intent = input.expansionIntent || "none";
+        var fired = intent === "new_revenue_stream" || intent === "both";
+        return {
+          fired: fired,
+          evidence: "Expansion intent " + dash(intent) + ". Fires on new stream or both."
+        };
+      }
+    },
+    {
+      id: "expand_ambition",
+      branch: "strategic",
+      label: "Ungated market entry",
+      question: "Is expansion ambition ahead of a gated thesis?",
+      engine: "expansion",
+      domain: "market_entry",
+      reason: "Expansion ambition is ahead of a gated market-entry thesis.",
+      eval: function (input) {
+        var fired = input.growthAmbition === "expand";
+        return {
+          fired: fired,
+          evidence: "Growth ambition " + dash(input.growthAmbition) + ". Fires on expand."
+        };
+      }
+    }
+  ];
+
+  var BRANCH_META = [
+    {
+      id: "quantitative",
+      label: "Quantitative",
+      question: "Vital signs and operating metrics"
+    },
+    {
+      id: "qualitative",
+      label: "Qualitative",
+      question: "Process, handoff, and cadence"
+    },
+    {
+      id: "strategic",
+      label: "Strategic",
+      question: "Growth posture and expansion intent"
+    }
+  ];
+
+  var ENGINE_META = [
+    { id: "growth", label: "Growth", firm: "Bain" },
+    { id: "expansion", label: "Expansion", firm: "Deloitte" },
+    { id: "alignment", label: "Alignment", firm: "McKinsey" }
+  ];
+
   function detect(ctx) {
     var input = ctx.input || {};
     var scoring = ctx.scoring || {};
@@ -37,69 +354,53 @@
       alignment: { reasons: [], domains: [] }
     };
 
-    if (isRY(r.revenue) || Number(input.closeRate) < 30) {
-      fire(map, "growth", "market_share_loss", "Win rate / revenue engine is not carrying share.", "quantitative");
-    }
-    if (Number(input.customerConcentration) >= 40) {
-      fire(map, "growth", "client_churn_concentration", "Account concentration creates retention and mix risk.", "quantitative");
-    }
-    if (isRY(r.margin) || Number(input.margin) < 30) {
-      fire(map, "growth", "pricing_pressure", "Pricing and margin are leaking value.", "quantitative");
-    }
-    if (Number(input.salesCycle) >= 90 || (s.revenue != null && s.revenue < 75)) {
-      fire(map, "growth", "pipeline_stall", "Pipeline velocity is too slow for the growth target.", "quantitative");
-    }
-    if (input.commercialMaturity === "ad_hoc" || input.commercialMaturity === "emerging") {
-      fire(map, "growth", "gtm_immaturity", "Commercial process maturity cannot support a repeatable GTM.", "qualitative");
-    }
-    if (input.growthAmbition === "grow" || input.growthAmbition === "expand") {
-      fire(map, "growth", "market_share_loss", "Growth posture requires a commercial excellence program.", "strategic");
-    }
+    var walk = TREE_TESTS.map(function (node) {
+      var result = node.eval(input, r, s);
+      if (result.fired) {
+        fire(map, node.engine, node.domain, node.reason, node.branch);
+      }
+      return {
+        id: node.id,
+        branch: node.branch,
+        label: node.label,
+        question: node.question,
+        engine: node.engine,
+        domain: node.domain,
+        reason: node.reason,
+        fired: !!result.fired,
+        evidence: result.evidence
+      };
+    });
 
-    var intent = input.expansionIntent || "none";
-    if (intent === "new_office" || intent === "both") {
-      fire(map, "expansion", "new_office", "Client intends a new office / geography.", "strategic");
-    }
-    if (intent === "new_revenue_stream" || intent === "both") {
-      fire(map, "expansion", "new_revenue_stream", "Client intends a new revenue stream or offer.", "strategic");
-    }
-    if (input.growthAmbition === "expand") {
-      fire(map, "expansion", "market_entry", "Expansion ambition is ahead of a gated market-entry thesis.", "strategic");
-    }
-    if (intent !== "none" && intent && (isRY(r.operations) || isRY(r.leadership) || isRY(r.margin))) {
-      fire(map, "expansion", "market_entry", "Expansion is requested while the core engine is still constrained.", "quantitative");
-    }
-
-    if (isRY(r.operations) || Number(input.costToServe) >= 20) {
-      fire(map, "alignment", "rising_costs", "Cost-to-serve and throughput are dragging the P&L.", "quantitative");
-    }
-    if (input.bdOpsTension === "strained" || input.bdOpsTension === "broken") {
-      fire(map, "alignment", "bd_ops_split", "BD and operations are not on one capacity plan.", "qualitative");
-    }
-    if (isRY(r.leadership) || Number(input.leadership) <= 6) {
-      fire(map, "alignment", "leadership_gap", "Leadership cadence cannot convert strategy into weekly execution.", "qualitative");
-    }
-    if (isRY(r.operations) || isRY(r.margin)) {
-      fire(map, "alignment", "execution_drift", "Execution discipline is not protecting delivery or margin.", "quantitative");
-    }
-
+    var anyFired = walk.some(function (n) {
+      return n.fired;
+    });
     var activated = Object.keys(map).filter(function (id) {
       return map[id].reasons.length > 0;
     });
-    if (!activated.length) activated = ["growth"];
+    var defaulted = !activated.length;
+    if (defaulted) activated = ["growth"];
 
     var branches = { quantitative: [], qualitative: [], strategic: [] };
-    activated.forEach(function (id) {
-      map[id].reasons.forEach(function (row) {
-        branches[row.branch].push({
-          engine: id,
-          domain: row.domain,
-          reason: row.reason
-        });
+    walk.forEach(function (row) {
+      if (!row.fired) return;
+      branches[row.branch].push({
+        engine: row.engine,
+        domain: row.domain,
+        reason: row.reason
       });
     });
 
-    return { activated: activated, map: map, branches: branches };
+    return {
+      activated: activated,
+      map: map,
+      branches: branches,
+      walk: walk,
+      defaulted: defaulted,
+      anyFired: anyFired,
+      ratings: r,
+      scores: s
+    };
   }
 
   function mergeInitiatives(engineResults) {
@@ -286,6 +587,8 @@
       posture: results.length > 1 ? "multi_engine" : binding.id,
       activated: detection.activated,
       branches: detection.branches,
+      walk: detection.walk,
+      defaulted: detection.defaulted,
       engines: results,
       initiatives: initiatives,
       roadmap: roadmap,
@@ -304,4 +607,6 @@
   global.ISI = global.ISI || {};
   global.ISI.detectDomains = detect;
   global.ISI.orchestrate = orchestrate;
+  global.ISI.branchMeta = BRANCH_META;
+  global.ISI.engineMeta = ENGINE_META;
 })(typeof window !== "undefined" ? window : this);
