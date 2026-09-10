@@ -19,14 +19,10 @@ export function renderHeader(packet) {
   var h = document.createElement("p");
   h.className = "isi-packet-header__name";
   h.textContent = firm.name;
-  var d = document.createElement("p");
-  d.className = "isi-packet-header__division";
-  d.textContent = firm.division;
   var t = document.createElement("p");
   t.className = "isi-packet-header__tagline";
   t.textContent = firm.tagline;
   names.appendChild(h);
-  names.appendChild(d);
   names.appendChild(t);
   brand.appendChild(names);
 

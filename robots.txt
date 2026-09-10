@@ -1,0 +1,9 @@
+# Crawl hold. Remove Disallow and X-Robots-Tag when routing is verified live.
+User-agent: *
+Disallow: /
+
+User-agent: Googlebot
+Disallow: /
+
+User-agent: Bingbot
+Disallow: /

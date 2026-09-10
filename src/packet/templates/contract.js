@@ -10,9 +10,7 @@ var CLAUSES = [
     body:
       "This Diagnostic Packet is issued by " +
       firm.name +
-      " (" +
-      firm.division +
-      ") to the client leadership team named in the header. It is a confidential advisory deliverable, not a public report."
+      " to the client leadership team named in the header. It is a confidential advisory deliverable, not a public report."
   },
   {
     title: "2. Scope",

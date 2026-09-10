@@ -75,6 +75,7 @@
           document.body.classList.add("isi-diagnostic");
           highlightActiveStep(activeStep);
           updateProgressBar(activeStep);
+          syncIsiChromeOffset();
         })
         .catch(function () {
           tryFetch();
@@ -84,7 +85,21 @@
     tryFetch();
   }
 
+  function syncIsiChromeOffset() {
+    var header = document.querySelector(".isi-header-root");
+    var nav = document.querySelector(".isi-nav-root");
+    var h = header ? Math.ceil(header.getBoundingClientRect().height) : 0;
+    var n = nav ? Math.ceil(nav.getBoundingClientRect().height) : 0;
+    document.documentElement.style.setProperty("--isi-header-height", h + "px");
+    document.documentElement.style.setProperty("--isi-nav-height", n + "px");
+  }
+
+  global.syncIsiChromeOffset = syncIsiChromeOffset;
   global.injectIsiNav = injectIsiNav;
   global.highlightActiveStep = highlightActiveStep;
   global.updateProgressBar = updateProgressBar;
+
+  if (typeof window !== "undefined") {
+    window.addEventListener("resize", syncIsiChromeOffset);
+  }
 })(typeof window !== "undefined" ? window : this);

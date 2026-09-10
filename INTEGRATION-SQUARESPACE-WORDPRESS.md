@@ -3,8 +3,7 @@
 The diagnostic is a **static app** hosted separately (Vercel / Netlify / GitHub Pages / Azure Static Web Apps).  
 Squarespace (isiconsults.com) and WordPress only need a **button or link** that opens the diagnostic entry URL.
 
-**Production entry:** `https://YOUR-DIAGNOSTIC-DOMAIN/`  
-(or `https://YOUR-DIAGNOSTIC-DOMAIN/diagnostic/input.html`)
+**Production entry:** `https://YOUR-DIAGNOSTIC-DOMAIN/diagnostic/input.html`
 
 Replace `YOUR-DIAGNOSTIC-DOMAIN` with your live host after deploy.
 
@@ -17,14 +16,14 @@ Replace `YOUR-DIAGNOSTIC-DOMAIN` with your live host after deploy.
 1. Edit the page (Home, Services, or Diagnostic flagship).
 2. Add a **Button** block.
 3. Label: **Run Diagnostic**
-4. Link: `https://YOUR-DIAGNOSTIC-DOMAIN/`
+4. Link: `https://YOUR-DIAGNOSTIC-DOMAIN/diagnostic/input.html`
 5. Open in: **New tab** (recommended so the marketing site stays open).
 6. Style: primary / filled to match navy brand.
 
 ### Option B — Text link
 
 ```html
-<a href="https://YOUR-DIAGNOSTIC-DOMAIN/" target="_blank" rel="noopener">Run Diagnostic</a>
+<a href="https://YOUR-DIAGNOSTIC-DOMAIN/diagnostic/input.html" target="_blank" rel="noopener">Run Diagnostic</a>
 ```
 
 Paste via a **Code** block if you need custom HTML.
@@ -33,7 +32,7 @@ Paste via a **Code** block if you need custom HTML.
 
 ```html
 <a
-  href="https://YOUR-DIAGNOSTIC-DOMAIN/"
+  href="https://YOUR-DIAGNOSTIC-DOMAIN/diagnostic/input.html"
   target="_blank"
   rel="noopener noreferrer"
   style="
@@ -64,13 +63,13 @@ Paste via a **Code** block if you need custom HTML.
 
 1. Add a **Buttons** block.
 2. Text: **Run Diagnostic**
-3. Link: `https://YOUR-DIAGNOSTIC-DOMAIN/`
+3. Link: `https://YOUR-DIAGNOSTIC-DOMAIN/diagnostic/input.html`
 4. Open in new tab.
 
 ### Option B — Custom HTML block
 
 ```html
-<a class="isi-run-diagnostic" href="https://YOUR-DIAGNOSTIC-DOMAIN/" target="_blank" rel="noopener noreferrer">
+<a class="isi-run-diagnostic" href="https://YOUR-DIAGNOSTIC-DOMAIN/diagnostic/input.html" target="_blank" rel="noopener noreferrer">
   Run Diagnostic
 </a>
 ```

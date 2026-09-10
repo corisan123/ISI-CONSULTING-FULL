@@ -28,6 +28,9 @@
           root.className = "isi-header-root";
           root.innerHTML = html;
           document.body.prepend(root);
+          if (typeof global.syncIsiChromeOffset === "function") {
+            global.syncIsiChromeOffset();
+          }
         })
         .catch(function () {
           tryFetch();

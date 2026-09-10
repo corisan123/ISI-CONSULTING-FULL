@@ -11,7 +11,7 @@ cd /path/to/ISI-CONSULTING-FULL
 python3 -m http.server 8080
 ```
 
-Open `http://localhost:8080/` (diagnostic input) or `http://localhost:8080/website/` (marketing).
+Open `http://localhost:8080/website/index.html` (marketing) or `http://localhost:8080/diagnostic/input.html` (diagnostic).
 
 Walk the diagnostic: Input → Scoring → **Run Multi-Engine Tree** → Priorities → Roadmap → Dashboard → Summary.
 
@@ -19,7 +19,9 @@ Walk the diagnostic: Input → Scoring → **Run Multi-Engine Tree** → Priorit
 
 ```
 /
-├── index.html                 Diagnostic input (production entry)
+├── index.html                 Redirects `/` to `/website/index.html`
+├── 404.html                   Real not-found page (not the diagnostic)
+├── _redirects / _headers      Cloudflare routing + noindex
 ├── diagnostic/                Flow pages (input through summary)
 ├── src/
 │   ├── engines/               Growth, Expansion, Alignment + orchestrator
@@ -57,7 +59,7 @@ Details: **[ARCHITECTURE.md](ARCHITECTURE.md)**.
 
 | Step | Page | Script |
 |------|------|--------|
-| Input | `/` and `/diagnostic/input.html` | `src/diagnostic-input.js` |
+| Input | `/diagnostic/input.html` | `src/diagnostic-input.js` |
 | Scoring | `/diagnostic/scoring.html` | `src/scoring.js` |
 | Decision tree (control) | `/diagnostic/decisionTree.html` | `src/engines/*` + `src/decisionTree.js` |
 | Priorities | `/diagnostic/prioritization.html` | merged list from the tree |

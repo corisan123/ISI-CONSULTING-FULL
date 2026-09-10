@@ -1,0 +1,11 @@
+# Cloudflare Pages / Netlify headers.
+# Site is not ready for indexing. Applies to the production hostname and
+# every *.pages.dev preview so two live copies cannot both be crawled.
+
+/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Content-Type-Options: nosniff
+
+https://*.pages.dev/*
+  X-Robots-Tag: noindex, nofollow, noarchive

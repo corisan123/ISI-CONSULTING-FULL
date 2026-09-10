@@ -30,7 +30,7 @@ function mount() {
   region.body.appendChild(
     Card({
       title: "In-browser only",
-      body: "Values stay in sessionStorage on this device until you run scoring."
+      body: "Your entries stay on this device. ISI Consulting does not collect them from this page."
     })
   );
   layout.placeholders.appendChild(region);

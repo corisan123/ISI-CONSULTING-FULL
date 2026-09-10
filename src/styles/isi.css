@@ -48,6 +48,12 @@
   --isi-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   --isi-max: 1120px;
   --isi-font: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --isi-header-height: 4.75rem;
+  --isi-nav-height: 4.5rem;
+}
+
+html {
+  scroll-padding-top: calc(var(--isi-header-height) + var(--isi-nav-height));
 }
 
 /* -------------------------------------------------------------------------- */
@@ -73,6 +79,7 @@ body.isi-diagnostic {
   width: min(100% - 2.5rem, var(--isi-max));
   margin-inline: auto;
   padding: var(--isi-page-pad) 0;
+  scroll-margin-top: calc(var(--isi-header-height) + var(--isi-nav-height));
 }
 
 .isi-page > h1,
@@ -137,6 +144,9 @@ body.isi-diagnostic {
 /* -------------------------------------------------------------------------- */
 .isi-header-root {
   width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 210;
 }
 
 .isi-header {
@@ -625,7 +635,7 @@ body.isi-diagnostic {
 /* -------------------------------------------------------------------------- */
 .isi-nav-root {
   position: sticky;
-  top: 0;
+  top: var(--isi-header-height);
   z-index: 200;
 }
 

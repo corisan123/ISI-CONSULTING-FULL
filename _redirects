@@ -1,0 +1,35 @@
+# Cloudflare Pages redirects. Publish directory = repository root.
+# Do not add an SPA fallback. Those two rules send unknown URLs to the diagnostic.
+# NEVER:  /*    /index.html   200
+# NEVER:  /*    /diagnostic/input.html   200
+#
+# Cloudflare already 308s foo.html → /foo (pretty URLs). Do not reverse that
+# or the two redirects loop. Destinations below are real files; CF may then
+# strip .html.
+
+# Public homepage (does not depend on renaming root index.html).
+/                 /website/index.html   302
+/index.html       /website/index.html   302
+/home             /website/index.html   302
+/home/            /website/index.html   302
+
+# URLs visitors type at the domain root → files that actually exist under /website/.
+/about            /website/about.html   301
+/about/           /website/about.html   301
+/philosophy       /website/philosophy.html   301
+/philosophy/      /website/philosophy.html   301
+/services         /website/services/index.html   301
+/services/        /website/services/index.html   301
+/contact          /website/contact.html   301
+/contact/         /website/contact.html   301
+/schedule         /website/schedule.html   301
+/schedule/        /website/schedule.html   301
+/growth-diagnostic-guide   /website/growth-diagnostic-guide.html   301
+/growth-diagnostic-guide/  /website/growth-diagnostic-guide.html   301
+
+# Diagnostic entry. Scoring and later steps keep their own files.
+/diagnostic       /diagnostic/input.html   302
+/diagnostic/      /diagnostic/input.html   302
+
+# Unmatched paths → real 404, not the diagnostic form.
+/*                /404.html   404

@@ -1,5 +1,6 @@
 /* ISI Consulting — consulting-grade site styles */
 :root {
+  --site-header-height: 5.5rem;
   --navy: #0b1f3a;
   --navy-deep: #071528;
   --navy-mid: #14305a;
@@ -19,7 +20,10 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--site-header-height);
+}
 body {
   margin: 0;
   font-family: var(--font);
@@ -169,6 +173,15 @@ a:hover { color: var(--accent); }
 .section-dark h3 { color: #fff; }
 .section-dark p,
 .section-dark li { color: rgba(255,255,255,0.85); }
+
+.hero,
+.page-header,
+.card-grid,
+.flow-steps,
+.card,
+.flow-step {
+  scroll-margin-top: var(--site-header-height);
+}
 
 .page-header {
   background: var(--navy);
