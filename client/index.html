@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Engagement logic | ISI Consulting</title>
+  <link rel="stylesheet" href="/internal/css/engagement.css">
+</head>
+<body class="eng client-view">
+  <header class="eng-top">
+    <a class="eng-brand" href="/website/index.html">
+      <div class="eng-mark">ISI</div>
+      <div>
+        <h1>ISI <span>Consulting</span></h1>
+        <p class="eng-sub" id="subline">How we reached this recommendation</p>
+      </div>
+    </a>
+    <div class="eng-top-links practitioner-only">
+      <a href="/internal/diagnostics/diligence.html">Back to bench</a>
+    </div>
+  </header>
+
+  <main class="eng-main">
+    <section class="eng-card">
+      <p class="eng-desc" id="companyLine">Placeholder numbers until this file is replaced in consultation.</p>
+      <div class="verdict" id="verdictBox">
+        <div class="val" id="verdict">—</div>
+        <div class="lbl" id="headline">Run financial due diligence first. This page shows the same logic the client sees.</div>
+      </div>
+    </section>
+
+    <section class="eng-card">
+      <h2>The questions we asked, in order</h2>
+      <p class="eng-desc">Each step is a financial test. You can see the formula, the number, and why the branch was taken. Nothing here is a black box.</p>
+      <div class="tree-path" id="tree"></div>
+    </section>
+
+    <section class="eng-card">
+      <h2>Proof behind the path</h2>
+      <p class="formula">Liquidity, coverage, cash cycle, quality of earnings, and NPV are computed — not estimated from a checklist.</p>
+      <div class="kpi-row" id="kpis"></div>
+      <div id="tests" style="margin-top:1rem"></div>
+    </section>
+
+    <section class="eng-card">
+      <h2>What this means for the work</h2>
+      <p class="eng-desc" id="meaning">If diligence has not been run in this browser session, open the practice bench, choose a situation, and run the engine. Then return here.</p>
+    </section>
+  </main>
+
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/diligence.js"></script>
+  <script>
+    (function () {
+      var data = ISI.store.read();
+      var row = data.results && data.results.diligence;
+      var res = row && row.payload;
+      if (!res) {
+        document.getElementById("meaning").textContent =
+          "No diligence run is stored in this session. The consultant runs the engine first; this page only presents the logic.";
+        return;
+      }
+      var company = (data.engagement && data.engagement.company) || "This company";
+      document.getElementById("companyLine").textContent =
+        company + " · " + res.situation.label + " · numbers are placeholders until replaced in consultation.";
+      document.getElementById("subline").textContent = res.situation.label;
+      document.getElementById("verdict").textContent = res.tree.verdict;
+      document.getElementById("headline").textContent = res.headline;
+
+      var tree = document.getElementById("tree");
+      res.tree.nodes.forEach(function (n, i) {
+        var el = document.createElement("div");
+        el.className = "tree-node " + n.kind;
+        el.innerHTML = "<div class='kind'>Step " + (i + 1) + " · " + n.result + "</div><h3>" + n.label + "</h3><p>" + n.because + "</p>";
+        tree.appendChild(el);
+      });
+
+      var kpis = document.getElementById("kpis");
+      [
+        ["Current ratio", ISI.diligence.fmtNum(res.metrics.current) + "x"],
+        ["DSCR", ISI.diligence.fmtNum(res.metrics.dscr) + "x"],
+        ["Cash cycle", ISI.diligence.fmtNum(res.metrics.ccc, 0) + " days"],
+        ["QoE EBITDA", ISI.diligence.fmtMoney(res.metrics.qoe)],
+        ["Free cash flow", ISI.diligence.fmtMoney(res.metrics.fcf)],
+        ["NPV", ISI.diligence.fmtMoney(res.metrics.npv)]
+      ].forEach(function (p) {
+        var d = document.createElement("div");
+        d.className = "kpi";
+        d.innerHTML = "<div class='val'>" + p[1] + "</div><div class='lbl'>" + p[0] + "</div>";
+        kpis.appendChild(d);
+      });
+
+      var tests = document.getElementById("tests");
+      res.tests.forEach(function (t) {
+        var d = document.createElement("div");
+        d.className = "test";
+        d.innerHTML = "<div class='q'>" + t.label + " <span class='badge " + t.rating + "'>" + t.rating + "</span></div>" +
+          "<div class='meta'><span>" + t.formula + "</span><strong>" + t.display + "</strong></div>" +
+          "<p class='because'>" + t.because + "</p>";
+        tests.appendChild(d);
+      });
+
+      var meaning = {
+        GO: "Gates cleared. The next conversation is scope: which diagnostic lens, which interventions, and what the 90-day plan protects.",
+        CAUTION: "We can continue, but only with the failed tests written into the statement of work. Those are the workstreams — not optional extras.",
+        STOP: "Stated numbers do not support the thesis. Diligence says recast cash, debt, or the deal before ISI spends time treating this as a growth file."
+      };
+      document.getElementById("meaning").textContent = meaning[res.tree.verdict] || res.clientNarrative;
+      var bus = ISI.store.getBus() || {};
+      if (bus.packet && bus.packet.narrative) {
+        document.getElementById("meaning").textContent = bus.packet.narrative;
+      }
+      if (bus.tree && bus.tree.best) {
+        var extra = document.createElement("div");
+        extra.className = "test";
+        extra.innerHTML = "<div class='q'>Quantified path: " + bus.tree.best.label +
+          "</div><p class='because'>EV(bid) uses win probability, gross profit, bid cost, and develop cost. Sensitivity and the decision matrix sit on this same tree.</p>";
+        document.getElementById("tests").appendChild(extra);
+      }
+    })();
+  </script>
+</body>
+</html>

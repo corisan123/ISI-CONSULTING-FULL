@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Sensitivity Analysis | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/engagement.css">
+  <link rel="stylesheet" href="/internal/css/practice.css">
+  <style>
+    body.eng .chart { height: 320px; background: #0a1528; border: 1px solid #2a3f5a; border-radius: 8px; width: 100%; }
+    .proof-table td, .proof-table th { font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body class="eng">
+  <header class="eng-top">
+    <a class="eng-brand" href="/internal/pipeline.html">
+      <div class="eng-mark">ISI</div>
+      <div>
+        <h1>Sensitivity <span>analysis</span></h1>
+        <p class="eng-sub">Same quantified bid tree. Tornado, then two-way grid on bid cost × develop cost. Reads the engagement bus.</p>
+      </div>
+    </a>
+    <div class="eng-top-links">
+      <a href="/internal/pipeline.html">Chain</a>
+      <a href="/internal/tools/matrix.html">Decision matrix</a>
+      <a href="/internal/tools/trees.html">Tree studio</a>
+    </div>
+  </header>
+
+  <main class="eng-main">
+    <section class="eng-card">
+      <h2>Tree inputs (from the chain, editable)</h2>
+      <p class="formula">EV(bid) = −BidCost + p(win) × (GP − DevelopCost) &nbsp;·&nbsp; EV(no-bid) = 0</p>
+      <div class="input-grid" id="inputs"></div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-gold" id="recompute">Recompute sensitivity</button>
+        <a class="btn btn-ghost" href="/internal/pipeline.html">Run full chain first</a>
+      </div>
+    </section>
+
+    <section class="eng-card">
+      <h2>One-way (tornado)</h2>
+      <p class="eng-desc">Each lever moved independently. The longest bar is the input that can break the recommendation.</p>
+      <canvas id="tornado" class="chart"></canvas>
+      <div id="tornadoNote" class="eng-desc"></div>
+    </section>
+
+    <section class="eng-card" id="twoway">
+      <h2>Two-way sensitivity — expected value of the bid tree</h2>
+      <p class="eng-desc">Rows: cost of placing the bid. Columns: cost of developing / executing. Cells: % change in EV from the base case — the same proof a PrecisionTree two-way graph produces, wired to this engagement.</p>
+      <canvas id="heat" class="chart" style="height:380px"></canvas>
+      <div style="overflow:auto;margin-top:1rem">
+        <table class="proof-table" id="grid"></table>
+      </div>
+    </section>
+  </main>
+
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/charts.js"></script>
+  <script src="/internal/js/trees.js"></script>
+  <script>
+    var FIELDS = [
+      { id: "pWin", label: "P(win)", step: 0.01 },
+      { id: "gp", label: "Gross profit if won ($)" },
+      { id: "bidCost", label: "Cost of placing bid ($)" },
+      { id: "developCost", label: "Cost of developing / executing ($)" }
+    ];
+
+    function seed() {
+      var bus = ISI.store.getBus() || {};
+      var t = bus.tree || { pWin: 0.24, gp: 220000, bidCost: 18000, developCost: 140000 };
+      return { pWin: t.pWin, gp: t.gp, bidCost: t.bidCost, developCost: t.developCost };
+    }
+
+    function paintInputs(vals) {
+      var g = document.getElementById("inputs");
+      g.innerHTML = FIELDS.map(function (f) {
+        var v = vals[f.id];
+        if (f.id === "pWin") v = Number(v).toFixed(2);
+        return "<div class='input-group'><label for='" + f.id + "'>" + f.label + "</label>" +
+          "<input id='" + f.id + "' type='number' step='" + (f.step || "any") + "' value='" + v + "'></div>";
+      }).join("");
+    }
+
+    function read() {
+      return {
+        pWin: Number(document.getElementById("pWin").value),
+        gp: Number(document.getElementById("gp").value),
+        bidCost: Number(document.getElementById("bidCost").value),
+        developCost: Number(document.getElementById("developCost").value)
+      };
+    }
+
+    function money(n) {
+      if (!isFinite(n)) return "—";
+      var s = n < 0 ? "-" : "";
+      return s + "$" + Math.abs(Math.round(n)).toLocaleString("en-US");
+    }
+
+    function run() {
+      var inp = read();
+      var tree = ISI.trees.bidTree(inp.pWin, inp.gp, inp.bidCost, inp.developCost);
+      var tornado = ISI.trees.oneWay(inp, [
+        { key: "pWin", label: "Win probability", pct: 0.25 },
+        { key: "gp", label: "Gross profit if won", pct: 0.2 },
+        { key: "bidCost", label: "Cost of placing bid", pct: 0.35 },
+        { key: "developCost", label: "Cost of developing", pct: 0.2 }
+      ], function (x) { return ISI.trees.bidTree(x.pWin, x.gp, x.bidCost, x.developCost).evBid; });
+      ISI.charts.tornado(document.getElementById("tornado"), tornado);
+      document.getElementById("tornadoNote").textContent =
+        "Base EV(bid) " + money(tree.evBid) + " vs no-bid 0. Recommendation: " + tree.best.label + ".";
+
+      var xs = [];
+      var ys = [];
+      for (var i = 0; i < 8; i++) xs.push(Math.round(inp.developCost * (0.85 + i * 0.05)));
+      for (var j = 0; j < 8; j++) ys.push(Math.round(inp.bidCost * (0.4 + j * 0.2)));
+      var grid = ISI.trees.twoWay(xs, ys, function (dev, bid) {
+        return ISI.trees.bidTree(inp.pWin, inp.gp, bid, dev).evBid;
+      });
+      ISI.charts.heatmap(
+        document.getElementById("heat"),
+        grid.pct,
+        ys.map(function (v) { return "Bid " + money(v); }),
+        xs.map(function (v) { return money(v); }),
+        { showValues: true }
+      );
+      var tbl = "<thead><tr><th>Bid cost \\ Develop</th>" + xs.map(function (v) { return "<th>" + money(v) + "</th>"; }).join("") + "</tr></thead><tbody>";
+      grid.pct.forEach(function (row, ri) {
+        tbl += "<tr><td>" + money(ys[ri]) + "</td>" + row.map(function (v) {
+          return "<td>" + (v >= 0 ? "+" : "") + v.toFixed(1) + "%</td>";
+        }).join("") + "</tr>";
+      });
+      tbl += "</tbody>";
+      document.getElementById("grid").innerHTML = tbl;
+      ISI.store.setBus({ tree: tree, tornado: { baseEV: tree.evBid, rows: tornado }, twoWay: grid });
+      ISI.store.saveResult("sensitivity-2way", grid);
+    }
+
+    paintInputs(seed());
+    document.getElementById("recompute").addEventListener("click", run);
+    document.getElementById("inputs").addEventListener("change", run);
+    run();
+  </script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Engagement Results | ISI Consulting</title>
+  <link rel="stylesheet" href="/internal/css/engagement.css">
+</head>
+<body class="eng">
+  <header class="eng-top">
+    <a class="eng-brand" href="/internal/index.html">
+      <div class="eng-mark">ISI</div>
+      <div>
+        <h1>Results <span>dashboard</span></h1>
+        <p class="eng-sub">Proven causes, killed stories, financial gates, and the work that follows</p>
+      </div>
+    </a>
+    <div class="eng-top-links">
+      <a href="/internal/diagnostics/rootcause.html">Diagnosis</a>
+      <a href="/internal/diagnostics/diligence.html">Diligence</a>
+      <a href="/client/index.html">Client view</a>
+    </div>
+  </header>
+
+  <main class="eng-main">
+    <section class="eng-card">
+      <h2 id="company">Engagement file</h2>
+      <p class="eng-desc" id="fileLine">Run structured diagnosis and due diligence in this browser session. This board only reports what those engines proved.</p>
+      <div class="kpi-row" id="kpis"></div>
+    </section>
+
+    <section class="eng-card">
+      <h2>What they said vs what survived</h2>
+      <p class="eng-desc">The left column is the complaint. The right column is the cause the tests could defend.</p>
+      <div id="compare"></div>
+    </section>
+
+    <section class="eng-card">
+      <h2>Financial gates</h2>
+      <p class="formula">Due diligence is first whenever money is involved. A GO here does not replace root-cause work; a STOP pauses the growth thesis.</p>
+      <div id="dd"></div>
+    </section>
+
+    <section class="eng-card">
+      <h2>Interventions that may fire</h2>
+      <p class="eng-desc">Modules activate from intake gaps, not from the client’s preferred story.</p>
+      <div id="mods"></div>
+    </section>
+
+    <section class="eng-card">
+      <h2>Sequence of work</h2>
+      <div class="tree-path" id="seq"></div>
+      <div class="btn-row">
+        <a class="btn btn-gold" href="/client/index.html">Present logic to the client</a>
+        <a class="btn btn-ghost" href="/internal/tools/roadmap.html">Roadmap studio</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/diligence.js"></script>
+  <script src="/internal/js/rootcause.js"></script>
+  <script>
+    (function () {
+      var data = ISI.store.read();
+      var rc = data.results.rootcause && data.results.rootcause.payload;
+      var dd = data.results.diligence && data.results.diligence.payload;
+      var iv = data.results.interventions && data.results.interventions.payload;
+      var company = (rc && rc.company) || data.engagement.company;
+      document.getElementById("company").textContent = company;
+      document.getElementById("fileLine").textContent = rc
+        ? rc.headline
+        : "No diagnosis stored yet. Open Structured Diagnosis, test competing causes, then return.";
+
+      var kpis = document.getElementById("kpis");
+      function kpi(label, val, cls) {
+        var d = document.createElement("div");
+        d.className = "kpi" + (cls ? " " + cls : "");
+        d.innerHTML = "<div class='val'>" + val + "</div><div class='lbl'>" + label + "</div>";
+        kpis.appendChild(d);
+      }
+      kpi("Proven causes", rc ? String(rc.keep.length) : "—", rc && rc.keep.length ? "go" : "");
+      kpi("Killed stories", rc ? String(rc.killed.length) : "—");
+      kpi("Diligence", dd ? dd.tree.verdict : "not run", dd ? (dd.tree.verdict === "GO" ? "go" : dd.tree.verdict === "STOP" ? "stop" : "caution") : "");
+      kpi("Interventions on", iv && iv.active ? String(iv.active.length) : "—");
+
+      var compare = document.getElementById("compare");
+      if (rc) {
+        var html = "";
+        rc.stated.forEach(function (s) {
+          html += '<div class="test"><div class="q">Symptom: ' + s.label + "</div><p class='because'>" + s.whyNotCause + "</p></div>";
+        });
+        rc.keep.forEach(function (x) {
+          html += '<div class="test"><div class="q">Root cause: ' + x.label +
+            ' <span class="badge Green">KEEP ' + x.score + "/" + x.of + "</span></div>" +
+            "<p class='because'>Evidence: " + x.fired.join("; ") + "</p></div>";
+        });
+        compare.innerHTML = html;
+      } else {
+        compare.innerHTML = "<p class='eng-desc'>Diagnosis has not been run in this session.</p>";
+      }
+
+      var ddBox = document.getElementById("dd");
+      if (dd) {
+        ddBox.innerHTML = '<div class="verdict"><div class="val">' + dd.tree.verdict + '</div><div class="lbl">' + dd.headline + "</div></div>" +
+          '<div class="kpi-row" style="margin-top:1rem">' +
+          [["Current", ISI.diligence.fmtNum(dd.metrics.current) + "x"],
+           ["DSCR", ISI.diligence.fmtNum(dd.metrics.dscr) + "x"],
+           ["CCC", ISI.diligence.fmtNum(dd.metrics.ccc, 0) + " d"],
+           ["NPV", ISI.diligence.fmtMoney(dd.metrics.npv)]].map(function (p) {
+            return "<div class='kpi'><div class='val'>" + p[1] + "</div><div class='lbl'>" + p[0] + "</div></div>";
+          }).join("") + "</div>";
+      } else {
+        ddBox.innerHTML = "<p class='eng-desc'>Due diligence has not been run. If this file has a financial component, run it before you present a growth plan.</p>";
+      }
+
+      var mods = document.getElementById("mods");
+      if (iv && iv.active && iv.active.length) {
+        mods.innerHTML = "<p>Active module IDs: <strong>" + iv.active.join(", ") + "</strong>. Open Intervention activation for names and tests.</p>";
+      } else {
+        mods.innerHTML = "<p class='eng-desc'>No intervention run stored. The activation page reads the public intake and fires only proven gaps.</p>";
+      }
+
+      var seq = document.getElementById("seq");
+      var bus = ISI.store.getBus() || {};
+      var steps;
+      if (bus.chain && bus.chain.length) {
+        steps = bus.chain.map(function (s) { return { t: s.label, d: s.headline + " — " + (s.detail || ""); }; });
+      } else {
+        steps = [
+          { t: "Discovery", d: "Intake captures facts and the story they believe. The story is not accepted." },
+          { t: "Due diligence", d: dd ? ("Verdict " + dd.tree.verdict + ". Hard gates on liquidity and debt service.") : "Not run — required if cash, debt, or investment is in play." },
+          { t: "Structured diagnosis", d: rc ? rc.headline : "Not run — competing causes have not been tested." },
+          { t: "Quantified tree / sensitivity / matrix", d: bus.tree ? ("Best path " + bus.tree.best.label) : "Run the wired chain to prove the decision." },
+          { t: "Interventions", d: "Only modules that the intake and diagnosis both support." },
+          { t: "Roadmap", d: "Sequence the surviving causes. Do not build a plan around the original complaint." }
+        ];
+      }
+      seq.innerHTML = steps.map(function (s, i) {
+        return "<div class='tree-node decision'><div class='kind'>Step " + (i + 1) + "</div><h3>" + s.t + "</h3><p>" + s.d + "</p></div>";
+      }).join("");
+    })();
+  </script>
+</body>
+</html>

@@ -27,10 +27,18 @@
 /schedule/        /website/schedule.html   301
 /growth-diagnostic-guide   /website/growth-diagnostic-guide.html   301
 /growth-diagnostic-guide/  /website/growth-diagnostic-guide.html   301
+/problems         /website/problems.html   301
+/problems/        /website/problems.html   301
+/faq              /website/faq.html   301
+/faq/             /website/faq.html   301
+/start            /website/start.html   301
+/start/           /website/start.html   301
 
 # Diagnostic entry. Scoring and later steps keep their own files.
 /diagnostic       /diagnostic/input.html   302
 /diagnostic/      /diagnostic/input.html   302
+
+# Practitioner tools exist as files under /internal/. Do not advertise. No /practice alias.
 
 # Unmatched paths → real 404, not the diagnostic form.
 /*                /404.html   404

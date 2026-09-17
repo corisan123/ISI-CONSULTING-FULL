@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Financial Engine | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <main class="pr-wrap">
+    <p class="pr-kicker">Quantitative kernel · consultation placeholders</p>
+    <h1>Financial engine</h1>
+    <p class="lede">Working NPV, PV, IRR, MIRR, CAPEX present value, WACC, ROI, payback, and a tornado on discount rate and year-1 cash flow. Prefills from the Growth diagnostic when those numbers exist.</p>
+    <p class="formula">NPV = Σ<sub>t=0</sub><sup>n</sup> CF<sub>t</sub> / (1+r)<sup>t</sup> &nbsp;|&nbsp; PV = FV / (1+r)<sup>n</sup> &nbsp;|&nbsp; IRR: r where NPV = 0</p>
+
+    <form id="finForm" class="pr-panel">
+      <h2>Investment case</h2>
+      <div class="pr-form-grid">
+        <div><label for="investment">Initial investment / CAPEX ($)</label><input id="investment" type="number" value="750000"></div>
+        <div><label for="rate">Discount rate / WACC (%)</label><input id="rate" type="number" step="any" value="10"></div>
+        <div><label for="reinvest">Reinvestment rate for MIRR (%)</label><input id="reinvest" type="number" step="any" value="8"></div>
+        <div><label for="financeRate">Finance rate for MIRR (%)</label><input id="financeRate" type="number" step="any" value="9"></div>
+        <div><label for="fv">Future value for single PV ($)</label><input id="fv" type="number" value="1000000"></div>
+        <div><label for="years">Periods (n)</label><input id="years" type="number" value="5"></div>
+        <div><label for="pmt">Annuity payment ($)</label><input id="pmt" type="number" value="180000"></div>
+        <div><label for="equity">Equity ($)</label><input id="equity" type="number" value="5000000"></div>
+        <div><label for="debt">Debt ($)</label><input id="debt" type="number" value="2000000"></div>
+        <div><label for="re">Cost of equity (%)</label><input id="re" type="number" step="any" value="12"></div>
+        <div><label for="rd">Cost of debt (%)</label><input id="rd" type="number" step="any" value="6.5"></div>
+        <div><label for="tax">Tax rate (%)</label><input id="tax" type="number" step="any" value="21"></div>
+        <div><label for="price">Price / unit</label><input id="price" type="number" value="42"></div>
+        <div><label for="vc">Variable cost / unit</label><input id="vc" type="number" value="27"></div>
+        <div><label for="fixed">Fixed cost ($)</label><input id="fixed" type="number" value="480000"></div>
+      </div>
+      <div style="margin-top:0.85rem">
+        <label for="cfs">Incremental cash flows after t0 (comma-separated)</label>
+        <input id="cfs" value="180000, 240000, 310000, 340000, 360000">
+      </div>
+      <div class="pr-actions">
+        <button class="btn btn-gold" type="submit">Calculate</button>
+        <button class="btn btn-ghost" type="button" id="fromDiag">Pull Growth diagnostic revenue</button>
+      </div>
+    </form>
+
+    <div class="pr-metrics" id="metrics"></div>
+    <div class="pr-panel">
+      <h2>Sensitivity — NPV vs discount rate and Year-1 CF (±20%)</h2>
+      <canvas id="tornado" class="chart"></canvas>
+    </div>
+    <div class="pr-panel">
+      <h2>Cash-flow profile</h2>
+      <canvas id="cfChart" class="chart"></canvas>
+      <table class="pr-table" id="cfTable"></table>
+    </div>
+  </main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/charts.js"></script>
+  <script src="/internal/js/shell.js"></script>
+  <script>
+    ISI.shell.render("tools");
+    var m = ISI.math;
+
+    function run(e) {
+      if (e) e.preventDefault();
+      var inv = Number(document.getElementById("investment").value);
+      var rate = Number(document.getElementById("rate").value) / 100;
+      var cf = m.parseCashflows(document.getElementById("cfs").value, inv);
+      var npv = m.npv(rate, cf);
+      var irr = m.irr(cf);
+      var mirr = m.mirr(cf, Number(document.getElementById("financeRate").value) / 100, Number(document.getElementById("reinvest").value) / 100);
+      var pb = m.payback(cf);
+      var dpb = m.discountedPayback(rate, cf);
+      var pi = m.profitabilityIndex(rate, cf);
+      var nper = Number(document.getElementById("years").value);
+      var pv1 = m.pv(Number(document.getElementById("fv").value), rate, nper);
+      var pva = m.pva(Number(document.getElementById("pmt").value), rate, nper);
+      var capexPv = m.capexPv(inv, rate, nper);
+      var wacc = m.wacc(
+        Number(document.getElementById("equity").value),
+        Number(document.getElementById("debt").value),
+        Number(document.getElementById("re").value) / 100,
+        Number(document.getElementById("rd").value) / 100,
+        Number(document.getElementById("tax").value) / 100
+      );
+      var be = m.breakEvenUnits(
+        Number(document.getElementById("fixed").value),
+        Number(document.getElementById("price").value),
+        Number(document.getElementById("vc").value)
+      );
+      var roi = m.roi(m.sum(cf.slice(1)), inv);
+
+      var cards = [
+        ["NPV", ISI.shell.money(npv), npv >= 0],
+        ["IRR", isFinite(irr) ? (irr * 100).toFixed(1) + "%" : "—", irr > rate],
+        ["MIRR", isFinite(mirr) ? (mirr * 100).toFixed(1) + "%" : "—", mirr > rate],
+        ["Payback", isFinite(pb) ? pb.toFixed(2) + " yrs" : "—", pb <= 5],
+        ["Disc. payback", isFinite(dpb) ? dpb.toFixed(2) + " yrs" : "—", true],
+        ["PI", isFinite(pi) ? pi.toFixed(2) : "—", pi >= 1],
+        ["PV (lump sum)", ISI.shell.money(pv1), true],
+        ["PV (annuity)", ISI.shell.money(pva), true],
+        ["CAPEX PV", ISI.shell.money(capexPv), true],
+        ["WACC", isFinite(wacc) ? (wacc * 100).toFixed(2) + "%" : "—", true],
+        ["ROI (undisc.)", isFinite(roi) ? (roi * 100).toFixed(1) + "%" : "—", roi > 0],
+        ["Break-even units", isFinite(be) ? Math.round(be).toLocaleString() : "—", true]
+      ];
+      document.getElementById("metrics").innerHTML = cards.map(function (c) {
+        return '<div class="pr-metric"><div class="lbl">' + c[0] + '</div><div class="val ' + (c[2] ? "" : "neg") + '">' + c[1] + "</div></div>";
+      }).join("");
+
+      var rateHigh = m.npv(rate * 1.2, cf) - npv;
+      var rateLow = m.npv(rate * 0.8, cf) - npv;
+      var cfHigh = cf.slice();
+      var cfLow = cf.slice();
+      cfHigh[1] = cf[1] * 1.2;
+      cfLow[1] = cf[1] * 0.8;
+      ISI.charts.tornado(document.getElementById("tornado"), [
+        { label: "Discount rate ±20%", low: rateHigh, high: rateLow },
+        { label: "Year-1 CF ±20%", low: m.npv(rate, cfLow) - npv, high: m.npv(rate, cfHigh) - npv }
+      ]);
+      ISI.charts.bars(
+        document.getElementById("cfChart"),
+        cf.map(function (_, i) { return "t" + i; }),
+        cf
+      );
+      var html = "<thead><tr><th>t</th><th>Cash flow</th><th>Discount factor</th><th>PV</th><th>Cumulative PV</th></tr></thead><tbody>";
+      var cum = 0;
+      cf.forEach(function (v, t) {
+        var df = 1 / Math.pow(1 + rate, t);
+        var p = v * df;
+        cum += p;
+        html += "<tr><td>" + t + "</td><td>" + ISI.shell.money(v) + "</td><td>" + df.toFixed(4) + "</td><td>" + ISI.shell.money(p) + "</td><td>" + ISI.shell.money(cum) + "</td></tr>";
+      });
+      html += "</tbody>";
+      document.getElementById("cfTable").innerHTML = html;
+
+      ISI.store.saveResult("finance", { npv: npv, irr: irr, payback: pb, cashflows: cf, rate: rate });
+    }
+
+    document.getElementById("finForm").addEventListener("submit", run);
+    document.getElementById("fromDiag").addEventListener("click", function () {
+      var d = ISI.store.readDiagnosticInput();
+      if (!d) return;
+      if (d.revenue) document.getElementById("equity").value = Math.round(Number(d.revenue) * 0.2);
+    });
+    run();
+  </script>
+</body>
+</html>

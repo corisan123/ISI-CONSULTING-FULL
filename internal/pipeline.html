@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Wired Engagement Chain | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/engagement.css">
+</head>
+<body class="eng">
+  <header class="eng-top">
+    <a class="eng-brand" href="/internal/index.html">
+      <div class="eng-mark">ISI</div>
+      <div>
+        <h1>Wired <span>engagement chain</span></h1>
+        <p class="eng-sub">Ten programs. One bus. A run here populates diagnosis, diligence, the tree, sensitivity, Monte Carlo, the matrix, and the packet.</p>
+      </div>
+    </a>
+    <div class="eng-top-links">
+      <a href="/internal/results.html">Results</a>
+      <a href="/internal/tools/sensitivity.html">Sensitivity</a>
+      <a href="/client/index.html">Client view</a>
+    </div>
+  </header>
+
+  <main class="eng-main">
+    <section class="eng-card">
+      <h2>Not siloed tools</h2>
+      <p class="eng-desc">Set the study type first if this is manufacturing, quality, finance, or CAPEX — the chain uses that type for diligence, scenarios, and the packet. Then run. Intake writes diagnosis; diagnosis and diligence write the tree; the tree writes sensitivity and Monte Carlo; those write the matrix and packet.</p>
+      <div class="btn-row">
+        <button type="button" class="btn btn-gold" id="run">Run the ten-program chain</button>
+        <a class="btn btn-ghost" href="/internal/results.html">Open dashboard after a run</a>
+      </div>
+    </section>
+    <section class="eng-card" id="out">
+      <p class="eng-desc">No chain stored yet. Run it — placeholders load if intake is empty.</p>
+    </section>
+  </main>
+
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/diligence.js"></script>
+  <script src="/internal/js/rootcause.js"></script>
+  <script src="/internal/js/trees.js"></script>
+  <script src="/internal/js/pipeline.js"></script>
+  <script>
+    function paint(log) {
+      if (!log || !log.length) return;
+      var html = '<div class="tree-path">';
+      log.forEach(function (s) {
+        html += '<div class="tree-node decision"><div class="kind">Program ' + s.n + ' · <a href="' + s.href + '" style="color:#e8d59a">' + s.label + "</a></div>" +
+          "<h3>" + s.headline + "</h3><p>" + s.purpose + "<br>" + (s.detail || "") + "</p></div>";
+      });
+      html += "</div>";
+      document.getElementById("out").innerHTML = html;
+    }
+    document.getElementById("run").addEventListener("click", function () {
+      var out = ISI.pipeline.runAll();
+      paint(out.log);
+    });
+    var bus = ISI.store.getBus();
+    if (bus && bus.chain) paint(bus.chain);
+  </script>
+</body>
+</html>

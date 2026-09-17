@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Throughput ROI | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <main class="pr-wrap">
+    <p class="pr-kicker">Internal · TOC accounting · not a static form</p>
+    <h1>Throughput ROI model</h1>
+    <p class="lede">ROI here is not “investment in, percent out.” It compares exploiting the constraint versus buying capacity. Throughput (T) is the rate at which the system generates contribution. Inventory (I) and operating expense (OE) sit beside it. Change any lever; T, ROI, and the recommendation recompute immediately.</p>
+    <p class="formula">T = min(Demand, Constraint cap × OEE) × contribution/unit × periods &nbsp;|&nbsp; NP = T − OE &nbsp;|&nbsp; ROI<sub>exploit</sub> = ΔT / cost of exploit</p>
+
+    <div class="pr-panel">
+      <h2>Levers</h2>
+      <div class="pr-form-grid" id="levers">
+        <div><label>Weekly demand (units)</label><input id="demand" type="number" value="1200"></div>
+        <div><label>Constraint capacity (units/week, 100% OEE)</label><input id="cap" type="number" value="1100"></div>
+        <div><label>OEE (%)</label><input id="oee" type="number" value="62"></div>
+        <div><label>Contribution $/unit</label><input id="cu" type="number" value="85"></div>
+        <div><label>Weekly OE (labor, overhead) $</label><input id="oe" type="number" value="48000"></div>
+        <div><label>Inventory $ (WIP + FG)</label><input id="inv" type="number" value="920000"></div>
+        <div><label>Exploit cost (changeover, buffer, training) $</label><input id="exploitCost" type="number" value="85000"></div>
+        <div><label>OEE after exploit (%)</label><input id="oee2" type="number" value="78"></div>
+        <div><label>New cell capex $</label><input id="capex" type="number" value="750000"></div>
+        <div><label>New cell added units/week</label><input id="addCap" type="number" value="400"></div>
+        <div><label>Discount rate (%)</label><input id="rate" type="number" step="any" value="10"></div>
+        <div><label>Horizon (years)</label><input id="years" type="number" value="5"></div>
+      </div>
+    </div>
+
+    <div class="pr-metrics" id="metrics"></div>
+    <div class="pr-panel">
+      <h2>Path comparison</h2>
+      <table class="pr-table" id="tbl"></table>
+      <p id="verdict" class="lede"></p>
+    </div>
+    <div class="pr-panel">
+      <h2>Annual T by path</h2>
+      <canvas id="chart" class="chart"></canvas>
+    </div>
+  </main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/charts.js"></script>
+  <script src="/internal/js/shell.js"></script>
+  <script>
+    ISI.shell.render("tools");
+    function n(id) { return Number(document.getElementById(id).value) || 0; }
+    function throughput(cap, oeePct, demand, cu) {
+      var effective = cap * (oeePct / 100);
+      var shipped = Math.min(demand, effective);
+      return { weeklyUnits: shipped, annualT: shipped * cu * 52, constrained: demand > effective };
+    }
+    function run() {
+      var base = throughput(n("cap"), n("oee"), n("demand"), n("cu"));
+      var exploit = throughput(n("cap"), n("oee2"), n("demand"), n("cu"));
+      var buy = throughput(n("cap") + n("addCap"), n("oee"), n("demand"), n("cu"));
+      var oeY = n("oe") * 52;
+      var npBase = base.annualT - oeY;
+      var npEx = exploit.annualT - oeY;
+      var npBuy = buy.annualT - oeY;
+      var dTEx = exploit.annualT - base.annualT;
+      var dTBuy = buy.annualT - base.annualT;
+      var roiEx = n("exploitCost") ? dTEx / n("exploitCost") : NaN;
+      var roiBuy = n("capex") ? dTBuy / n("capex") : NaN;
+      var cfEx = [-n("exploitCost")];
+      var cfBuy = [-n("capex")];
+      var y;
+      for (y = 1; y <= n("years"); y++) {
+        cfEx.push(dTEx);
+        cfBuy.push(dTBuy);
+      }
+      var rate = n("rate") / 100;
+      var npvEx = ISI.math.npv(rate, cfEx);
+      var npvBuy = ISI.math.npv(rate, cfBuy);
+      var rec = npvEx >= npvBuy && npvEx > 0 ? "Exploit the constraint before buying a cell." :
+        npvBuy > 0 ? "Capex wins on NPV — confirm the constraint has been exploited first." :
+        "Neither path creates value at this WACC. Recheck contribution and demand.";
+
+      document.getElementById("metrics").innerHTML = [
+        ["T now (annual)", ISI.shell.money(base.annualT)],
+        ["NP now (T − OE)", ISI.shell.money(npBase)],
+        ["Inventory I", ISI.shell.money(n("inv"))],
+        ["Constraint binding", base.constrained ? "Yes" : "No"],
+        ["NPV exploit", ISI.shell.money(npvEx)],
+        ["NPV buy cell", ISI.shell.money(npvBuy)]
+      ].map(function (c) {
+        return '<div class="pr-metric"><div class="lbl">' + c[0] + '</div><div class="val">' + c[1] + "</div></div>";
+      }).join("");
+
+      document.getElementById("tbl").innerHTML =
+        "<thead><tr><th>Path</th><th>Annual T</th><th>ΔT vs now</th><th>Simple ROI</th><th>NPV</th></tr></thead><tbody>" +
+        [["Do nothing", base.annualT, 0, "—", 0],
+         ["Exploit constraint", exploit.annualT, dTEx, isFinite(roiEx) ? (roiEx * 100).toFixed(0) + "%" : "—", npvEx],
+         ["Buy machinery", buy.annualT, dTBuy, isFinite(roiBuy) ? (roiBuy * 100).toFixed(0) + "%" : "—", npvBuy]
+        ].map(function (r) {
+          return "<tr><td>" + r[0] + "</td><td>" + ISI.shell.money(r[1]) + "</td><td>" + ISI.shell.money(r[2]) + "</td><td>" + r[3] + "</td><td>" + ISI.shell.money(r[4]) + "</td></tr>";
+        }).join("") + "</tbody>";
+      document.getElementById("verdict").innerHTML = "<strong>" + rec + "</strong>";
+      ISI.charts.bars(document.getElementById("chart"), ["Now", "Exploit", "Buy cell"], [base.annualT, exploit.annualT, buy.annualT]);
+      ISI.store.saveResult("roi-throughput", { npvEx: npvEx, npvBuy: npvBuy, rec: rec, T: base.annualT });
+    }
+    document.querySelectorAll("#levers input").forEach(function (el) {
+      el.addEventListener("input", run);
+    });
+    run();
+  </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Supply Chain Map | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <main class="pr-wrap">
+    <p class="pr-kicker">Flow · inventory · trade shock</p>
+    <h1>Supply chain map</h1>
+    <p class="lede">Supplier → warehouse → distribution → customer. Excess inventory ties cash; a tariff shock on import value hits COGS. Placeholders for a fabricated-products manufacturer.</p>
+    <form id="scForm" class="pr-panel">
+      <div class="pr-form-grid">
+        <div><label for="cogs">Annual COGS ($)</label><input id="cogs" type="number" value="14000000"></div>
+        <div><label for="inv">On-hand inventory ($)</label><input id="inv" type="number" value="4200000"></div>
+        <div><label for="targetDoh">Target days on hand</label><input id="targetDoh" type="number" value="45"></div>
+        <div><label for="fill">Fill rate (%)</label><input id="fill" type="number" value="91"></div>
+        <div><label for="tariffVal">Tariff-sensitive imports ($)</label><input id="tariffVal" type="number" value="2100000"></div>
+        <div><label for="tariffPct">Tariff / duty shock (pts)</label><input id="tariffPct" type="number" step="any" value="12"></div>
+        <div><label for="lead">Lead time (days)</label><input id="lead" type="number" value="52"></div>
+        <div><label for="ss">Safety stock days</label><input id="ss" type="number" value="18"></div>
+      </div>
+      <div class="pr-actions"><button class="btn btn-gold" type="submit">Model flow</button></div>
+    </form>
+    <div class="pr-metrics" id="metrics"></div>
+    <div class="pr-panel">
+      <h2>Network</h2>
+      <div class="pr-grid" id="nodes"></div>
+    </div>
+    <div class="pr-panel"><h2>Inventory position vs target</h2><canvas id="invChart" class="chart"></canvas></div>
+  </main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/charts.js"></script>
+  <script src="/internal/js/shell.js"></script>
+  <script>
+    ISI.shell.render("plan");
+    function run(e) {
+      if (e) e.preventDefault();
+      var cogs = Number(document.getElementById("cogs").value);
+      var inv = Number(document.getElementById("inv").value);
+      var target = Number(document.getElementById("targetDoh").value);
+      var doh = cogs ? (inv / cogs) * 365 : 0;
+      var targetInv = cogs * (target / 365);
+      var trapped = Math.max(0, inv - targetInv);
+      var shock = Number(document.getElementById("tariffVal").value) * (Number(document.getElementById("tariffPct").value) / 100);
+      var fill = Number(document.getElementById("fill").value);
+      document.getElementById("metrics").innerHTML = [
+        ["Days on hand", doh.toFixed(0)],
+        ["Turns", (cogs / inv).toFixed(2)],
+        ["Trapped capital", ISI.shell.money(trapped)],
+        ["Tariff P&L hit", ISI.shell.money(shock)],
+        ["Fill rate", fill + "%"],
+        ["Lead + safety", Number(document.getElementById("lead").value) + Number(document.getElementById("ss").value) + " days"]
+      ].map(function (c) {
+        return '<div class="pr-metric"><div class="lbl">' + c[0] + '</div><div class="val">' + c[1] + "</div></div>";
+      }).join("");
+      var stages = [
+        ["Supplier", "Lead time and single-source risk sit here."],
+        ["Warehouse", "On-hand " + ISI.shell.money(inv) + " vs target " + ISI.shell.money(targetInv)],
+        ["Distribution", "OTIF and fill rate " + fill + "%"],
+        ["Customer", "Service fails if fill drops under ~95% while cutting stock."]
+      ];
+      document.getElementById("nodes").innerHTML = stages.map(function (s) {
+        return '<div class="pr-card"><h3>' + s[0] + "</h3><p>" + s[1] + "</p></div>";
+      }).join("");
+      ISI.charts.bars(document.getElementById("invChart"), ["On-hand", "Target", "Trapped"], [inv, targetInv, trapped]);
+      ISI.store.saveResult("supply-chain", { doh: doh, trapped: trapped, shock: shock });
+    }
+    document.getElementById("scForm").addEventListener("submit", run);
+    run();
+  </script>
+</body>
+</html>

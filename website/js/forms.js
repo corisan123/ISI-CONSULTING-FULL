@@ -63,6 +63,70 @@
     }
   }
 
+  function draftKey(form) {
+    return "isi_draft_" + (form.id || location.pathname);
+  }
+
+  function serializeLive(form) {
+    var data = {};
+    form.querySelectorAll("input, select, textarea").forEach(function (el) {
+      if (!el.name && !el.id) return;
+      var key = el.name || el.id;
+      if (el.type === "checkbox" && el.name === "statedSymptoms") return;
+      if (el.type === "checkbox") data[key] = el.checked;
+      else if (el.type === "radio") {
+        if (el.checked) data[key] = el.value;
+      } else data[key] = el.value;
+    });
+    var symptoms = [];
+    form.querySelectorAll("input[name='statedSymptoms']:checked").forEach(function (el) {
+      symptoms.push(el.value);
+    });
+    if (form.querySelector("input[name='statedSymptoms']")) data.statedSymptoms = symptoms.join(",");
+    return data;
+  }
+
+  function hydrateForm(form, data) {
+    if (!data || !form) return;
+    form.querySelectorAll("input, select, textarea").forEach(function (el) {
+      var key = el.name || el.id;
+      if (el.type === "checkbox" && el.name === "statedSymptoms") {
+        el.checked = ("," + (data.statedSymptoms || "") + ",").indexOf("," + el.value + ",") >= 0;
+        return;
+      }
+      if (data[key] == null || data[key] === "") return;
+      if (el.type === "checkbox") el.checked = !!data[key];
+      else if (el.type === "radio") el.checked = el.value === data[key];
+      else el.value = data[key];
+    });
+  }
+
+  function bindLiveForm(form) {
+    if (!form) return;
+    var key = draftKey(form);
+    var restoreKey = form.getAttribute("data-restore-key");
+    function save() {
+      store(key, serializeLive(form));
+    }
+    function restore() {
+      try {
+        var raw = sessionStorage.getItem(key);
+        if (raw) {
+          hydrateForm(form, JSON.parse(raw));
+          return;
+        }
+        if (restoreKey) {
+          var submitted = sessionStorage.getItem(restoreKey);
+          if (submitted) hydrateForm(form, JSON.parse(submitted));
+        }
+      } catch (err) {}
+    }
+    restore();
+    form.addEventListener("input", save);
+    form.addEventListener("change", save);
+    window.addEventListener("pageshow", restore);
+  }
+
   function maybeNavigate(form) {
     if (!form) return;
     var next = form.getAttribute("data-next");
@@ -85,13 +149,19 @@
   }
 
   /**
-   * Client Intake — companyName, contactName, email, phone, industry, challenge
+   * Client Intake — nine-section construction / trades profile.
+   * Serializes every named control; required IDs must be present.
    */
   function submitClientIntake() {
     var form = document.getElementById("clientIntakeForm");
     clearErrors(form);
 
-    var required = ["companyName", "contactName", "email", "phone", "industry", "challenge"];
+    var required = [];
+    if (form) {
+      form.querySelectorAll("[required]").forEach(function (el) {
+        if (el.id) required.push(el.id);
+      });
+    }
     var ok = requireFields(required);
     var email = val("email");
     if (email && !validateEmail(email)) {
@@ -100,21 +170,43 @@
     }
     if (!ok) return false;
 
-    var data = {
-      companyName: val("companyName"),
-      contactName: val("contactName"),
-      email: email,
-      phone: val("phone"),
-      industry: val("industry"),
-      challenge: val("challenge"),
-      submittedAt: new Date().toISOString()
-    };
+    var data = { submittedAt: new Date().toISOString() };
+    if (form) {
+      form.querySelectorAll("input, select, textarea").forEach(function (el) {
+        if (!el.name) return;
+        if (el.type === "checkbox") return;
+        data[el.name] = String(el.value || "").trim();
+      });
+      var symptoms = [];
+      form.querySelectorAll("input[name='statedSymptoms']:checked").forEach(function (el) {
+        symptoms.push(el.value);
+      });
+      if (symptoms.length) data.statedSymptoms = symptoms.join(",");
+    }
+    data.companyName = data.companyName || val("companyName");
+    data.industry = data.trade || data.industry || "";
+    data.constraintFamily = data.constraintFamily || "growth";
+    data.challenge = data.preventing || data.challenge || "";
 
     console.log("Client Intake submitted:", data);
     store("isi_clientIntake", data);
+    try {
+      var practice = {};
+      var raw = sessionStorage.getItem("isi_practice");
+      if (raw) practice = JSON.parse(raw);
+      practice.engagement = practice.engagement || {};
+      practice.engagement.company = data.companyName;
+      practice.engagement.contact = data.contactName;
+      practice.engagement.email = data.email;
+      practice.engagement.industry = data.trade || data.industry;
+      practice.engagement.constraint = data.constraintFamily;
+      practice.engagement.updatedAt = data.submittedAt;
+      practice.intake = data;
+      sessionStorage.setItem("isi_practice", JSON.stringify(practice));
+    } catch (err) {}
     showSuccess(
       form,
-      "Thank you. Your client intake has been saved locally. Continuing to the Discovery Questionnaire…"
+      "Thank you. Your intake has been saved on this device. Continue to commercial metrics or book a consultation."
     );
     maybeNavigate(form);
     return false;
@@ -274,6 +366,18 @@
     bindFormSubmit("scheduleForm", submitSchedule);
     bindFormSubmit("contactForm", submitContact);
     bindFormSubmit("leadMagnetForm", submitLeadMagnet);
+    [
+      ["clientIntakeForm", "isi_clientIntake"],
+      ["discoveryForm", "isi_discovery"],
+      ["scheduleForm", "isi_schedule"],
+      ["contactForm", "isi_contact"],
+      ["leadMagnetForm", "isi_leadMagnet"]
+    ].forEach(function (pair) {
+      var form = document.getElementById(pair[0]);
+      if (!form) return;
+      form.setAttribute("data-restore-key", pair[1]);
+      bindLiveForm(form);
+    });
   });
 
   global.submitClientIntake = submitClientIntake;

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Study setup | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/engagement.css">
+</head>
+<body class="eng">
+  <header class="eng-top">
+    <a class="eng-brand" href="/internal/index.html">
+      <div class="eng-mark">ISI</div>
+      <div>
+        <h1>Study <span>setup</span></h1>
+        <p class="eng-sub">A study is the project. Type sets workstreams, MECE, methods, and which proof the chain must produce.</p>
+      </div>
+    </a>
+    <div class="eng-top-links">
+      <a href="/internal/pipeline.html">Wired chain</a>
+      <a href="/internal/tools/scenarios.html">Scenarios</a>
+      <a href="/internal/packet.html">1-pager</a>
+    </div>
+  </header>
+
+  <main class="eng-main">
+    <section class="eng-card">
+      <h2>What kind of study is this?</h2>
+      <p class="eng-desc">Manufacturing, quality, finance, and CAPEX are different approaches — not a relabeled template. Pick the type. Swim lanes and owners spawn with it.</p>
+      <div class="sit-grid" id="types"></div>
+    </section>
+    <section class="eng-card">
+      <h2>Workstreams and swim lanes</h2>
+      <p class="eng-desc" id="q"></p>
+      <table class="proof-table" id="ws"></table>
+      <div class="btn-row">
+        <button type="button" class="btn btn-gold" id="save">Save study and open chain</button>
+        <a class="btn btn-ghost" href="/internal/tools/mece.html">MECE tree for this type</a>
+      </div>
+    </section>
+    <section class="eng-card">
+      <h2>Agile 12 — as study-design tests, not posters</h2>
+      <div id="agile"></div>
+    </section>
+  </main>
+
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/studies.js"></script>
+  <script>
+    var typeId = (ISI.store.getBus().study && ISI.store.getBus().study.type) || "commercial";
+    function paint() {
+      var g = document.getElementById("types");
+      g.innerHTML = "";
+      Object.keys(ISI.studies.TYPES).forEach(function (id) {
+        var t = ISI.studies.TYPES[id];
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "sit" + (id === typeId ? " is-on" : "");
+        b.innerHTML = "<strong>" + t.label + "</strong><span>" + t.question + "</span>";
+        b.addEventListener("click", function () { typeId = id; paint(); });
+        g.appendChild(b);
+      });
+      var company = (ISI.store.read().engagement || {}).company;
+      var study = ISI.studies.spawn(typeId, company);
+      document.getElementById("q").textContent = study.question + " Methods in play: " + study.methods.join(", ") + ".";
+      document.getElementById("ws").innerHTML = "<thead><tr><th>Workstream</th><th>Swim lane</th><th>Owner</th><th>Method</th></tr></thead><tbody>" +
+        study.workstreams.map(function (w) {
+          return "<tr><td>" + w.name + "</td><td>" + w.swimlane + "</td><td>" + w.owner + "</td><td>" + w.method + "</td></tr>";
+        }).join("") + "</tbody>";
+      document.getElementById("agile").innerHTML = ISI.studies.AGILE12.map(function (a) {
+        return "<div class='test'><div class='q'>" + a.label + "</div><p class='because'>" + a.test + "</p></div>";
+      }).join("");
+      window.__study = study;
+    }
+    document.getElementById("save").addEventListener("click", function () {
+      ISI.store.setBus({ study: window.__study });
+      location.href = "/internal/pipeline.html";
+    });
+    paint();
+  </script>
+</body>
+</html>

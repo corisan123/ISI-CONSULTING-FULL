@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Study packet | ISI Consulting</title>
+  <link rel="stylesheet" href="/internal/css/engagement.css">
+</head>
+<body class="eng client-view">
+  <header class="eng-top">
+    <a class="eng-brand" href="/internal/study.html">
+      <div class="eng-mark">ISI</div>
+      <div>
+        <h1>ISI <span>1-pager</span></h1>
+        <p class="eng-sub" id="sub">Executive summary of the study</p>
+      </div>
+    </a>
+    <div class="eng-top-links practitioner-only">
+      <a href="/internal/study.html">Study</a>
+      <button type="button" class="btn btn-gold" onclick="window.print()">Print</button>
+    </div>
+  </header>
+
+  <main class="eng-main">
+    <section class="eng-card">
+      <h2 id="title">Executive summary</h2>
+      <p class="eng-desc" id="scqa"></p>
+      <div class="verdict" id="verdictBox">
+        <div class="val" id="verdict">—</div>
+        <div class="lbl" id="headline"></div>
+      </div>
+      <div class="kpi-row" id="kpis"></div>
+    </section>
+    <section class="eng-card">
+      <h2>Workstreams</h2>
+      <table class="proof-table" id="ws"></table>
+    </section>
+    <section class="eng-card">
+      <h2>What this asks the C-suite to decide</h2>
+      <p class="eng-desc" id="decide"></p>
+    </section>
+  </main>
+
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/diligence.js"></script>
+  <script>
+    var bus = ISI.store.getBus() || {};
+    var study = bus.study;
+    var feas = bus.feasibility;
+    var sc = bus.scenarios;
+    var dd = bus.diligence;
+    var rc = bus.rootcause;
+    if (!study) {
+      document.getElementById("headline").textContent = "Set the study type first. This 1-pager is the output of a configured study, not a blank template.";
+    } else {
+      document.getElementById("sub").textContent = study.label;
+      document.getElementById("title").textContent = (study.company || "Client") + " — " + study.label;
+      document.getElementById("scqa").textContent =
+        "Situation: the stated problem is treated as a symptom. Complication: " + study.question +
+        " Question: which workstream is mission-critical. Answer follows from diligence, diagnosis, and scenarios.";
+      document.getElementById("verdict").textContent = (feas && feas.verdict) || (dd && dd.tree && dd.tree.verdict) || "IN PROGRESS";
+      document.getElementById("headline").textContent = (bus.packet && bus.packet.narrative) || study.question;
+      var kpis = document.getElementById("kpis");
+      function kpi(l, v) {
+        var d = document.createElement("div");
+        d.className = "kpi";
+        d.innerHTML = "<div class='val'>" + v + "</div><div class='lbl'>" + l + "</div>";
+        kpis.appendChild(d);
+      }
+      kpi("Workstreams", String(study.workstreams.length));
+      kpi("Proven causes", rc ? String(rc.keep.length) : "—");
+      kpi("Diligence", dd && dd.tree ? dd.tree.verdict : "—");
+      kpi("Stress Δ", sc && sc.delta ? Math.round(sc.delta.stress).toLocaleString() : "—");
+      document.getElementById("ws").innerHTML = "<thead><tr><th>Workstream</th><th>Swim lane</th><th>Owner</th></tr></thead><tbody>" +
+        study.workstreams.map(function (w) {
+          return "<tr><td>" + w.name + "</td><td>" + w.swimlane + "</td><td>" + w.owner + "</td></tr>";
+        }).join("") + "</tbody>";
+      document.getElementById("decide").textContent =
+        "Buy-in is required from the swim-lane owners. The recommendation is feasible only if the red gates are closed. Optics are not a substitute for the delta on the dashboard.";
+    }
+  </script>
+</body>
+</html>

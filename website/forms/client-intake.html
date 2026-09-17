@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title>Client Intake | ISI Consulting</title>
-  <meta name="description" content="Structured client intake for ISI Consulting — company, contact, industry, and primary challenge.">
+  <title>Leadership &amp; Diagnostic Intake | ISI Consulting</title>
+  <meta name="description" content="Nine-section intake for construction and trades companies. Facts only — the diagnostic engine is not on this page.">
   <link rel="stylesheet" href="../css/site.css">
 </head>
 <body>
@@ -19,6 +19,7 @@
           <li><a href="../about.html">About</a></li>
           <li><a href="../philosophy.html">Philosophy</a></li>
           <li><a href="../services/index.html">Services</a></li>
+          <li><a href="../problems.html">Problems</a></li>
           <li><a href="../contact.html">Contact</a></li>
           <li><a class="nav-cta" href="https://calendly.com/contact-isi-consults" target="_blank" rel="noopener noreferrer">Schedule</a></li>
         </ul>
@@ -29,66 +30,366 @@
   <main>
     <div class="page-header">
       <div class="container">
-        <h1>Client Intake</h1>
-        <p class="lede">Tell us about your organization and the constraint you want to address. This intake feeds the discovery questionnaire and consultation.</p>
+        <h1>Leadership &amp; Diagnostic Intake</h1>
+        <p class="lede">Built for construction and trades companies, typically $5M–$50M. This form captures the facts. Scoring, trees, and financial models run inside the engagement — they are not published here.</p>
       </div>
     </div>
 
     <section class="section section-alt">
       <div class="container">
-        <div class="form-block form-block-wide" style="margin-inline:auto">
-          <h2 style="margin-top:0">Client Intake Form</h2>
-          <p>All fields are required. After submission you will continue to the Discovery Questionnaire.</p>
+        <div class="form-block form-block-xl" style="margin-inline:auto">
+          <p>This is step 2 of 4. Answers are saved on this device as you type. Use Back — nothing is wiped.</p>
+          <ol class="form-steps">
+            <li><a href="../legal/nda.html">1. Confidentiality</a></li>
+            <li class="is-current">2. Intake</li>
+            <li><a href="discovery.html">3. Discovery</a></li>
+            <li><a href="../schedule.html">4. Schedule</a></li>
+          </ol>
           <form id="clientIntakeForm" class="isi-form" data-next="discovery.html" novalidate>
-            <div class="form-success" aria-live="polite">Thank you. Your client intake has been saved locally.</div>
+            <div class="form-success" aria-live="polite">Intake saved on this device.</div>
 
-            <div class="form-group">
-              <label for="companyName">Company Name</label>
-              <input type="text" id="companyName" name="companyName" required autocomplete="organization">
-              <div class="error">Please enter your company name.</div>
-            </div>
+            <fieldset class="form-section">
+              <legend>Section 1 — Company profile</legend>
+              <p class="sec-help">Who you are on paper.</p>
+              <div class="isi-form-grid">
+                <div class="form-group">
+                  <label for="companyName">Legal business name</label>
+                  <input id="companyName" name="companyName" required autocomplete="organization">
+                  <div class="error">Required.</div>
+                </div>
+                <div class="form-group">
+                  <label for="contactName">Your name</label>
+                  <input id="contactName" name="contactName" required autocomplete="name">
+                  <div class="error">Required.</div>
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input id="email" name="email" type="email" required autocomplete="email">
+                  <div class="error">Valid email required.</div>
+                </div>
+                <div class="form-group">
+                  <label for="phone">Phone</label>
+                  <input id="phone" name="phone" type="tel" required autocomplete="tel">
+                  <div class="error">Required.</div>
+                </div>
+                <div class="form-group">
+                  <label for="trade">Primary trade</label>
+                  <select id="trade" name="trade" required>
+                    <option value="">Select…</option>
+                    <option value="gc">General contractor</option>
+                    <option value="specialty">Specialty contractor</option>
+                    <option value="civil">Civil</option>
+                    <option value="mechanical">Mechanical</option>
+                    <option value="electrical">Electrical</option>
+                    <option value="plumbing">Plumbing / piping</option>
+                    <option value="manufacturing">Fabrication / manufacturing</option>
+                    <option value="other">Other</option>
+                  </select>
+                  <div class="error">Required.</div>
+                </div>
+                <div class="form-group">
+                  <label for="revenueRange">Annual revenue range</label>
+                  <select id="revenueRange" name="revenueRange" required>
+                    <option value="">Select…</option>
+                    <option value="under-5">Under $5M</option>
+                    <option value="5-15">$5M–$15M</option>
+                    <option value="15-30">$15M–$30M</option>
+                    <option value="30-50">$30M–$50M</option>
+                    <option value="over-50">Over $50M</option>
+                  </select>
+                  <div class="error">Required.</div>
+                </div>
+                <div class="form-group">
+                  <label for="employees">Number of employees</label>
+                  <input id="employees" name="employees" required placeholder="e.g., 85">
+                  <div class="error">Required.</div>
+                </div>
+                <div class="form-group">
+                  <label for="geo">Geographic service area</label>
+                  <input id="geo" name="geo" required placeholder="e.g., Carolinas and Georgia">
+                  <div class="error">Required.</div>
+                </div>
+                <div class="form-group">
+                  <label for="ownership">Ownership structure</label>
+                  <select id="ownership" name="ownership" required>
+                    <option value="">Select…</option>
+                    <option>Founder-owned</option>
+                    <option>Family / multi-generation</option>
+                    <option>ESOP</option>
+                    <option>PE-backed</option>
+                    <option>Other</option>
+                  </select>
+                  <div class="error">Required.</div>
+                </div>
+                <div class="form-group">
+                  <label for="years">Years in operation</label>
+                  <input id="years" name="years" required placeholder="e.g., 22">
+                  <div class="error">Required.</div>
+                </div>
+              </div>
+            </fieldset>
 
-            <div class="form-group">
-              <label for="contactName">Contact Name</label>
-              <input type="text" id="contactName" name="contactName" required autocomplete="name">
-              <div class="error">Please enter a contact name.</div>
-            </div>
+            <fieldset class="form-section">
+              <legend>Section 2 — Leadership &amp; goals</legend>
+              <div class="form-group">
+                <label for="goals12">Top 3 business goals for the next 12 months</label>
+                <textarea id="goals12" name="goals12" required></textarea>
+                <div class="error">Required.</div>
+              </div>
+              <div class="form-group">
+                <label for="goals35">What long-term outcomes matter most (3–5 years)?</label>
+                <textarea id="goals35" name="goals35" required></textarea>
+                <div class="error">Required.</div>
+              </div>
+              <div class="form-group">
+                <label for="preventing">What is currently preventing you from reaching these goals?</label>
+                <textarea id="preventing" name="preventing" required></textarea>
+                <div class="error">Required.</div>
+              </div>
+              <div class="form-group">
+                <span class="label-like">What do you believe the problem is? (select all that apply)</span>
+                <p class="sec-help">These are the symptoms you see. Discovery tests whether they are the cause.</p>
+                <div class="isi-form-grid">
+                  <label class="check"><input type="checkbox" name="statedSymptoms" value="revenue_down"> Revenue / share slipping</label>
+                  <label class="check"><input type="checkbox" name="statedSymptoms" value="margin_down"> Margins compressing</label>
+                  <label class="check"><input type="checkbox" name="statedSymptoms" value="forecast_miss"> Forecasts miss repeatedly</label>
+                  <label class="check"><input type="checkbox" name="statedSymptoms" value="cash_tight"> Cash always tight</label>
+                  <label class="check"><input type="checkbox" name="statedSymptoms" value="late_jobs"> Jobs late / OTIF slipping</label>
+                  <label class="check"><input type="checkbox" name="statedSymptoms" value="growth_stall"> Cannot grow without breaking</label>
+                  <label class="check"><input type="checkbox" name="statedSymptoms" value="leadership_drag"> Leadership overloaded</label>
+                </div>
+              </div>
+              <div class="isi-form-grid">
+                <div class="form-group">
+                  <label for="leadershipConfidence">Confidence in the leadership team’s ability to execute (1–10)</label>
+                  <input id="leadershipConfidence" name="leadershipConfidence" type="number" min="1" max="10" required>
+                  <div class="error">1–10.</div>
+                </div>
+                <div class="form-group form-group-span">
+                  <label for="hardDecisions">What decisions are hardest for you to make right now?</label>
+                  <textarea id="hardDecisions" name="hardDecisions" required></textarea>
+                  <div class="error">Required.</div>
+                </div>
+              </div>
+            </fieldset>
 
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email" required autocomplete="email">
-              <div class="error">Please enter a valid email address.</div>
-            </div>
+            <fieldset class="form-section">
+              <legend>Section 3 — Commercial &amp; BD health</legend>
+              <div class="isi-form-grid">
+                <div class="form-group">
+                  <label for="pipelineConsistency">Pipeline consistency month to month</label>
+                  <select id="pipelineConsistency" name="pipelineConsistency" required>
+                    <option value="">Select…</option>
+                    <option value="consistent">Consistent</option>
+                    <option value="uneven">Uneven</option>
+                    <option value="inconsistent">Inconsistent / feast-famine</option>
+                  </select>
+                  <div class="error">Required.</div>
+                </div>
+                <div class="form-group">
+                  <label for="winRate">Current proposal win rate (%)</label>
+                  <input id="winRate" name="winRate" type="number" step="any" required placeholder="e.g., 24">
+                  <div class="error">Required.</div>
+                </div>
+                <div class="form-group form-group-span">
+                  <label for="marginErosion">Where do you believe margin erosion is happening?</label>
+                  <textarea id="marginErosion" name="marginErosion" required></textarea>
+                  <div class="error">Required.</div>
+                </div>
+                <div class="form-group">
+                  <label for="bdProcess">Defined BD process?</label>
+                  <select id="bdProcess" name="bdProcess" required>
+                    <option value="">Select…</option>
+                    <option value="yes">Yes, documented and used</option>
+                    <option value="partial">Partial / person-dependent</option>
+                    <option value="ad hoc">Ad hoc / no</option>
+                  </select>
+                  <div class="error">Required.</div>
+                </div>
+                <div class="form-group">
+                  <label for="bdOwner">Who owns BD accountability today?</label>
+                  <input id="bdOwner" name="bdOwner" required>
+                  <div class="error">Required.</div>
+                </div>
+                <div class="form-group form-group-span">
+                  <label for="proposalFrustration">Biggest frustration with proposals or sales</label>
+                  <textarea id="proposalFrustration" name="proposalFrustration" required></textarea>
+                  <div class="error">Required.</div>
+                </div>
+              </div>
+            </fieldset>
 
-            <div class="form-group">
-              <label for="phone">Phone</label>
-              <input type="tel" id="phone" name="phone" required autocomplete="tel">
-              <div class="error">Please enter a phone number.</div>
-            </div>
+            <fieldset class="form-section">
+              <legend>Section 4 — Operational alignment</legend>
+              <div class="form-group">
+                <label for="bdOpsComm">How well do BD, estimating, PMs, and operations communicate?</label>
+                <select id="bdOpsComm" name="bdOpsComm" required>
+                  <option value="">Select…</option>
+                  <option value="strong">Strong</option>
+                  <option value="uneven">Uneven</option>
+                  <option value="poor">Poor / siloed</option>
+                </select>
+                <div class="error">Required.</div>
+              </div>
+              <div class="form-group">
+                <label for="handoffs">Where do handoffs break down?</label>
+                <textarea id="handoffs" name="handoffs" required></textarea>
+                <div class="error">Required.</div>
+              </div>
+              <div class="form-group">
+                <label for="bottlenecks">Recurring operational bottlenecks (projects or proposals)</label>
+                <textarea id="bottlenecks" name="bottlenecks" required></textarea>
+                <div class="error">Required.</div>
+              </div>
+              <div class="form-group">
+                <label for="deptConflict">Internal conflicts or misalignments between departments</label>
+                <textarea id="deptConflict" name="deptConflict" required></textarea>
+                <div class="error">Required.</div>
+              </div>
+            </fieldset>
 
-            <div class="form-group">
-              <label for="industry">Industry</label>
-              <select id="industry" name="industry" required>
-                <option value="">Select industry…</option>
-                <option value="AEC">AEC</option>
-                <option value="Manufacturing">Manufacturing</option>
-                <option value="Building Products">Building Products</option>
-                <option value="Automation">Automation</option>
-                <option value="Construction">Construction</option>
-                <option value="Other">Other</option>
-              </select>
-              <div class="error">Please select an industry.</div>
-            </div>
+            <fieldset class="form-section">
+              <legend>Section 5 — Financial &amp; margin clarity</legend>
+              <div class="isi-form-grid">
+                <div class="form-group">
+                  <label for="jobProfitVisibility">Clear visibility into job profitability?</label>
+                  <select id="jobProfitVisibility" name="jobProfitVisibility" required>
+                    <option value="">Select…</option>
+                    <option value="yes">Yes</option>
+                    <option value="partial">Partial / after closeout only</option>
+                    <option value="low">No / low</option>
+                  </select>
+                  <div class="error">Required.</div>
+                </div>
+                <div class="form-group">
+                  <label for="estimatingConfidence">Confidence in estimating accuracy (1–10)</label>
+                  <input id="estimatingConfidence" name="estimatingConfidence" type="number" min="1" max="10" required>
+                  <div class="error">1–10.</div>
+                </div>
+                <div class="form-group form-group-span">
+                  <label for="kpisTracked">Financial KPIs you track consistently</label>
+                  <textarea id="kpisTracked" name="kpisTracked" required></textarea>
+                  <div class="error">Required.</div>
+                </div>
+                <div class="form-group form-group-span">
+                  <label for="hiddenCosts">Where you suspect hidden costs or inefficiencies</label>
+                  <textarea id="hiddenCosts" name="hiddenCosts" required></textarea>
+                  <div class="error">Required.</div>
+                </div>
+              </div>
+            </fieldset>
 
-            <div class="form-group">
-              <label for="challenge">Primary Challenge</label>
-              <textarea id="challenge" name="challenge" required placeholder="e.g., margin compression, pipeline quality, operational bottlenecks, leadership cadence…"></textarea>
-              <div class="error">Please describe the primary challenge.</div>
-            </div>
+            <fieldset class="form-section">
+              <legend>Section 6 — Leadership bandwidth &amp; stress</legend>
+              <div class="form-group">
+                <label for="timeSink">What tasks consume most of your time?</label>
+                <textarea id="timeSink" name="timeSink" required></textarea>
+                <div class="error">Required.</div>
+              </div>
+              <div class="form-group">
+                <label for="offload">What would you offload immediately if possible?</label>
+                <textarea id="offload" name="offload" required></textarea>
+                <div class="error">Required.</div>
+              </div>
+              <div class="form-group">
+                <label for="nights">What decisions or issues keep you up at night?</label>
+                <textarea id="nights" name="nights" required></textarea>
+                <div class="error">Required.</div>
+              </div>
+              <div class="form-group">
+                <label for="leadershipGaps">What leadership gaps exist in the organization?</label>
+                <textarea id="leadershipGaps" name="leadershipGaps" required></textarea>
+                <div class="error">Required.</div>
+              </div>
+            </fieldset>
 
-            <button class="btn btn-primary" type="submit" onclick="return submitClientIntake()">Submit Client Intake</button>
+            <fieldset class="form-section">
+              <legend>Section 7 — Growth readiness</legend>
+              <div class="form-group">
+                <label for="growthBreak">If you grew 20–30% next year, what would break first?</label>
+                <textarea id="growthBreak" name="growthBreak" required></textarea>
+                <div class="error">Required.</div>
+              </div>
+              <div class="form-group">
+                <label for="missingSystems">What systems are missing or outdated?</label>
+                <textarea id="missingSystems" name="missingSystems" required></textarea>
+                <div class="error">Required.</div>
+              </div>
+              <div class="form-group">
+                <label for="understaffedRoles">What roles are underdeveloped or understaffed?</label>
+                <textarea id="understaffedRoles" name="understaffedRoles" required></textarea>
+                <div class="error">Required.</div>
+              </div>
+              <div class="form-group">
+                <label for="blockedOpps">What opportunities are you currently unable to pursue?</label>
+                <textarea id="blockedOpps" name="blockedOpps" required></textarea>
+                <div class="error">Required.</div>
+              </div>
+            </fieldset>
+
+            <fieldset class="form-section">
+              <legend>Section 8 — Engagement fit</legend>
+              <div class="form-group">
+                <label for="prompt">What prompted you to explore fractional leadership or diagnostics?</label>
+                <textarea id="prompt" name="prompt" required></textarea>
+                <div class="error">Required.</div>
+              </div>
+              <div class="form-group">
+                <label for="successLooks">What outcomes would make this engagement a success?</label>
+                <textarea id="successLooks" name="successLooks" required></textarea>
+                <div class="error">Required.</div>
+              </div>
+              <div class="isi-form-grid">
+                <div class="form-group">
+                  <label for="timeline">Timeline you have in mind</label>
+                  <input id="timeline" name="timeline" required placeholder="e.g., 90 days to a fact-base">
+                  <div class="error">Required.</div>
+                </div>
+                <div class="form-group">
+                  <label for="openToChange">Open to structural or process changes if the diagnostic recommends them?</label>
+                  <select id="openToChange" name="openToChange" required>
+                    <option value="">Select…</option>
+                    <option value="yes">Yes</option>
+                    <option value="cautious">Cautious / depends</option>
+                    <option value="no">Not now</option>
+                  </select>
+                  <div class="error">Required.</div>
+                </div>
+              </div>
+            </fieldset>
+
+            <fieldset class="form-section">
+              <legend>Section 9 — Final alignment</legend>
+              <div class="form-group">
+                <label for="elseKnow">What else should we know about the business?</label>
+                <textarea id="elseKnow" name="elseKnow"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="concerns">Concerns about bringing in outside leadership</label>
+                <textarea id="concerns" name="concerns"></textarea>
+              </div>
+              <div class="isi-form-grid">
+                <div class="form-group">
+                  <label for="commPref">Best way to communicate with you</label>
+                  <select id="commPref" name="commPref" required>
+                    <option value="">Select…</option>
+                    <option>Email</option>
+                    <option>Phone</option>
+                    <option>Text</option>
+                    <option>In person</option>
+                  </select>
+                  <div class="error">Required.</div>
+                </div>
+                <div class="form-group">
+                  <label for="others">Who else should be involved in future conversations?</label>
+                  <input id="others" name="others">
+                </div>
+              </div>
+            </fieldset>
+
+            <button class="btn btn-primary" type="submit">Submit intake</button>
           </form>
-          <p style="margin-top:1.25rem;margin-bottom:0;font-size:0.9rem"><a href="index.html">← All forms</a> · <a href="discovery.html">Skip to Discovery</a></p>
+          <p style="margin-top:1.25rem;margin-bottom:0;font-size:0.9rem"><a href="../system.html">The ISI Leadership &amp; Diagnostic System</a> · <a href="discovery.html">Commercial metrics only</a></p>
         </div>
       </div>
     </section>
@@ -99,15 +400,14 @@
       <div class="footer-grid">
         <div>
           <div class="footer-brand">ISI <span>Consulting</span></div>
-          <p>Iron Sharpens Iron — transforming revenue, margin, and operational performance for industrial and project-driven companies.</p>
+          <p>The Unified Growth System for construction and trades companies.</p>
         </div>
         <div>
           <h4>Navigate</h4>
           <ul>
             <li><a href="../index.html">Home</a></li>
-            <li><a href="../about.html">About</a></li>
-            <li><a href="../philosophy.html">Philosophy</a></li>
-            <li><a href="../services/index.html">Services</a></li>
+            <li><a href="../system.html">The system</a></li>
+            <li><a href="../problems.html">Problems</a></li>
             <li><a href="../contact.html">Contact</a></li>
           </ul>
         </div>
@@ -115,10 +415,7 @@
           <h4>Engage</h4>
           <ul>
             <li><a href="https://calendly.com/contact-isi-consults" target="_blank" rel="noopener noreferrer">Schedule</a></li>
-            <li><a href="index.html">Forms</a></li>
-            <li><a href="client-intake.html">Client Intake</a></li>
-            <li><a href="lead-magnet.html">Lead Magnet</a></li>
-            <li><a href="../templates/resource-library.html">Resources</a></li>
+            <li><a href="client-intake.html">Intake</a></li>
           </ul>
         </div>
         <div>

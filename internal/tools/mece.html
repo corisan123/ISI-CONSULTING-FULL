@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>MECE Issue Trees | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <main class="pr-wrap">
+    <p class="pr-kicker">Mutually exclusive · collectively exhaustive · then depth</p>
+    <h1>MECE issue trees</h1>
+    <p class="lede">MECE is the floor: buckets do not overlap and nothing material is missing. It is not the engagement. Depth means each branch ends on a testable cause. Insight means the tree is built for this constraint, not a generic profit tree every firm draws. Select a kit, audit overlaps, then write the pyramid close.</p>
+
+    <div class="pr-panel">
+      <label for="kit">Constraint family</label>
+      <select id="kit"></select>
+    </div>
+    <div class="pr-panel tree" id="tree"></div>
+    <div class="pr-panel" id="audit"></div>
+    <div class="pr-panel">
+      <h2>Pyramid close (SCQA)</h2>
+      <p><strong>Situation</strong> — one sentence on the client’s current operating reality.</p>
+      <p><strong>Complication</strong> — the constraint that makes the status quo expensive.</p>
+      <p><strong>Question</strong> — the decision this diagnostic must answer.</p>
+      <p><strong>Answer</strong> — headline first, then 3 MECE reasons, each with evidence from the kit.</p>
+      <textarea id="pyramid" placeholder="Write the close here during consultation…"></textarea>
+      <div class="pr-actions"><button type="button" class="btn btn-gold" id="savePy">Save close to session</button></div>
+    </div>
+  </main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/shell.js"></script>
+  <script src="/internal/js/studies.js"></script>
+  <script>
+    ISI.shell.render("structure");
+    var TREES = {};
+    var kit = document.getElementById("kit");
+    Object.keys(ISI.studies.TYPES).forEach(function (id) {
+      TREES[id] = ISI.studies.TYPES[id].mece;
+      var opt = document.createElement("option");
+      opt.value = id;
+      opt.textContent = ISI.studies.TYPES[id].label;
+      kit.appendChild(opt);
+    });
+    var bus = ISI.store.getBus();
+    if (bus.study && bus.study.type) kit.value = bus.study.type;
+
+    function draw() {
+      var t = TREES[kit.value];
+      var html = "<h2>" + t.question + "</h2><ul>";
+      t.branches.forEach(function (b) {
+        html += "<li><span class='node decision'>" + b.name + "</span><ul>";
+        b.children.forEach(function (c) {
+          html += "<li><span class='node chance'>" + c + "</span></li>";
+        });
+        html += "</ul></li>";
+      });
+      html += "</ul>";
+      document.getElementById("tree").innerHTML = html;
+      var audit = ISI.studies.auditMece(t);
+      document.getElementById("audit").innerHTML =
+        "<h2>Audit (better than a generic MECE poster)</h2><p>" + audit.exhaustiveNote + "</p><ul>" +
+        t.mistakes.map(function (m) { return "<li>" + m + "</li>"; }).join("") +
+        audit.overlap.map(function (m) { return "<li>" + m + "</li>"; }).join("") + "</ul>" +
+        "<p>If a fact could sit in two buckets, the cut is wrong. If a fact sits in none, the tree is not exhaustive. Depth means each leaf is a test, not a label.</p>";
+    }
+    kit.addEventListener("change", draw);
+    document.getElementById("savePy").addEventListener("click", function () {
+      ISI.store.saveResult("mece", { kit: kit.value, pyramid: document.getElementById("pyramid").value });
+    });
+    draw();
+  </script>
+</body>
+</html>

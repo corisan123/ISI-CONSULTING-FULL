@@ -7,3 +7,8 @@ Disallow: /
 
 User-agent: Bingbot
 Disallow: /
+
+# Practice bench, client room, and generated documents stay off the public index.
+User-agent: *
+Disallow: /internal/
+Disallow: /client/

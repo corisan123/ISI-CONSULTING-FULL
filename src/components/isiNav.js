@@ -8,6 +8,7 @@
   var ORDER = [
     "input",
     "scoring",
+    "finance",
     "decision",
     "prioritization",
     "roadmap",

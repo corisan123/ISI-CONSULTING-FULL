@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Mutual NDA Generator | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <main class="pr-wrap">
+    <p class="pr-kicker">Template · not legal advice · print from consultation</p>
+    <h1>Mutual non-disclosure agreement</h1>
+    <p class="lede">Fill names and dates, then print or save as PDF. This is a working skeleton for ISI Consulting, LLC. Have counsel review before a client signs. Public confidentiality notice remains at <a href="/website/legal/nda.html">/website/legal/nda.html</a>.</p>
+    <form id="f" class="pr-panel pr-form-grid">
+      <div><label for="client">Client legal name</label><input id="client" value="Placeholder Manufacturing Co."></div>
+      <div><label for="state">Governing state</label><input id="state" value="North Carolina"></div>
+      <div><label for="effective">Effective date</label><input id="effective" type="date"></div>
+      <div><label for="term">Term (months)</label><input id="term" type="number" value="24"></div>
+      <div><label for="purpose">Purpose</label><input id="purpose" value="Evaluation of a potential consulting engagement, including diagnostic, financial, and operational information."></div>
+    </form>
+    <div class="pr-actions">
+      <button type="button" class="btn btn-gold" id="gen">Generate</button>
+      <button type="button" class="btn btn-ghost" id="print">Print / PDF</button>
+      <a class="btn btn-navy" href="/internal/documents/exclusivity.html">Exclusivity letter</a>
+      <a class="btn btn-ghost" href="/internal/documents/sow.html">Statement of Work</a>
+    </div>
+    <article class="doc" id="doc"></article>
+  </main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/shell.js"></script>
+  <script>
+    ISI.shell.render("docs");
+    document.getElementById("effective").value = new Date().toISOString().slice(0, 10);
+    function gen() {
+      var client = document.getElementById("client").value;
+      var state = document.getElementById("state").value;
+      var effective = document.getElementById("effective").value;
+      var term = document.getElementById("term").value;
+      var purpose = document.getElementById("purpose").value;
+      document.getElementById("doc").innerHTML =
+        "<h2>MUTUAL NON-DISCLOSURE AGREEMENT</h2>" +
+        "<p>This Mutual Non-Disclosure Agreement (“Agreement”) is entered into as of <strong>" + effective + "</strong> by and between <strong>ISI Consulting, LLC</strong> (“ISI”) and <strong>" + client + "</strong> (“Client”). Each is a “Party”; together, the “Parties.”</p>" +
+        "<p><strong>1. Purpose.</strong> The Parties wish to exchange confidential information for: " + purpose + "</p>" +
+        "<p><strong>2. Confidential Information</strong> means non-public information disclosed by either Party, including financial data, operational data, customer lists, pricing, forecasts, models, diagnostic outputs, process documentation, and the existence of discussions. Information is confidential whether marked or not if a reasonable person would treat it as confidential.</p>" +
+        "<p><strong>3. Exclusions.</strong> Confidential Information does not include information that is public through no breach, already in the receiving Party’s possession, independently developed, or required to be disclosed by law (with prior notice where legally permitted).</p>" +
+        "<p><strong>4. Obligations.</strong> The receiving Party shall use Confidential Information solely for the Purpose, restrict access to personnel with a need to know, and apply at least the care it uses for its own confidential information (and no less than reasonable care). ISI’s diagnostic engines, models, and practice tools remain ISI intellectual property; Client retains its underlying data.</p>" +
+        "<p><strong>5. Term.</strong> This Agreement continues for " + term + " months from the Effective Date. Confidentiality obligations survive for three (3) years after disclosure, and indefinitely for trade secrets.</p>" +
+        "<p><strong>6. Return / destruction.</strong> Upon written request, the receiving Party shall return or destroy Confidential Information, except one copy retained for legal or archival purposes under continued confidentiality.</p>" +
+        "<p><strong>7. No license / no obligation to deal.</strong> No license is granted. This Agreement does not require either Party to proceed with an engagement.</p>" +
+        "<p><strong>8. Governing law.</strong> The laws of the State of " + state + ", excluding conflict-of-law rules. Venue in the state or federal courts of that state.</p>" +
+        "<p><strong>9. Entire agreement.</strong> This is the entire agreement on confidentiality and may be signed in counterparts, including electronic signature.</p>" +
+        "<p style='margin-top:2rem'>ISI Consulting, LLC ________________________ Date ________</p>" +
+        "<p>" + client + " ________________________ Date ________</p>" +
+        "<p style='font-size:0.8rem;color:#5a6577'>Template for internal use. Not a substitute for legal counsel. © 2026 ISI Consulting, LLC.</p>";
+      ISI.store.saveResult("nda", { client: client, effective: effective });
+    }
+    document.getElementById("gen").addEventListener("click", gen);
+    document.getElementById("print").addEventListener("click", function () { gen(); window.print(); });
+    gen();
+  </script>
+</body>
+</html>

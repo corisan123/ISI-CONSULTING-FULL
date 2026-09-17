@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Financial Case | ISI Consulting Diagnostic</title>
+  <meta name="description" content="NPV, IRR, payback, and CAPEX present value on top of the Growth & Turnaround Diagnostic inputs.">
+  <link rel="stylesheet" href="/src/styles/isi.css">
+  <link rel="stylesheet" href="/src/ui/theme.css">
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <script src="/src/components/isiHeader.js"></script>
+  <script>injectIsiHeader();</script>
+  <script src="/src/components/isiNav.js"></script>
+  <script>injectIsiNav("finance");</script>
+
+  <div class="isi-page">
+    <h2>Financial case</h2>
+    <p>This step sits on the live Growth &amp; Turnaround Diagnostic. It does not replace scoring. It adds NPV, IRR, MIRR, payback, CAPEX present value, and a tornado so the packet is not stuck at EBITDA % as a lone financial measure. Placeholders prefill; overwrite with the client’s cash-flow view.</p>
+    <p class="formula">NPV = Σ CF<sub>t</sub> / (1+r)<sup>t</sup> − CF<sub>0</sub> wait: CF<sub>0</sub> is included in the sum at t=0. IRR solves NPV = 0.</p>
+
+    <form id="finForm" class="pr-panel">
+      <div class="pr-form-grid">
+        <div><label for="investment">Investment / CAPEX ($)</label><input id="investment" type="number" value="450000"></div>
+        <div><label for="rate">Discount rate (%)</label><input id="rate" type="number" step="any" value="10"></div>
+        <div><label for="cf1">Y1 cash flow ($)</label><input id="cf1" type="number" value="120000"></div>
+        <div><label for="cf2">Y2 cash flow ($)</label><input id="cf2" type="number" value="150000"></div>
+        <div><label for="cf3">Y3 cash flow ($)</label><input id="cf3" type="number" value="175000"></div>
+        <div><label for="cf4">Y4 cash flow ($)</label><input id="cf4" type="number" value="190000"></div>
+        <div><label for="cf5">Y5 cash flow ($)</label><input id="cf5" type="number" value="200000"></div>
+        <div><label for="reinvest">Reinvest rate (%)</label><input id="reinvest" type="number" step="any" value="8"></div>
+      </div>
+      <div class="pr-actions">
+        <button class="btn btn-gold" type="submit">Calculate financial case</button>
+        <a class="btn btn-ghost" href="/internal/tools/montecarlo.html">Run Monte Carlo</a>
+        <a class="btn btn-navy" href="/diagnostic/decisionTree.html">Continue to decision tree</a>
+      </div>
+    </form>
+    <div class="pr-metrics" id="metrics"></div>
+    <div class="pr-panel"><canvas id="tornado" class="chart"></canvas></div>
+    <p><a href="/internal/index.html">Practice bench (all tools)</a></p>
+  </div>
+
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/charts.js"></script>
+  <script src="/internal/js/shell.js"></script>
+  <script>
+    function run(e) {
+      if (e) e.preventDefault();
+      var inv = Number(document.getElementById("investment").value);
+      var rate = Number(document.getElementById("rate").value) / 100;
+      var cf = [-Math.abs(inv),
+        Number(document.getElementById("cf1").value),
+        Number(document.getElementById("cf2").value),
+        Number(document.getElementById("cf3").value),
+        Number(document.getElementById("cf4").value),
+        Number(document.getElementById("cf5").value)];
+      var npv = ISI.math.npv(rate, cf);
+      var irr = ISI.math.irr(cf);
+      var mirr = ISI.math.mirr(cf, rate, Number(document.getElementById("reinvest").value) / 100);
+      var pb = ISI.math.payback(cf);
+      document.getElementById("metrics").innerHTML = [
+        ["NPV", ISI.shell.money(npv)],
+        ["IRR", isFinite(irr) ? (irr * 100).toFixed(1) + "%" : "—"],
+        ["MIRR", isFinite(mirr) ? (mirr * 100).toFixed(1) + "%" : "—"],
+        ["Payback", isFinite(pb) ? pb.toFixed(2) + " yrs" : "—"],
+        ["PI", ISI.math.profitabilityIndex(rate, cf).toFixed(2)]
+      ].map(function (c) {
+        return '<div class="pr-metric"><div class="lbl">' + c[0] + '</div><div class="val">' + c[1] + "</div></div>";
+      }).join("");
+      var hi = cf.slice(); hi[1] *= 1.2;
+      var lo = cf.slice(); lo[1] *= 0.8;
+      ISI.charts.tornado(document.getElementById("tornado"), [
+        { label: "Rate ±20%", low: ISI.math.npv(rate * 1.2, cf) - npv, high: ISI.math.npv(rate * 0.8, cf) - npv },
+        { label: "Y1 CF ±20%", low: ISI.math.npv(rate, lo) - npv, high: ISI.math.npv(rate, hi) - npv }
+      ]);
+      try {
+        sessionStorage.setItem("isi_financeCase", JSON.stringify({ npv: npv, irr: irr, payback: pb, cashflows: cf, rate: rate }));
+      } catch (err) {}
+      ISI.store.saveResult("diagnostic-finance", { npv: npv, irr: irr, payback: pb });
+    }
+    document.getElementById("finForm").addEventListener("submit", run);
+    var d = ISI.store.readDiagnosticInput();
+    if (d && d.revenue) {
+      var scale = Math.max(150000, Number(d.revenue) * 0.02);
+      document.getElementById("investment").value = Math.round(scale);
+    }
+    run();
+  </script>
+</body>
+</html>

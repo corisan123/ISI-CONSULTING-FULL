@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Pivot &amp; transform | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/engagement.css">
+</head>
+<body class="eng">
+  <header class="eng-top">
+    <a class="eng-brand" href="/internal/index.html">
+      <div class="eng-mark">ISI</div>
+      <div>
+        <h1>Pivot <span>&amp; transform</span></h1>
+        <p class="eng-sub">Paste large tables. Group, aggregate, sanity-check, export CSV / SpreadsheetML Excel can open. The transform is the model — not a screenshot of a pivot.</p>
+      </div>
+    </a>
+    <div class="eng-top-links">
+      <a href="/internal/study.html">Study</a>
+      <a href="/internal/tools/stats.html">Stats bench</a>
+    </div>
+  </header>
+
+  <main class="eng-main">
+    <section class="eng-card">
+      <h2>Source table</h2>
+      <p class="eng-desc">Tab- or comma-separated. First row is headers. Thousands of rows are fine in this browser session.</p>
+      <div class="input-group">
+        <label for="raw">Paste data</label>
+        <textarea id="raw" style="min-height:140px;background:#0d1728;color:#e8ecf0;border:1px solid #2a3f5a;border-radius:6px;padding:0.7rem;font:13px Consolas,monospace">job,crew,week,hours,scrap,revenue
+A,East,1,42,2,18000
+A,East,2,40,1,17500
+B,West,1,38,6,12000
+B,West,2,41,5,11800
+C,East,1,44,0,22000
+C,West,2,39,3,16000
+A,West,3,43,2,19000
+B,East,3,37,8,11000</textarea>
+      </div>
+      <div class="input-grid" style="margin-top:1rem">
+        <div class="input-group"><label for="rows">Rows (group)</label><select id="rows"></select></div>
+        <div class="input-group"><label for="cols">Columns (group)</label><select id="cols"></select></div>
+        <div class="input-group"><label for="val">Value</label><select id="val"></select></div>
+        <div class="input-group"><label for="agg">Aggregate</label>
+          <select id="agg"><option>sum</option><option>avg</option><option>count</option><option>min</option><option>max</option></select>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-gold" id="run">Pivot</button>
+        <button type="button" class="btn btn-ghost" id="csv">Export CSV</button>
+        <button type="button" class="btn btn-ghost" id="xml">Export Excel XML</button>
+      </div>
+    </section>
+    <section class="eng-card">
+      <h2>Pivot result</h2>
+      <p class="eng-desc" id="meta"></p>
+      <div style="overflow:auto"><table class="proof-table" id="out"></table></div>
+    </section>
+  </main>
+
+  <script src="/internal/js/store.js"></script>
+  <script>
+    function parse(text) {
+      var lines = text.trim().split(/\r?\n/).filter(Boolean);
+      var delim = (lines[0] || "").indexOf("\t") >= 0 ? "\t" : ",";
+      var headers = lines[0].split(delim).map(function (h) { return h.trim(); });
+      var rows = [];
+      for (var i = 1; i < lines.length; i++) {
+        var cells = lines[i].split(delim);
+        var o = {};
+        headers.forEach(function (h, j) { o[h] = cells[j] == null ? "" : cells[j].trim(); });
+        rows.push(o);
+      }
+      return { headers: headers, rows: rows };
+    }
+    function fillSelects(headers) {
+      ["rows", "cols", "val"].forEach(function (id, i) {
+        var el = document.getElementById(id);
+        el.innerHTML = headers.map(function (h) { return "<option>" + h + "</option>"; }).join("");
+        el.selectedIndex = Math.min(i, headers.length - 1);
+      });
+    }
+    function agg(arr, how) {
+      if (how === "count") return arr.length;
+      var nums = arr.map(Number).filter(isFinite);
+      if (!nums.length) return 0;
+      if (how === "min") return Math.min.apply(null, nums);
+      if (how === "max") return Math.max.apply(null, nums);
+      var s = nums.reduce(function (a, b) { return a + b; }, 0);
+      return how === "avg" ? s / nums.length : s;
+    }
+    var last = { table: "", headers: [] };
+    function run() {
+      var src = parse(document.getElementById("raw").value);
+      var rK = document.getElementById("rows").value;
+      var cK = document.getElementById("cols").value;
+      var vK = document.getElementById("val").value;
+      var how = document.getElementById("agg").value;
+      var map = {};
+      var colSet = {};
+      src.rows.forEach(function (row) {
+        var r = row[rK] || "(blank)";
+        var c = row[cK] || "(blank)";
+        colSet[c] = true;
+        map[r] = map[r] || {};
+        map[r][c] = map[r][c] || [];
+        map[r][c].push(row[vK]);
+      });
+      var cols = Object.keys(colSet).sort();
+      var rowKeys = Object.keys(map).sort();
+      var html = "<thead><tr><th>" + rK + " \\ " + cK + "</th>" + cols.map(function (c) { return "<th>" + c + "</th>"; }).join("") + "<th>Total</th></tr></thead><tbody>";
+      var csv = [rK].concat(cols).concat("Total").join(",") + "\n";
+      rowKeys.forEach(function (r) {
+        var total = 0;
+        html += "<tr><td>" + r + "</td>";
+        var line = [r];
+        cols.forEach(function (c) {
+          var v = agg(map[r][c] || [], how);
+          total += Number(v) || 0;
+          html += "<td>" + (Math.round(v * 100) / 100) + "</td>";
+          line.push(v);
+        });
+        html += "<td>" + (Math.round(total * 100) / 100) + "</td></tr>";
+        csv += line.concat(total).join(",") + "\n";
+      });
+      html += "</tbody>";
+      document.getElementById("out").innerHTML = html;
+      document.getElementById("meta").textContent = src.rows.length + " source rows · " + rowKeys.length + " groups · " + cols.length + " columns · " + how + "(" + vK + "). Sanity: totals should match a manual sum of " + vK + ".";
+      last.table = csv;
+      last.headers = [rK].concat(cols).concat("Total");
+      last.grid = csv;
+      ISI.store.saveResult("pivot", { rows: src.rows.length, groups: rowKeys.length, agg: how, value: vK });
+    }
+    function download(name, mime, body) {
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob([body], { type: mime }));
+      a.download = name;
+      a.click();
+    }
+    document.getElementById("run").addEventListener("click", function () {
+      fillSelects(parse(document.getElementById("raw").value).headers);
+      run();
+    });
+    document.getElementById("csv").addEventListener("click", function () {
+      download("isi-pivot.csv", "text/csv", last.table || "");
+    });
+    document.getElementById("xml").addEventListener("click", function () {
+      var rows = (last.table || "").trim().split("\n").map(function (line) { return line.split(","); });
+      var xml = '<?xml version="1.0"?><?mso-application progid="Excel.Sheet"?>';
+      xml += '<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Worksheet ss:Name="Pivot"><Table>';
+      rows.forEach(function (r) {
+        xml += "<Row>";
+        r.forEach(function (c) {
+          var n = Number(c);
+          xml += isFinite(n) && c !== "" ? '<Cell><Data ss:Type="Number">' + n + "</Data></Cell>" : '<Cell><Data ss:Type="String">' + String(c).replace(/&/g, "&amp;") + "</Data></Cell>";
+        });
+        xml += "</Row>";
+      });
+      xml += "</Table></Worksheet></Workbook>";
+      download("isi-pivot.xml", "application/vnd.ms-excel", xml);
+    });
+    fillSelects(parse(document.getElementById("raw").value).headers);
+    run();
+  </script>
+</body>
+</html>

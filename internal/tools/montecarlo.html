@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Monte Carlo Simulation | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <main class="pr-wrap">
+    <p class="pr-kicker">Uncertainty engine · seeded · auditable</p>
+    <h1>Monte Carlo simulation</h1>
+    <p class="lede">Replaces point estimates with distributions. If the wired chain has been run, this page still has its own NPV model — the bid-tree Monte Carlo already lives on the chain and results dashboard. Same seed reproduces a run.</p>
+    <p class="formula">For i = 1…N: draw inputs from specified distributions → compute NPV<sub>i</sub> → report mean, σ, P10 / P50 / P90</p>
+
+    <form id="mcForm" class="pr-panel">
+      <h2>Levers</h2>
+      <div class="pr-form-grid">
+        <div><label for="iterations">Iterations (100–20000)</label><input id="iterations" type="number" value="4000" min="100" max="20000"></div>
+        <div><label for="seed">Seed (integer)</label><input id="seed" type="number" value="20260917"></div>
+        <div><label for="invMean">Investment mean ($)</label><input id="invMean" type="number" value="750000"></div>
+        <div><label for="invSd">Investment σ ($)</label><input id="invSd" type="number" value="80000"></div>
+        <div><label for="cfMin">Annual CF min ($)</label><input id="cfMin" type="number" value="120000"></div>
+        <div><label for="cfMode">Annual CF mode ($)</label><input id="cfMode" type="number" value="260000"></div>
+        <div><label for="cfMax">Annual CF max ($)</label><input id="cfMax" type="number" value="420000"></div>
+        <div><label for="rateMean">Discount rate mean (%)</label><input id="rateMean" type="number" step="any" value="10"></div>
+        <div><label for="rateSd">Discount rate σ (pts)</label><input id="rateSd" type="number" step="any" value="1.5"></div>
+        <div><label for="years">Horizon (years)</label><input id="years" type="number" value="5"></div>
+        <div><label for="target">Target NPV for probability of success ($)</label><input id="target" type="number" value="0"></div>
+      </div>
+      <div class="pr-actions"><button class="btn btn-gold" type="submit">Run simulation</button></div>
+    </form>
+
+    <div class="pr-metrics" id="metrics"></div>
+    <div class="pr-panel">
+      <h2>Outcome distribution (NPV)</h2>
+      <canvas id="hist" class="chart"></canvas>
+      <p id="audit" class="lede"></p>
+    </div>
+  </main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/charts.js"></script>
+  <script src="/internal/js/shell.js"></script>
+  <script>
+    ISI.shell.render("tools");
+    function run(e) {
+      if (e) e.preventDefault();
+      var years = Number(document.getElementById("years").value);
+      var target = Number(document.getElementById("target").value);
+      var result = ISI.math.monteCarlo({
+        iterations: Number(document.getElementById("iterations").value),
+        seed: Number(document.getElementById("seed").value),
+        inputs: [
+          { name: "investment", type: "normal", mean: Number(document.getElementById("invMean").value), stdev: Number(document.getElementById("invSd").value) },
+          { name: "cf", type: "triangular", min: Number(document.getElementById("cfMin").value), mode: Number(document.getElementById("cfMode").value), max: Number(document.getElementById("cfMax").value) },
+          { name: "rate", type: "normal", mean: Number(document.getElementById("rateMean").value) / 100, stdev: Number(document.getElementById("rateSd").value) / 100 }
+        ],
+        model: function (d) {
+          var cf = [-Math.abs(d.investment)];
+          for (var t = 1; t <= years; t++) cf.push(d.cf);
+          return ISI.math.npv(Math.max(-0.5, d.rate), cf);
+        }
+      });
+      var pSuccess = result.values.filter(function (v) { return v >= target; }).length / result.iterations;
+      var cards = [
+        ["Mean NPV", ISI.shell.money(result.mean)],
+        ["σ", ISI.shell.money(result.stdev)],
+        ["P10", ISI.shell.money(result.p10)],
+        ["P50", ISI.shell.money(result.p50)],
+        ["P90", ISI.shell.money(result.p90)],
+        ["P(NPV ≥ target)", (pSuccess * 100).toFixed(1) + "%"],
+        ["Min", ISI.shell.money(result.min)],
+        ["Max", ISI.shell.money(result.max)]
+      ];
+      document.getElementById("metrics").innerHTML = cards.map(function (c) {
+        return '<div class="pr-metric"><div class="lbl">' + c[0] + '</div><div class="val">' + c[1] + "</div></div>";
+      }).join("");
+      var hist = ISI.math.histogram(result.values, 28);
+      ISI.charts.histogram(document.getElementById("hist"), hist, {
+        markers: [
+          { value: result.p10, color: "#b42318" },
+          { value: result.p50, color: "#C9A235" },
+          { value: result.p90, color: "#067647" }
+        ]
+      });
+      document.getElementById("audit").textContent =
+        "Seed " + result.seed + " · " + result.iterations.toLocaleString() + " iterations · " + result.elapsedMs + " ms · markers: P10 (red), P50 (gold), P90 (green). Same seed + levers reproduce this distribution.";
+      ISI.store.saveResult("montecarlo", { mean: result.mean, p10: result.p10, p50: result.p50, p90: result.p90, seed: result.seed, iterations: result.iterations, pSuccess: pSuccess });
+    }
+    document.getElementById("mcForm").addEventListener("submit", run);
+    run();
+  </script>
+</body>
+</html>

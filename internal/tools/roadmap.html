@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Roadmap Studio | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <main class="pr-wrap">
+    <p class="pr-kicker">Planning views · same underlying initiatives</p>
+    <h1>Roadmap studio</h1>
+    <p class="lede">Methodology-agnostic. Switch timeline, grid, swimlane, or kanban. Dependencies are listed so bottlenecks show without redrawing slides. Placeholder program for a mid-market manufacturer — rename in consultation.</p>
+    <div class="views" id="views">
+      <button type="button" class="btn btn-ghost is-on" data-view="timeline">Timeline</button>
+      <button type="button" class="btn btn-ghost" data-view="grid">Grid</button>
+      <button type="button" class="btn btn-ghost" data-view="swim">Swimlanes</button>
+      <button type="button" class="btn btn-ghost" data-view="kanban">Kanban</button>
+    </div>
+    <div id="board" class="pr-panel"></div>
+    <div class="pr-panel">
+      <h2>Dependencies</h2>
+      <table class="pr-table" id="deps"></table>
+    </div>
+  </main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/shell.js"></script>
+  <script>
+    ISI.shell.render("plan");
+    var ITEMS = [
+      { id: "D1", name: "Constraint diagnosis", lane: "Discover", start: 0, dur: 3, status: "done", dep: [] },
+      { id: "D2", name: "Financial case (NPV / Monte Carlo)", lane: "Discover", start: 2, dur: 3, status: "doing", dep: ["D1"] },
+      { id: "P1", name: "Bottleneck buffer & changeover cut", lane: "Operations", start: 4, dur: 6, status: "doing", dep: ["D1"] },
+      { id: "P2", name: "S&OP forecast rebuild", lane: "Supply", start: 5, dur: 5, status: "todo", dep: ["D2"] },
+      { id: "C1", name: "Pricing waterfall & deal desk", lane: "Commercial", start: 3, dur: 5, status: "todo", dep: ["D1"] },
+      { id: "L1", name: "Weekly cadence + decision rights", lane: "Leadership", start: 1, dur: 8, status: "doing", dep: [] },
+      { id: "R1", name: "Risk register & contingency", lane: "Governance", start: 0, dur: 4, status: "done", dep: [] }
+    ];
+    var MONTHS = ["M1","M2","M3","M4","M5","M6","M7","M8","M9","M10","M11","M12"];
+
+    function paint(view) {
+      var el = document.getElementById("board");
+      if (view === "timeline") {
+        el.innerHTML = "<h2>Timeline</h2><div class='gantt'>" + ITEMS.map(function (it) {
+          var left = (it.start / 12) * 100;
+          var w = (it.dur / 12) * 100;
+          return "<div class='gantt-row'><div>" + it.id + " " + it.name + "</div><div style='position:relative;height:22px;background:#eef2f7;border-radius:3px'><div class='gantt-bar " + (it.status === "done" ? "ok" : "") + "' style='position:absolute;left:" + left + "%;width:" + w + "%'></div></div></div>";
+        }).join("") + "</div>";
+      } else if (view === "grid") {
+        el.innerHTML = "<h2>Grid</h2><table class='pr-table'><thead><tr><th>ID</th><th>Initiative</th><th>Lane</th><th>Start</th><th>Duration</th><th>Status</th></tr></thead><tbody>" +
+          ITEMS.map(function (it) {
+            return "<tr><td>" + it.id + "</td><td>" + it.name + "</td><td>" + it.lane + "</td><td>" + MONTHS[it.start] + "</td><td>" + it.dur + " mo</td><td>" + it.status + "</td></tr>";
+          }).join("") + "</tbody></table>";
+      } else if (view === "swim") {
+        var lanes = {};
+        ITEMS.forEach(function (it) {
+          lanes[it.lane] = lanes[it.lane] || [];
+          lanes[it.lane].push(it);
+        });
+        el.innerHTML = "<h2>Swimlanes</h2><div class='swim'>" + Object.keys(lanes).map(function (lane) {
+          return "<div class='lane'><h4>" + lane + "</h4>" + lanes[lane].map(function (it) {
+            return "<span class='chip'>" + it.id + " · " + it.name + "</span>";
+          }).join("") + "</div>";
+        }).join("") + "</div>";
+      } else {
+        var cols = { todo: [], doing: [], done: [] };
+        ITEMS.forEach(function (it) { cols[it.status].push(it); });
+        el.innerHTML = "<h2>Kanban</h2><div class='pr-grid'>" + ["todo","doing","done"].map(function (s) {
+          return "<div class='lane'><h4>" + s + "</h4>" + cols[s].map(function (it) {
+            return "<div class='chip'>" + it.name + "</div>";
+          }).join("") + "</div>";
+        }).join("") + "</div>";
+      }
+    }
+
+    document.getElementById("deps").innerHTML = "<thead><tr><th>From</th><th>To</th><th>Type</th></tr></thead><tbody>" +
+      ITEMS.filter(function (it) { return it.dep.length; }).map(function (it) {
+        return it.dep.map(function (d) {
+          return "<tr><td>" + d + "</td><td>" + it.id + "</td><td>Finish-to-start</td></tr>";
+        }).join("");
+      }).join("") + "</tbody>";
+
+    paint("timeline");
+    document.getElementById("views").addEventListener("click", function (e) {
+      var btn = e.target.closest("button");
+      if (!btn) return;
+      document.querySelectorAll("#views button").forEach(function (b) { b.classList.remove("is-on"); });
+      btn.classList.add("is-on");
+      paint(btn.getAttribute("data-view"));
+    });
+    ISI.store.saveResult("roadmap", { count: ITEMS.length });
+  </script>
+</body>
+</html>

@@ -1,0 +1,308 @@
+/* ISI Consulting — internal practice bench (not client-facing) */
+:root {
+  --navy: #0F1F3D;
+  --navy-deep: #0a1528;
+  --navy-mid: #1a335c;
+  --gold: #C9A235;
+  --gold-hover: #d4b04a;
+  --steel: #5b7a9d;
+  --bg: #f4f6f9;
+  --surface: #fff;
+  --text: #1a2332;
+  --muted: #5a6577;
+  --border: #dce3ed;
+  --green: #067647;
+  --red: #b42318;
+  --header-h: 3.4rem;
+  --mega-h: 2.6rem;
+  --font: "Segoe UI", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html { scroll-padding-top: calc(var(--header-h) + var(--mega-h) + 12px); }
+body.practice {
+  margin: 0;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+.pr-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: var(--navy);
+  color: #fff;
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+  border-bottom: 2px solid var(--gold);
+}
+.pr-brand {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+  text-decoration: none;
+}
+.pr-brand span { color: var(--gold); }
+.pr-tag {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.72);
+  margin-left: 0.75rem;
+}
+.pr-header-right { font-size: 0.8rem; color: rgba(255,255,255,0.7); }
+.pr-header-right a { color: var(--gold); }
+
+.pr-mega {
+  position: sticky;
+  top: var(--header-h);
+  z-index: 39;
+  background: var(--navy-mid);
+  min-height: var(--mega-h);
+}
+.pr-mega-bar {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0 0.5rem;
+}
+.pr-mega-item { position: relative; }
+.pr-mega-item > a,
+.pr-mega-item > button {
+  display: block;
+  background: none;
+  border: 0;
+  color: rgba(255,255,255,0.9);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 600;
+  padding: 0.7rem 0.95rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+.pr-mega-item:hover > a,
+.pr-mega-item:hover > button,
+.pr-mega-item:focus-within > a,
+.pr-mega-item:focus-within > button,
+.pr-mega-item.is-current > a {
+  color: var(--gold);
+}
+.pr-drop {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  min-width: 280px;
+  background: #fff;
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 24px rgba(15,31,61,0.16);
+  padding: 0.5rem 0;
+}
+.pr-mega-item:hover .pr-drop,
+.pr-mega-item:focus-within .pr-drop { display: block; }
+.pr-drop a {
+  display: block;
+  padding: 0.45rem 1rem;
+  color: var(--navy);
+  text-decoration: none;
+  font-size: 0.88rem;
+}
+.pr-drop a:hover { background: #f4f6f9; color: var(--gold); }
+.pr-drop .hint {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.pr-wrap {
+  width: min(100% - 2rem, 1180px);
+  margin: 1.5rem auto 3rem;
+}
+.pr-kicker {
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 700;
+  margin: 0 0 0.35rem;
+}
+h1 { font-size: 1.7rem; margin: 0 0 0.5rem; color: var(--navy); }
+.lede { color: var(--muted); max-width: 70ch; margin: 0 0 1.25rem; }
+
+.pr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+.pr-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.15rem 1.1rem;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+a.pr-card:hover { border-color: var(--gold); }
+.pr-card h3 { margin: 0 0 0.4rem; color: var(--navy); font-size: 1.05rem; }
+.pr-card p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+.pr-card .go { margin-top: 0.7rem; font-weight: 600; color: var(--navy-mid); font-size: 0.85rem; }
+
+.pr-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+  margin: 1rem 0 1.5rem;
+}
+.pr-metric {
+  background: var(--navy);
+  color: #fff;
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+}
+.pr-metric .lbl { font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); }
+.pr-metric .val { font-size: 1.25rem; font-weight: 700; margin-top: 0.2rem; }
+
+.pr-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+}
+.pr-panel h2 { margin: 0 0 0.75rem; font-size: 1.15rem; color: var(--navy); }
+
+.pr-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.85rem 1rem;
+}
+label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--navy); margin-bottom: 0.25rem; }
+input, select, textarea {
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font: inherit;
+  background: #fff;
+}
+textarea { min-height: 72px; resize: vertical; }
+.pr-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
+.btn {
+  display: inline-block;
+  border: 0;
+  border-radius: 5px;
+  padding: 0.55rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  font: inherit;
+  text-decoration: none;
+}
+.btn-gold { background: var(--gold); color: var(--navy-deep); }
+.btn-navy { background: var(--navy); color: #fff; }
+.btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--navy); }
+
+.formula {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.85rem;
+  background: #eef2f7;
+  border-left: 3px solid var(--gold);
+  padding: 0.7rem 0.9rem;
+  margin: 0 0 1rem;
+  color: var(--muted);
+}
+canvas.chart {
+  width: 100%;
+  height: 280px;
+  display: block;
+  background: #fafbfc;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+table.pr-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.pr-table th, .pr-table td {
+  text-align: left;
+  padding: 0.45rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.pr-table th { color: var(--navy); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.pos { color: var(--green); font-weight: 600; }
+.neg { color: var(--red); font-weight: 600; }
+.banner {
+  background: var(--navy);
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+.banner strong { color: var(--gold); }
+.tree { font-size: 0.92rem; }
+.tree ul { list-style: none; margin: 0.3rem 0 0.3rem 1rem; padding: 0; border-left: 1px solid var(--border); }
+.tree li { margin: 0.25rem 0; padding-left: 0.7rem; }
+.tree .node {
+  display: inline-block;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  background: #eef2f7;
+  font-weight: 600;
+}
+.tree .chance { background: #e3eef8; }
+.tree .decision { background: var(--navy); color: #fff; }
+.tree .leaf-pos { background: #ecfdf3; color: var(--green); }
+.tree .leaf-neg { background: #fef3f2; color: var(--red); }
+.tree .leaf-neu { background: #fff8e8; color: #8a6a12; }
+.views { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+.views button.is-on { background: var(--navy); color: #fff; }
+.doc {
+  background: #fff;
+  border: 1px solid var(--border);
+  padding: 1.5rem 1.75rem;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+.doc h2 { font-size: 1.2rem; }
+.swim {
+  display: grid;
+  gap: 0.6rem;
+}
+.lane {
+  background: #eef2f7;
+  border-radius: 6px;
+  padding: 0.6rem;
+  min-height: 70px;
+}
+.lane h4 { margin: 0 0 0.4rem; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--navy); }
+.chip {
+  display: inline-block;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  padding: 0.35rem 0.55rem;
+  margin: 0.2rem 0.25rem 0.2rem 0;
+  font-size: 0.82rem;
+}
+.gantt { overflow-x: auto; }
+.gantt-row { display: grid; grid-template-columns: 140px 1fr; gap: 0.5rem; align-items: center; margin-bottom: 0.35rem; }
+.gantt-bar {
+  height: 18px;
+  background: var(--steel);
+  border-radius: 3px;
+}
+.gantt-bar.delay { background: #b42318; }
+.gantt-bar.ok { background: #067647; }
+@media print {
+  .pr-header, .pr-mega, .pr-actions, .banner { display: none !important; }
+  body.practice { background: #fff; }
+}
+@media (max-width: 800px) {
+  .pr-tag, .pr-header-right { display: none; }
+  .pr-drop { position: static; box-shadow: none; }
+}

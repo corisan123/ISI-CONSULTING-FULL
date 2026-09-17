@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Decision Tree Studio | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <main class="pr-wrap">
+    <p class="pr-kicker">Internal · choose the tree type · replace placeholders</p>
+    <h1>Decision tree studio</h1>
+    <p class="lede">Five working tree types. Pick the structure that matches the problem, edit the inputs, and the expected values / fired branches update. This is not a drawing. Analytics are computed in-page.</p>
+
+    <div class="pr-panel">
+      <label for="type">Tree type</label>
+      <select id="type">
+        <option value="ev">Expected-value (decision + chance)</option>
+        <option value="diagnostic">Diagnostic / classification (threshold fire)</option>
+        <option value="constraint">Constraint / fault (throughput)</option>
+        <option value="sequential">Sequential / stage-gate (real option)</option>
+        <option value="winloss">Commercial win-loss</option>
+      </select>
+      <p id="typeHelp" class="lede" style="margin-top:0.75rem"></p>
+    </div>
+
+    <div id="inputs" class="pr-panel"></div>
+    <div class="pr-metrics" id="metrics"></div>
+    <div class="pr-panel">
+      <h2>Visual</h2>
+      <div class="tree" id="visual"></div>
+    </div>
+    <div class="pr-panel">
+      <h2>Analytics</h2>
+      <table class="pr-table" id="table"></table>
+    </div>
+  </main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/shell.js"></script>
+  <script src="/internal/js/trees.js"></script>
+  <script>
+    ISI.shell.render("structure");
+    var HELP = {
+      ev: "Investment decision with chance nodes. EV = Σ p × payoff. Optimal path is the decision with the highest EV.",
+      diagnostic: "Issue tree that fires when a KPI crosses a threshold. Used in the Growth diagnostic. Not a profit tree.",
+      constraint: "Operations: demand vs constraint capacity. Lost throughput $ is contribution × weekly gap × 52.",
+      sequential: "Stage-gate: pursue now vs pilot vs pass. Pilot haircuts probability and cost.",
+      winloss: "Commercial: bid / no-bid given win rate, margin, and pursuit cost."
+    };
+
+    function num(id, d) {
+      var el = document.getElementById(id);
+      var n = el ? Number(el.value) : d;
+      return isFinite(n) ? n : d;
+    }
+
+    function paintType() {
+      var t = document.getElementById("type").value;
+      document.getElementById("typeHelp").textContent = HELP[t];
+      var html = "";
+      if (t === "ev") {
+        html =
+          '<div class="pr-form-grid">' +
+          '<div><label>P(strong adoption)</label><input id="pStrong" type="number" step="0.05" value="0.65"></div>' +
+          '<div><label>P(high ROI | strong)</label><input id="pHigh" type="number" step="0.05" value="0.80"></div>' +
+          '<div><label>High ROI ($)</label><input id="vHigh" type="number" value="3200000"></div>' +
+          '<div><label>Moderate | strong ($)</label><input id="vModS" type="number" value="1300000"></div>' +
+          '<div><label>P(moderate adoption)</label><input id="pMod" type="number" step="0.05" value="0.25"></div>' +
+          '<div><label>Moderate ROI ($)</label><input id="vMod" type="number" value="1100000"></div>' +
+          '<div><label>Low ROI | moderate ($)</label><input id="vLowM" type="number" value="400000"></div>' +
+          '<div><label>Low adoption payoff ($)</label><input id="vLow" type="number" value="-600000"></div>' +
+          "</div>";
+      } else if (t === "diagnostic") {
+        html =
+          '<div class="pr-form-grid">' +
+          '<div><label>Win rate (%)</label><input id="win" type="number" value="22"></div>' +
+          '<div><label>Top-account concentration (%)</label><input id="conc" type="number" value="55"></div>' +
+          '<div><label>Gross margin (%)</label><input id="gm" type="number" value="18"></div>' +
+          '<div><label>OTIF (%)</label><input id="otif" type="number" value="81"></div>' +
+          "</div>";
+      } else if (t === "constraint") {
+        html =
+          '<div class="pr-form-grid">' +
+          '<div><label>Weekly demand (units)</label><input id="demand" type="number" value="1200"></div>' +
+          '<div><label>Constraint capacity (units/week)</label><input id="cap" type="number" value="900"></div>' +
+          '<div><label>Contribution $/unit</label><input id="cu" type="number" value="85"></div>' +
+          '<div><label>OEE (%)</label><input id="oee" type="number" value="62"></div>' +
+          "</div>";
+      } else if (t === "sequential") {
+        html =
+          '<div class="pr-form-grid">' +
+          '<div><label>P(success)</label><input id="ps" type="number" step="0.05" value="0.55"></div>' +
+          '<div><label>Value if win ($)</label><input id="vw" type="number" value="1800000"></div>' +
+          '<div><label>Value if lose ($)</label><input id="vl" type="number" value="-250000"></div>' +
+          '<div><label>Cost to pursue now ($)</label><input id="cn" type="number" value="400000"></div>' +
+          "</div>";
+      } else {
+        html =
+          '<div class="pr-form-grid">' +
+          '<div><label>Win rate (%)</label><input id="wr" type="number" value="28"></div>' +
+          '<div><label>Gross profit if won ($)</label><input id="gp" type="number" value="220000"></div>' +
+          '<div><label>Pursuit / bid cost ($)</label><input id="pc" type="number" value="18000"></div>' +
+          '<div><label>Develop / execute if won ($)</label><input id="dev" type="number" value="140000"></div>' +
+          '<div><label>Capacity load if won (0–1)</label><input id="load" type="number" step="0.05" value="0.4"></div>' +
+          "</div>";
+      }
+      document.getElementById("inputs").innerHTML = "<h2>Inputs</h2>" + html;
+      document.getElementById("inputs").querySelectorAll("input").forEach(function (inp) {
+        inp.addEventListener("input", run);
+      });
+      run();
+    }
+
+    function run() {
+      var t = document.getElementById("type").value;
+      var visual = "";
+      var rows = [];
+      var metrics = [];
+      if (t === "ev") {
+        var pS = num("pStrong", 0.65);
+        var pM = num("pMod", 0.25);
+        var pL = Math.max(0, 1 - pS - pM);
+        var evS = num("pHigh", 0.8) * num("vHigh", 0) + (1 - num("pHigh", 0.8)) * num("vModS", 0);
+        var evM = 0.6 * num("vMod", 0) + 0.4 * num("vLowM", 0);
+        var evL = num("vLow", 0);
+        var ev = pS * evS + pM * evM + pL * evL;
+        metrics = [["Expected value", ISI.shell.money(ev)], ["P-sum check", ((pS + pM + pL) * 100).toFixed(0) + "%"]];
+        visual =
+          "<ul><li><span class='node decision'>Invest?</span><ul>" +
+          "<li><span class='node chance'>Strong " + pS.toFixed(2) + "</span> → EV " + ISI.shell.money(evS) + "</li>" +
+          "<li><span class='node chance'>Moderate " + pM.toFixed(2) + "</span> → EV " + ISI.shell.money(evM) + "</li>" +
+          "<li><span class='node chance'>Low " + pL.toFixed(2) + "</span> → " + ISI.shell.money(evL) + "</li>" +
+          "</ul></li></ul>";
+        rows = [
+          ["Strong adoption", pS, evS],
+          ["Moderate", pM, evM],
+          ["Low", pL, evL]
+        ];
+        ISI.store.saveResult("tree-ev", { ev: ev });
+      } else if (t === "diagnostic") {
+        var tests = [
+          { id: "win", label: "Win rate carrying share?", eval: function () { return { fired: num("win", 0) < 30, evidence: "Win rate " + num("win", 0) + "% (fires < 30%)" }; }, engine: "commercial" },
+          { id: "conc", label: "Concentration risk?", eval: function () { return { fired: num("conc", 0) >= 40, evidence: "Top accounts " + num("conc", 0) + "% (fires ≥ 40%)" }; }, engine: "commercial" },
+          { id: "gm", label: "Margin structurally thin?", eval: function () { return { fired: num("gm", 0) < 22, evidence: "GM " + num("gm", 0) + "% (fires < 22%)" }; }, engine: "margin" },
+          { id: "otif", label: "Delivery failing promises?", eval: function () { return { fired: num("otif", 0) < 90, evidence: "OTIF " + num("otif", 0) + "% (fires < 90%)" }; }, engine: "operations" }
+        ];
+        var out = ISI.trees.diagnosticFire(tests, {});
+        var fired = out.filter(function (x) { return x.fired; });
+        metrics = [["Branches fired", fired.length + " / " + out.length], ["Primary lens", fired[0] ? fired[0].engine : "none"]];
+        visual = "<ul>" + out.map(function (x) {
+          return "<li><span class='node " + (x.fired ? "leaf-neg" : "leaf-pos") + "'>" + x.label + "</span> " + x.evidence + "</li>";
+        }).join("") + "</ul>";
+        rows = out.map(function (x) { return [x.label, x.fired ? "FIRE" : "quiet", x.engine]; });
+        ISI.store.saveResult("tree-diagnostic", { fired: fired.length });
+      } else if (t === "constraint") {
+        var gap = Math.max(0, num("demand", 0) - num("cap", 0));
+        var lost = gap * num("cu", 0) * 52;
+        var recovered = num("cap", 0) * (num("oee", 0) / 100 < 0.75 ? 0.12 : 0.04) * num("cu", 0) * 52;
+        metrics = [["Weekly gap", gap + " units"], ["Annual T at risk", ISI.shell.money(lost)], ["OEE recovery $", ISI.shell.money(recovered)]];
+        visual =
+          "<ul><li><span class='node decision'>Raise throughput?</span><ul>" +
+          "<li><span class='node chance'>Exploit constraint</span> recover ~ " + ISI.shell.money(recovered) + " without a new cell</li>" +
+          "<li><span class='node " + (gap > 0 ? "leaf-neg" : "leaf-pos") + "'>Buy machinery</span> only if exploit cannot close the " + gap + " unit gap</li>" +
+          "</ul></li></ul>";
+        rows = [["Demand", num("demand", 0), ""], ["Capacity", num("cap", 0), ""], ["Gap", gap, lost]];
+        ISI.store.saveResult("tree-constraint", { gap: gap, lost: lost });
+      } else if (t === "sequential") {
+        var seq = ISI.trees.sequential(num("ps", 0.55), num("vw", 0), num("vl", 0), num("cn", 0), num("cn", 0));
+        metrics = [["Best path", seq.best.label], ["EV", ISI.shell.money(seq.best.ev)]];
+        visual = "<ul><li><span class='node decision'>Stage-gate</span><ul>" + seq.rows.map(function (r) {
+          var cls = r.id === seq.best.id ? "leaf-pos" : "leaf-neu";
+          return "<li><span class='node " + cls + "'>" + r.label + "</span> EV " + ISI.shell.money(r.ev) + "</li>";
+        }).join("") + "</ul></li></ul>";
+        rows = seq.rows.map(function (r) { return [r.label, "", r.ev]; });
+        ISI.store.saveResult("tree-sequential", { best: seq.best.label, ev: seq.best.ev });
+      } else {
+        var p = num("wr", 0) / 100;
+        var gp = num("gp", 0);
+        var pc = num("pc", 0);
+        var develop = num("dev", 140000);
+        var tree = ISI.trees.bidTree(p, gp, pc, develop);
+        metrics = [["EV(bid)", ISI.shell.money(tree.evBid)], ["Best path", tree.best.label], ["EV(JV)", ISI.shell.money(tree.evJV)]];
+        visual =
+          "<ul><li><span class='node decision'>Bid?</span><ul>" +
+          "<li><span class='node chance'>Win " + (p * 100).toFixed(0) + "%</span> GP " + ISI.shell.money(gp) + " − develop " + ISI.shell.money(develop) + "</li>" +
+          "<li><span class='node chance'>Lose " + ((1 - p) * 100).toFixed(0) + "%</span> sunk bid cost " + ISI.shell.money(pc) + "</li>" +
+          "<li><span class='node " + (tree.best.id === "bid" ? "leaf-pos" : "leaf-neu") + "'>Recommend " + tree.best.label + "</span> EV " + ISI.shell.money(tree.best.ev) + "</li>" +
+          "</ul></li></ul>";
+        rows = tree.options.map(function (o) { return [o.label, "", o.ev]; });
+        ISI.store.saveResult("tree-winloss", tree);
+        ISI.store.setBus({ tree: tree });
+      }
+
+      document.getElementById("visual").innerHTML = visual;
+      document.getElementById("metrics").innerHTML = metrics.map(function (c) {
+        return '<div class="pr-metric"><div class="lbl">' + c[0] + '</div><div class="val">' + c[1] + "</div></div>";
+      }).join("");
+      var head = t === "diagnostic" ? "<thead><tr><th>Branch</th><th>Status</th><th>Lens</th></tr></thead>" : "<thead><tr><th>Node</th><th>p / qty</th><th>Value</th></tr></thead>";
+      document.getElementById("table").innerHTML = head + "<tbody>" + rows.map(function (r) {
+        var c2 = typeof r[2] === "number" ? ISI.shell.money(r[2]) : (r[2] == null ? "" : r[2]);
+        var c1 = typeof r[1] === "number" && r[1] <= 1 && r[1] >= 0 && t !== "constraint" && t !== "diagnostic" ? (r[1] * 100).toFixed(0) + "%" : r[1];
+        if (t === "constraint") c1 = r[1];
+        return "<tr><td>" + r[0] + "</td><td>" + c1 + "</td><td>" + c2 + "</td></tr>";
+      }).join("") + "</tbody>";
+    }
+
+    document.getElementById("type").addEventListener("change", paintType);
+    var busTree = ISI.store.getBus().tree;
+    if (busTree && busTree.pWin != null) {
+      document.getElementById("type").value = "winloss";
+    }
+    paintType();
+    if (busTree && document.getElementById("wr")) {
+      document.getElementById("wr").value = (busTree.pWin * 100).toFixed(1);
+      document.getElementById("gp").value = Math.round(busTree.gp);
+      document.getElementById("pc").value = Math.round(busTree.bidCost);
+      if (document.getElementById("dev")) document.getElementById("dev").value = Math.round(busTree.developCost);
+      run();
+    }
+  </script>
+</body>
+</html>

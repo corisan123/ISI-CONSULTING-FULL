@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Exclusivity Letter | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <main class="pr-wrap">
+    <p class="pr-kicker">Template · not legal advice</p>
+    <h1>Limited exclusivity letter</h1>
+    <form id="f" class="pr-panel pr-form-grid">
+      <div><label for="client">Client</label><input id="client" value="Placeholder Manufacturing Co."></div>
+      <div><label for="scope">Scope of services</label><input id="scope" value="Growth & turnaround diagnostic and 90-day implementation support in the United States manufacturing operations of Client."></div>
+      <div><label for="days">Exclusivity period (days)</label><input id="days" type="number" value="60"></div>
+      <div><label for="geo">Territory</label><input id="geo" value="United States"></div>
+    </form>
+    <div class="pr-actions">
+      <button type="button" class="btn btn-gold" id="gen">Generate</button>
+      <button type="button" class="btn btn-ghost" onclick="window.print()">Print / PDF</button>
+    </div>
+    <article class="doc" id="doc"></article>
+  </main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/shell.js"></script>
+  <script>
+    ISI.shell.render("docs");
+    function gen() {
+      document.getElementById("doc").innerHTML =
+        "<h2>LIMITED EXCLUSIVITY LETTER</h2>" +
+        "<p>ISI Consulting, LLC and <strong>" + document.getElementById("client").value + "</strong> agree that, for <strong>" + document.getElementById("days").value + " days</strong> from the date of last signature, ISI will not provide the same Scope to a direct competitor of Client in the Territory without Client’s written consent.</p>" +
+        "<p><strong>Scope:</strong> " + document.getElementById("scope").value + "</p>" +
+        "<p><strong>Territory:</strong> " + document.getElementById("geo").value + "</p>" +
+        "<p>This letter does not restrict ISI’s work for non-competing clients, nor Client’s right to engage other advisors. Confidentiality remains governed by the NDA. Either party may terminate this exclusivity on ten (10) days’ written notice if a paid engagement has not been executed.</p>" +
+        "<p style='margin-top:2rem'>ISI Consulting, LLC ________________ Date ________</p>" +
+        "<p>Client ________________ Date ________</p>";
+      ISI.store.saveResult("exclusivity", { client: document.getElementById("client").value });
+    }
+    document.getElementById("gen").addEventListener("click", gen);
+    gen();
+  </script>
+</body>
+</html>

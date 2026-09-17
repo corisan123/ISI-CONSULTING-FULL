@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Decision Matrix | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/engagement.css">
+</head>
+<body class="eng">
+  <header class="eng-top">
+    <a class="eng-brand" href="/internal/pipeline.html">
+      <div class="eng-mark">ISI</div>
+      <div>
+        <h1>Decision <span>matrix</span></h1>
+        <p class="eng-sub">Scored alternatives. EV from the quantified tree, cash at risk, proven causes, diligence gates. Not a vote.</p>
+      </div>
+    </a>
+    <div class="eng-top-links">
+      <a href="/internal/pipeline.html">Chain</a>
+      <a href="/internal/tools/sensitivity.html">Sensitivity</a>
+      <a href="/internal/results.html">Results</a>
+    </div>
+  </header>
+
+  <main class="eng-main">
+    <section class="eng-card">
+      <h2 id="winner">Run the chain or recompute</h2>
+      <p class="eng-desc" id="blurb">Weights: expected value 40%, cash at risk 20%, fit to proven causes 25%, diligence 15%.</p>
+      <div id="body"></div>
+      <div class="btn-row">
+        <a class="btn btn-gold" href="/internal/pipeline.html">Run wired chain</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/trees.js"></script>
+  <script>
+    var bus = ISI.store.getBus() || {};
+    var matrix = bus.matrix;
+    var el = document.getElementById("body");
+    if (!matrix || !matrix.rows) {
+      el.innerHTML = "<p class='eng-desc'>No matrix on the bus yet. Run the ten-program chain — this page will fill from the tree, diagnosis, and diligence.</p>";
+    } else {
+      document.getElementById("winner").textContent = "Winner: " + matrix.best.label;
+      var html = "<table class='proof-table'><thead><tr><th>Alternative</th>";
+      matrix.criteria.forEach(function (c) { html += "<th>" + c.label + " (" + (c.weight * 100).toFixed(0) + "%)</th>"; });
+      html += "<th>Total</th></tr></thead><tbody>";
+      matrix.rows.forEach(function (r) {
+        html += "<tr><td>" + r.label + "</td>";
+        r.cells.forEach(function (c) { html += "<td>" + c.weighted.toFixed(2) + "</td>"; });
+        html += "<td>" + r.total.toFixed(2) + "</td></tr>";
+      });
+      html += "</tbody></table>";
+      el.innerHTML = html;
+    }
+  </script>
+</body>
+</html>

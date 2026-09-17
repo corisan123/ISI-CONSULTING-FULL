@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Intervention Activation | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <main class="pr-wrap">
+    <p class="pr-kicker">Internal · modular interventions · only what the intake proves</p>
+    <h1>Intervention activation</h1>
+    <p class="lede">Reads the client-facing nine-section intake. Each module fires only when the answers show the gap. Nothing is recommended by default.</p>
+    <div class="banner" id="src"></div>
+    <div class="pr-metrics" id="metrics"></div>
+    <div class="pr-panel">
+      <table class="pr-table" id="tbl"></table>
+    </div>
+    <p class="lede">If intake is empty, load a demo construction file to see the wiring.</p>
+    <div class="pr-actions">
+      <button type="button" class="btn btn-gold" id="demo">Load construction demo intake</button>
+      <a class="btn btn-ghost" href="/website/forms/client-intake.html">Open public intake</a>
+    </div>
+  </main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/shell.js"></script>
+  <script>
+    ISI.shell.render("diag");
+    var MODULES = [
+      { id: "bd", name: "BD process rebuild", test: function (d) { return /no|weak|inconsistent|ad hoc/i.test(d.bdProcess || "") || /low|inconsistent/i.test(d.pipelineConsistency || ""); } },
+      { id: "proposal", name: "Proposal system overhaul", test: function (d) { return Number(d.winRate) < 30 || /frustrat|slow|inconsist/i.test(d.proposalFrustration || ""); } },
+      { id: "margin", name: "Margin recovery and pricing discipline", test: function (d) { return /estimat|discount|job cost|handoff|buyout/i.test(d.marginErosion || "") || /low|no/i.test(d.jobProfitVisibility || ""); } },
+      { id: "cadence", name: "Leadership cadence reset", test: function (d) { return Number(d.leadershipConfidence) <= 6 || /align|conflict|handoff/i.test(d.deptConflict || ""); } },
+      { id: "training", name: "Training systems for PMs, estimators, BD", test: function (d) { return /under|gap|thin|no bench/i.test(d.leadershipGaps || d.understaffedRoles || ""); } },
+      { id: "align", name: "Alignment between BD, Ops, and Finance", test: function (d) { return /poor|break|silo/i.test(d.handoffs || d.bdOpsComm || ""); } }
+    ];
+
+    function demo() {
+      var data = {
+        companyName: "Piedmont Mechanical LLC",
+        trade: "mechanical",
+        revenueRange: "15-30",
+        employees: "85",
+        pipelineConsistency: "inconsistent",
+        winRate: "24",
+        bdProcess: "ad hoc",
+        marginErosion: "buyout and discounting on negotiated work",
+        jobProfitVisibility: "low",
+        bdOpsComm: "poor",
+        handoffs: "breaks between estimating and PM",
+        leadershipConfidence: "5",
+        leadershipGaps: "no bench behind the owner",
+        understaffedRoles: "estimator and PM",
+        growthBreak: "estimating and cash",
+        openToChange: "yes"
+      };
+      sessionStorage.setItem("isi_clientIntake", JSON.stringify(data));
+      paint();
+    }
+
+    function paint() {
+      var d = {};
+      try { d = JSON.parse(sessionStorage.getItem("isi_clientIntake") || "{}"); } catch (e) {}
+      document.getElementById("src").innerHTML = d.companyName
+        ? "Intake file: <strong>" + d.companyName + "</strong> · trade " + (d.trade || "—") + " · revenue " + (d.revenueRange || "—")
+        : "No intake in this browser session yet.";
+      var fired = MODULES.filter(function (m) { return m.test(d); });
+      document.getElementById("metrics").innerHTML =
+        '<div class="pr-metric"><div class="lbl">Modules on</div><div class="val">' + fired.length + " / " + MODULES.length + "</div></div>" +
+        '<div class="pr-metric"><div class="lbl">Win rate</div><div class="val">' + (d.winRate || "—") + "</div></div>";
+      document.getElementById("tbl").innerHTML = "<thead><tr><th>Intervention</th><th>Status</th></tr></thead><tbody>" +
+        MODULES.map(function (m) {
+          var on = m.test(d);
+          return "<tr><td>" + m.name + "</td><td class='" + (on ? "neg" : "pos") + "'>" + (on ? "ACTIVATE" : "leave off") + "</td></tr>";
+        }).join("") + "</tbody>";
+      ISI.store.saveResult("interventions", { active: fired.map(function (m) { return m.id; }) });
+    }
+    document.getElementById("demo").addEventListener("click", demo);
+    paint();
+  </script>
+</body>
+</html>

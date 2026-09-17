@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Financial Due Diligence | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/engagement.css">
+</head>
+<body class="eng">
+  <header class="eng-top">
+    <a class="eng-brand" href="/internal/index.html">
+      <div class="eng-mark">ISI</div>
+      <div>
+        <h1>Financial <span>Due Diligence</span></h1>
+        <p class="eng-sub">First workstream when money is involved · live formulas · client-visible logic</p>
+      </div>
+    </a>
+    <div class="eng-top-links">
+      <a href="/internal/index.html">Practice bench</a>
+      <a href="/client/index.html">Client view</a>
+      <a href="/internal/tools/finance.html">Finance kernel</a>
+    </div>
+  </header>
+
+  <nav class="eng-tabs" aria-label="Diligence steps">
+    <button type="button" class="eng-tab is-on" data-panel="situation">1. Situation</button>
+    <button type="button" class="eng-tab" data-panel="numbers">2. Numbers</button>
+    <button type="button" class="eng-tab" data-panel="scorecard">3. Scorecard</button>
+    <button type="button" class="eng-tab" data-panel="tree">4. Decision tree</button>
+    <button type="button" class="eng-tab" data-panel="proof">5. Financial proof</button>
+  </nav>
+
+  <main class="eng-main">
+    <section class="eng-card" id="panel-situation">
+      <h2>What kind of money question is this?</h2>
+      <p class="eng-desc">One engine. Six situations. The tests, gates, and tree change with the engagement — not a new product for every project type.</p>
+      <div class="sit-grid" id="sitGrid"></div>
+      <p class="eng-desc" id="sitPurpose" style="margin-top:1rem"></p>
+      <div class="btn-row">
+        <button type="button" class="btn btn-gold" id="toNumbers">Continue to numbers</button>
+      </div>
+    </section>
+
+    <section class="eng-card panel-hidden" id="panel-numbers">
+      <h2>Stated numbers</h2>
+      <p class="eng-desc">Placeholders until consultation. Change any field; the engine recomputes. Nothing is posted to a server.</p>
+      <form id="ddForm">
+        <div class="input-grid" id="fieldGrid"></div>
+      </form>
+      <div class="btn-row">
+        <button type="button" class="btn btn-gold" id="runBtn">Run due diligence</button>
+        <button type="button" class="btn btn-ghost" id="resetBtn">Reset placeholders</button>
+      </div>
+    </section>
+
+    <section class="eng-card panel-hidden" id="panel-scorecard">
+      <h2>Scorecard</h2>
+      <p class="eng-desc">Each test is a real formula. Green / yellow / red is the gate, not a survey score.</p>
+      <div id="scoreEmpty" class="eng-desc">Run diligence from the Numbers tab.</div>
+      <div id="scoreBody"></div>
+    </section>
+
+    <section class="eng-card panel-hidden" id="panel-tree">
+      <h2>Decision tree the client can follow</h2>
+      <p class="eng-desc">Hard gates first (liquidity and debt service). Then quality, cycle, and concentration. The path taken is the only path shown in gold.</p>
+      <div id="treeBody"></div>
+    </section>
+
+    <section class="eng-card panel-hidden" id="panel-proof">
+      <h2>Financial proof</h2>
+      <p class="eng-desc">The same kernel used in NPV, IRR, working-capital, and coverage tools. Theory is proven here, not asserted.</p>
+      <p class="formula">Current = CA/CL &nbsp;·&nbsp; Quick = (CA−Inv)/CL &nbsp;·&nbsp; CCC = DSO+DIO−DPO &nbsp;·&nbsp; DSCR = EBITDA/(Int+Prin) &nbsp;·&nbsp; FCF = EBITDA−CAPEX−ΔNWC−Tax &nbsp;·&nbsp; NPV = Σ CF<sub>t</sub>/(1+WACC)<sup>t</sup></p>
+      <div id="proofBody"></div>
+      <div class="btn-row">
+        <a class="btn btn-gold" href="/client/index.html">Open client-facing logic</a>
+        <a class="btn btn-ghost" id="nextKit" href="/internal/tools/finance.html">Matched next tool</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/diligence.js"></script>
+  <script>
+    (function () {
+      var sit = "acquisition";
+      var last = null;
+      var grid = document.getElementById("sitGrid");
+      var purpose = document.getElementById("sitPurpose");
+      var fieldGrid = document.getElementById("fieldGrid");
+
+      function show(id) {
+        ["situation", "numbers", "scorecard", "tree", "proof"].forEach(function (p) {
+          document.getElementById("panel-" + p).classList.toggle("panel-hidden", p !== id);
+        });
+        document.querySelectorAll(".eng-tab").forEach(function (t) {
+          t.classList.toggle("is-on", t.getAttribute("data-panel") === id);
+        });
+      }
+
+      function paintSits() {
+        grid.innerHTML = "";
+        Object.keys(ISI.diligence.SITUATIONS).forEach(function (key) {
+          var s = ISI.diligence.SITUATIONS[key];
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "sit" + (key === sit ? " is-on" : "");
+          b.innerHTML = "<strong>" + s.label + "</strong><span>" + s.purpose + "</span>";
+          b.addEventListener("click", function () {
+            sit = key;
+            paintSits();
+          });
+          grid.appendChild(b);
+        });
+        purpose.textContent = ISI.diligence.SITUATIONS[sit].purpose +
+          " Modules: " + ISI.diligence.SITUATIONS[sit].modules.join(", ") + ".";
+      }
+
+      function paintFields() {
+        fieldGrid.innerHTML = "";
+        var lastGroup = "";
+        ISI.diligence.FIELDS.forEach(function (f) {
+          if (f.group !== lastGroup) {
+            lastGroup = f.group;
+            var h = document.createElement("div");
+            h.className = "group-label";
+            h.textContent = f.group;
+            fieldGrid.appendChild(h);
+          }
+          var wrap = document.createElement("div");
+          wrap.className = "input-group";
+          wrap.innerHTML = "<label for='" + f.id + "'>" + f.label + "</label>" +
+            "<input id='" + f.id + "' name='" + f.id + "' type='number' step='any' value='" + f.value + "'>";
+          fieldGrid.appendChild(wrap);
+        });
+      }
+
+      function readFields() {
+        var o = {};
+        ISI.diligence.FIELDS.forEach(function (f) {
+          var el = document.getElementById(f.id);
+          o[f.id] = el ? el.value : f.value;
+        });
+        return o;
+      }
+
+      function run() {
+        last = ISI.diligence.run(sit, readFields(), ISI.math);
+        ISI.store.saveResult("diligence", last);
+        ISI.store.setEngagement({ constraint: sit === "commercial" ? "growth" : sit, diligenceType: sit });
+        paintScore(last);
+        paintTree(last);
+        paintProof(last);
+        document.getElementById("nextKit").href = last.next[0] || "/internal/tools/finance.html";
+        show("scorecard");
+      }
+
+      function paintScore(res) {
+        document.getElementById("scoreEmpty").hidden = true;
+        var tone = res.tree.verdict === "GO" ? "go" : res.tree.verdict === "STOP" ? "stop" : "caution";
+        var html = '<div class="verdict ' + tone + '"><div class="val">' + res.tree.verdict + "</div>" +
+          '<div class="lbl">' + res.headline + "</div></div>";
+        html += '<div class="kpi-row" style="margin:1rem 0">';
+        [
+          ["Current", ISI.diligence.fmtNum(res.metrics.current) + "x"],
+          ["DSCR", ISI.diligence.fmtNum(res.metrics.dscr) + "x"],
+          ["CCC", ISI.diligence.fmtNum(res.metrics.ccc, 0) + " d"],
+          ["QoE EBITDA", ISI.diligence.fmtMoney(res.metrics.qoe)],
+          ["FCF", ISI.diligence.fmtMoney(res.metrics.fcf)],
+          ["NPV", ISI.diligence.fmtMoney(res.metrics.npv)]
+        ].forEach(function (p) {
+          html += '<div class="kpi"><div class="val">' + p[1] + '</div><div class="lbl">' + p[0] + "</div></div>";
+        });
+        html += "</div>";
+        res.tests.forEach(function (t) {
+          html += '<div class="test"><div class="q">' + t.label + ' <span class="badge ' + t.rating + '">' + t.rating + "</span></div>" +
+            '<div class="meta"><span>' + t.formula + "</span><strong>" + t.display + "</strong></div>" +
+            '<p class="because">' + t.because + "</p></div>";
+        });
+        document.getElementById("scoreBody").innerHTML = html;
+      }
+
+      function paintTree(res) {
+        var html = "";
+        res.tree.nodes.forEach(function (n) {
+          html += '<div class="tree-node ' + n.kind + '"><div class="kind">' + n.kind.replace("-", " ") +
+            " · " + n.result + "</div><h3>" + n.label + "</h3><p>" + n.because + "</p></div>";
+        });
+        html += '<p class="eng-desc" style="margin-top:1rem">' + res.clientNarrative + "</p>";
+        document.getElementById("treeBody").innerHTML = html;
+      }
+
+      function paintProof(res) {
+        var m = res.metrics;
+        var rows = [
+          ["Current ratio CA ÷ CL", ISI.diligence.fmtNum(m.current) + "x"],
+          ["Quick ratio (CA − Inv) ÷ CL", ISI.diligence.fmtNum(m.quick) + "x"],
+          ["Net working capital", ISI.diligence.fmtMoney(m.nwc)],
+          ["DSO", ISI.diligence.fmtNum(m.dso, 0) + " days"],
+          ["DIO", ISI.diligence.fmtNum(m.dio, 0) + " days"],
+          ["DPO", ISI.diligence.fmtNum(m.dpo, 0) + " days"],
+          ["Cash conversion cycle", ISI.diligence.fmtNum(m.ccc, 0) + " days"],
+          ["Interest coverage EBIT ÷ Interest", ISI.diligence.fmtNum(m.icr) + "x"],
+          ["DSCR", ISI.diligence.fmtNum(m.dscr) + "x"],
+          ["Net debt / EBITDA", ISI.diligence.fmtNum(m.netDebtToEbitda) + "x"],
+          ["Free cash flow", ISI.diligence.fmtMoney(m.fcf)],
+          ["Quality of earnings EBITDA", ISI.diligence.fmtMoney(m.qoe)],
+          ["QoE haircut vs reported", ISI.diligence.fmtNum(m.qoeHaircut * 100, 1) + "%"],
+          ["EV / QoE EBITDA", ISI.diligence.fmtNum(m.evEbitda) + "x"],
+          ["NPV @ WACC", ISI.diligence.fmtMoney(m.npv)],
+          ["IRR vs WACC", (isFinite(m.irr) ? ISI.diligence.fmtNum(m.irr * 100, 1) : "—") + "% / " + ISI.diligence.fmtNum(m.wacc * 100, 1) + "%"],
+          ["Backlog cover", ISI.diligence.fmtNum(m.backlogCover, 2) + "x"],
+          ["Top-customer concentration", ISI.diligence.fmtNum(m.concentration * 100, 1) + "%"]
+        ];
+        var html = '<table class="proof-table"><thead><tr><th>Proof</th><th>Result</th></tr></thead><tbody>';
+        rows.forEach(function (r) {
+          html += "<tr><td>" + r[0] + "</td><td>" + r[1] + "</td></tr>";
+        });
+        html += "</tbody></table>";
+        document.getElementById("proofBody").innerHTML = html;
+      }
+
+      document.querySelectorAll(".eng-tab").forEach(function (tab) {
+        tab.addEventListener("click", function () { show(tab.getAttribute("data-panel")); });
+      });
+      document.getElementById("toNumbers").addEventListener("click", function () { show("numbers"); });
+      document.getElementById("runBtn").addEventListener("click", run);
+      document.getElementById("resetBtn").addEventListener("click", paintFields);
+
+      paintSits();
+      paintFields();
+    })();
+  </script>
+</body>
+</html>

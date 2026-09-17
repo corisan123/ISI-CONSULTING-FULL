@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Statistics Bench | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <main class="pr-wrap">
+    <p class="pr-kicker">Internal only · not client-facing</p>
+    <h1>Statistics bench</h1>
+    <p class="lede">Fifteen procedures plus utilities on pasted series. Reports update from the same dataset. Placeholder monthly demand is loaded. Uses: demand/load forecasting, cost estimation, and reliability / quality control.</p>
+
+    <form id="dataForm" class="pr-panel">
+      <h2>Dataset</h2>
+      <label for="seriesA">Series A (demand, cost, or measurement — comma or space separated)</label>
+      <textarea id="seriesA">118, 121, 119, 130, 128, 141, 137, 146, 152, 148, 160, 158, 171, 166, 174, 180</textarea>
+      <label for="seriesB" style="margin-top:0.75rem">Series B (optional pairing — price, labor hours, or second sample)</label>
+      <textarea id="seriesB">42, 43, 41, 45, 44, 48, 47, 49, 51, 50, 53, 52, 55, 54, 56, 58</textarea>
+      <div class="pr-form-grid" style="margin-top:0.75rem">
+        <div><label for="alpha">Smoothing α</label><input id="alpha" type="number" step="0.05" value="0.35"></div>
+        <div><label for="periods">Forecast periods</label><input id="periods" type="number" value="6"></div>
+        <div><label for="kmeans">k-means clusters</label><input id="kmeans" type="number" value="3"></div>
+        <div><label for="window">Moving-average window</label><input id="window" type="number" value="3"></div>
+      </div>
+      <div class="pr-actions"><button class="btn btn-gold" type="submit">Update all procedures</button></div>
+    </form>
+
+    <div class="pr-metrics" id="desc"></div>
+    <div class="pr-panel"><h2>Series A with MA and exponential-smooth forecast</h2><canvas id="fcChart" class="chart"></canvas></div>
+    <div class="pr-panel"><h2>SPC — mean ± 3σ</h2><canvas id="spcChart" class="chart"></canvas><p id="spcNote" class="lede"></p></div>
+    <div class="pr-panel" id="reports"></div>
+  </main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/charts.js"></script>
+  <script src="/internal/js/shell.js"></script>
+  <script>
+    ISI.shell.render("tools");
+    var m = ISI.math;
+    function run(e) {
+      if (e) e.preventDefault();
+      var a = m.parseSeries(document.getElementById("seriesA").value);
+      var b = m.parseSeries(document.getElementById("seriesB").value);
+      var d = m.describe(a);
+      if (!d) return;
+      var cards = [
+        ["n", d.n],
+        ["Mean", d.mean.toFixed(2)],
+        ["Median", d.median.toFixed(2)],
+        ["σ", d.stdev.toFixed(2)],
+        ["Q1", d.q1.toFixed(2)],
+        ["Q3", d.q3.toFixed(2)],
+        ["Skew", d.skew.toFixed(2)],
+        ["Kurtosis", d.kurtosis.toFixed(2)]
+      ];
+      document.getElementById("desc").innerHTML = cards.map(function (c) {
+        return '<div class="pr-metric"><div class="lbl">' + c[0] + '</div><div class="val">' + c[1] + "</div></div>";
+      }).join("");
+
+      var alpha = Number(document.getElementById("alpha").value);
+      var periods = Number(document.getElementById("periods").value);
+      var fc = m.forecastExpSmooth(a, alpha, periods);
+      var ma = m.movingAverage(a, Number(document.getElementById("window").value));
+      var x = a.map(function (_, i) { return i + 1; });
+      var lineA = a.concat(new Array(periods).fill(null).map(function () { return fc.level; }));
+      ISI.charts.line(document.getElementById("fcChart"), [
+        { values: a, color: "#5b7a9d" },
+        { values: ma, color: "#0F1F3D" },
+        { values: fc.fitted.concat(fc.forecast), color: "#C9A235" }
+      ]);
+
+      var spc = m.controlLimits(a);
+      ISI.charts.line(document.getElementById("spcChart"), [
+        { values: a, color: "#0F1F3D" },
+        { values: a.map(function () { return spc.ucl; }), color: "#b42318" },
+        { values: a.map(function () { return spc.lcl; }), color: "#b42318" },
+        { values: a.map(function () { return spc.mean; }), color: "#C9A235" }
+      ]);
+      var breaches = a.filter(function (v) { return v > spc.ucl || v < spc.lcl; }).length;
+      document.getElementById("spcNote").textContent = breaches
+        ? breaches + " point(s) outside ±3σ — special-cause candidate."
+        : "No points outside ±3σ on this placeholder series.";
+
+      var jb = m.jarqueBera(a);
+      var km = m.kMeans1D(a, Number(document.getElementById("kmeans").value), 7);
+      var blocks = [];
+      blocks.push("<h2>Procedure results</h2>");
+      blocks.push("<p><strong>1–8 Descriptive / distribution:</strong> n, mean, median, σ, variance, quartiles, range, CV " + (d.cv * 100).toFixed(1) + "%.</p>");
+      blocks.push("<p><strong>9 Normality (Jarque–Bera approx.):</strong> JB = " + (isFinite(jb.jb) ? jb.jb.toFixed(2) : "—") + ", rough p ≈ " + (isFinite(jb.pApprox) ? jb.pApprox.toFixed(3) : "—") + ".</p>");
+      if (b.length) {
+        var n = Math.min(a.length, b.length);
+        var aa = a.slice(0, n);
+        var bb = b.slice(0, n);
+        var reg = m.linreg(aa, bb);
+        var t = m.tTestTwoSample(aa, bb);
+        var mw = m.mannWhitney(aa, bb);
+        blocks.push("<p><strong>10 Pearson r:</strong> " + m.pearson(aa, bb).toFixed(3) + " &nbsp; <strong>11 Spearman:</strong> " + m.spearman(aa, bb).toFixed(3) + "</p>");
+        blocks.push("<p><strong>12 OLS regression</strong> B = " + reg.intercept.toFixed(3) + " + " + reg.slope.toFixed(3) + " A &nbsp; R² = " + (reg.r2 * 100).toFixed(1) + "%.</p>");
+        blocks.push("<p><strong>13 Two-sample t (unequal var):</strong> t = " + t.t.toFixed(2) + ", df ≈ " + t.df + ", mean diff = " + t.diff.toFixed(2) + ".</p>");
+        blocks.push("<p><strong>14 Mann–Whitney U:</strong> U = " + mw.u + " (n1=" + mw.n1 + ", n2=" + mw.n2 + ").</p>");
+        blocks.push("<p><strong>15 χ² 2×2 demo</strong> (median split counts on A vs B above/below own median): see console pairing — use for coded yes/no exports.</p>");
+        var medA = m.median(aa);
+        var medB = m.median(bb);
+        var c11 = 0, c12 = 0, c21 = 0, c22 = 0;
+        for (var i = 0; i < n; i++) {
+          var ha = aa[i] >= medA;
+          var hb = bb[i] >= medB;
+          if (ha && hb) c11++;
+          else if (ha && !hb) c12++;
+          else if (!ha && hb) c21++;
+          else c22++;
+        }
+        var chi = m.chiSquare2x2(c11, c12, c21, c22);
+        blocks.push("<p>χ² = " + chi.chi2.toFixed(2) + " on median-split table [" + [c11, c12, c21, c22].join(", ") + "].</p>");
+      }
+      blocks.push("<p><strong>16 Exponential smoothing forecast</strong> last level = " + fc.level.toFixed(2) + ", next " + periods + " periods held at that level (simple SES).</p>");
+      blocks.push("<p><strong>17 Moving average</strong> window " + document.getElementById("window").value + ".</p>");
+      blocks.push("<p><strong>18 k-means (1D)</strong> centroids: " + km.centroids.map(function (c) { return c.toFixed(1); }).join(", ") + ".</p>");
+      blocks.push("<p><strong>19 Control chart</strong> UCL " + spc.ucl.toFixed(2) + " / LCL " + spc.lcl.toFixed(2) + ".</p>");
+      blocks.push("<p><strong>Utilities:</strong> parse series, mean, σ, quantiles, min/max — all live from the same paste.</p>");
+      document.getElementById("reports").innerHTML = blocks.join("");
+      ISI.store.saveResult("stats", { n: d.n, mean: d.mean, stdev: d.stdev, forecastLevel: fc.level });
+    }
+    document.getElementById("dataForm").addEventListener("submit", run);
+    run();
+  </script>
+</body>
+</html>

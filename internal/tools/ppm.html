@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Project Portfolio | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <main class="pr-wrap">
+    <p class="pr-kicker">PPM · visibility before commitment</p>
+    <h1>Project portfolio</h1>
+    <p class="lede">Shared view of initiatives, risk, capacity, and value. Edit the placeholder rows. Score = (strategic fit × value) / (risk × capacity load). Use this before adding work, not after the slide deck is frozen.</p>
+    <div class="pr-panel">
+      <table class="pr-table" id="tbl"></table>
+      <div class="pr-actions"><button class="btn btn-gold" id="recalc" type="button">Recalculate scores</button></div>
+    </div>
+    <div class="pr-metrics" id="metrics"></div>
+    <div class="pr-panel"><h2>Value vs risk</h2><canvas id="chart" class="chart"></canvas></div>
+  </main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/charts.js"></script>
+  <script src="/internal/js/shell.js"></script>
+  <script>
+    ISI.shell.render("plan");
+    var ROWS = [
+      { name: "Constraint recovery", fit: 9, value: 8, risk: 4, load: 3, invest: 180000 },
+      { name: "S&OP / inventory release", fit: 8, value: 9, risk: 5, load: 4, invest: 120000 },
+      { name: "CRM + deal desk", fit: 7, value: 6, risk: 3, load: 5, invest: 90000 },
+      { name: "Capex line 2", fit: 6, value: 9, risk: 8, load: 9, invest: 750000 },
+      { name: "Leadership cadence", fit: 9, value: 5, risk: 2, load: 2, invest: 40000 }
+    ];
+    function score(r) {
+      return (r.fit * r.value) / Math.max(1, r.risk * r.load);
+    }
+    function paint() {
+      var html = "<thead><tr><th>Initiative</th><th>Fit 1–10</th><th>Value 1–10</th><th>Risk 1–10</th><th>Capacity load 1–10</th><th>Invest $</th><th>Score</th></tr></thead><tbody>";
+      ROWS.forEach(function (r, i) {
+        html += "<tr><td>" + r.name + "</td>" +
+          ["fit","value","risk","load","invest"].map(function (k) {
+            return "<td><input data-i='" + i + "' data-k='" + k + "' type='number' value='" + r[k] + "'></td>";
+          }).join("") +
+          "<td>" + score(r).toFixed(2) + "</td></tr>";
+      });
+      html += "</tbody>";
+      document.getElementById("tbl").innerHTML = html;
+      var ranked = ROWS.slice().sort(function (a, b) { return score(b) - score(a); });
+      document.getElementById("metrics").innerHTML =
+        '<div class="pr-metric"><div class="lbl">Top score</div><div class="val">' + ranked[0].name + "</div></div>" +
+        '<div class="pr-metric"><div class="lbl">Portfolio ask</div><div class="val">' + ISI.shell.money(ISI.math.sum(ROWS.map(function (r) { return r.invest; }))) + "</div></div>" +
+        '<div class="pr-metric"><div class="lbl">Avg risk</div><div class="val">' + ISI.math.mean(ROWS.map(function (r) { return r.risk; })).toFixed(1) + "</div></div>";
+      ISI.charts.bars(document.getElementById("chart"), ROWS.map(function (r) { return r.name.split(" ")[0]; }), ROWS.map(score));
+    }
+    paint();
+    document.getElementById("tbl").addEventListener("change", function (e) {
+      var t = e.target;
+      if (!t.getAttribute) return;
+      var i = Number(t.getAttribute("data-i"));
+      var k = t.getAttribute("data-k");
+      if (k) ROWS[i][k] = Number(t.value);
+    });
+    document.getElementById("recalc").addEventListener("click", function () {
+      paint();
+      ISI.store.saveResult("ppm", { rows: ROWS, top: ROWS.slice().sort(function (a, b) { return score(b) - score(a); })[0].name });
+    });
+  </script>
+</body>
+</html>

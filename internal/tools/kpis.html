@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>KPI Library | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <main class="pr-wrap">
+    <p class="pr-kicker">Activate measures from the constraint</p>
+    <h1>KPI library</h1>
+    <p class="lede">Not a separate engine per KPI. Filter by diagnostic kit, tick the measures you will actually use, and they attach to the session. Placeholder actuals are editable.</p>
+    <div class="pr-panel">
+      <label for="filter">Show kit</label>
+      <select id="filter">
+        <option value="all">All</option>
+        <option value="growth">Growth</option>
+        <option value="margin">Margin / capital</option>
+        <option value="operations">Operations</option>
+        <option value="capital">Capital projects</option>
+        <option value="supply">Supply chain</option>
+      </select>
+    </div>
+    <div class="pr-panel">
+      <table class="pr-table" id="tbl"></table>
+      <div class="pr-actions"><button type="button" class="btn btn-gold" id="save">Save active KPIs to session</button></div>
+    </div>
+  </main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/shell.js"></script>
+  <script>
+    ISI.shell.render("tools");
+    var KPIS = [
+      { kit: "growth", name: "Win rate", unit: "%", actual: 22, target: 30 },
+      { kit: "growth", name: "Sales cycle", unit: "days", actual: 90, target: 60 },
+      { kit: "growth", name: "Customer concentration", unit: "%", actual: 55, target: 35 },
+      { kit: "growth", name: "Pipeline coverage", unit: "x", actual: 2.1, target: 3.5 },
+      { kit: "margin", name: "EBITDA margin", unit: "%", actual: 8, target: 12 },
+      { kit: "margin", name: "NPV", unit: "$", actual: -40000, target: 0 },
+      { kit: "margin", name: "IRR", unit: "%", actual: 8.5, target: 10 },
+      { kit: "margin", name: "Payback", unit: "yrs", actual: 4.6, target: 3 },
+      { kit: "operations", name: "OEE", unit: "%", actual: 62, target: 75 },
+      { kit: "operations", name: "OTIF", unit: "%", actual: 81, target: 95 },
+      { kit: "operations", name: "Scrap", unit: "%", actual: 7.5, target: 2 },
+      { kit: "operations", name: "WIP days", unit: "days", actual: 18, target: 8 },
+      { kit: "capital", name: "CPI", unit: "index", actual: 0.78, target: 1 },
+      { kit: "capital", name: "SPI", unit: "index", actual: 0.8, target: 1 },
+      { kit: "capital", name: "Critical-path float", unit: "days", actual: -18, target: 5 },
+      { kit: "supply", name: "Days on hand", unit: "days", actual: 96, target: 45 },
+      { kit: "supply", name: "Fill rate", unit: "%", actual: 91, target: 97 },
+      { kit: "supply", name: "Forecast MAPE", unit: "%", actual: 28, target: 12 },
+      { kit: "supply", name: "Single-source SKUs", unit: "%", actual: 34, target: 15 }
+    ];
+    var active = {};
+    function paint() {
+      var f = document.getElementById("filter").value;
+      var rows = KPIS.filter(function (k) { return f === "all" || k.kit === f; });
+      document.getElementById("tbl").innerHTML = "<thead><tr><th></th><th>KPI</th><th>Kit</th><th>Actual</th><th>Target</th><th>Gap</th></tr></thead><tbody>" +
+        rows.map(function (k, i) {
+          var id = k.kit + ":" + k.name;
+          var gap = k.actual - k.target;
+          var cls = (k.name === "Scrap" || k.name === "Days on hand" || k.name === "Payback" || k.name === "MAPE" || k.name.indexOf("float") >= 0 || k.name.indexOf("cycle") >= 0 || k.name.indexOf("concentration") >= 0)
+            ? (gap > 0 ? "neg" : "pos")
+            : (gap < 0 ? "neg" : "pos");
+          return "<tr><td><input type='checkbox' data-id='" + id + "'" + (active[id] ? " checked" : "") + "></td><td>" + k.name + "</td><td>" + k.kit + "</td><td><input data-i='" + KPIS.indexOf(k) + "' data-k='actual' type='number' step='any' value='" + k.actual + "'></td><td>" + k.target + " " + k.unit + "</td><td class='" + cls + "'>" + gap.toFixed(1) + "</td></tr>";
+        }).join("") + "</tbody>";
+    }
+    document.getElementById("tbl").addEventListener("change", function (e) {
+      var t = e.target;
+      if (t.type === "checkbox") active[t.getAttribute("data-id")] = t.checked;
+      if (t.getAttribute("data-k") === "actual") {
+        KPIS[Number(t.getAttribute("data-i"))].actual = Number(t.value);
+        paint();
+      }
+    });
+    document.getElementById("filter").addEventListener("change", paint);
+    document.getElementById("save").addEventListener("click", function () {
+      var chosen = Object.keys(active).filter(function (k) { return active[k]; });
+      ISI.store.saveResult("kpis", { active: chosen, snapshot: KPIS });
+    });
+    paint();
+  </script>
+</body>
+</html>

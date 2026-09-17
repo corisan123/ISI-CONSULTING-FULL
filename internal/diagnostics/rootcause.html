@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Structured Diagnosis | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/engagement.css">
+</head>
+<body class="eng">
+  <header class="eng-top">
+    <a class="eng-brand" href="/internal/index.html">
+      <div class="eng-mark">ISI</div>
+      <div>
+        <h1>Structured <span>Diagnosis</span></h1>
+        <p class="eng-sub">Stated problems are symptoms. Competing causes are tested. Only survivors reach the dashboard.</p>
+      </div>
+    </a>
+    <div class="eng-top-links">
+      <a href="/internal/index.html">Bench</a>
+      <a href="/internal/diagnostics/diligence.html">Due diligence</a>
+      <a href="/internal/results.html">Results dashboard</a>
+    </div>
+  </header>
+
+  <nav class="eng-tabs" aria-label="Diagnosis steps">
+    <button type="button" class="eng-tab is-on" data-panel="symptoms">1. Stated symptoms</button>
+    <button type="button" class="eng-tab" data-panel="measures">2. Measures</button>
+    <button type="button" class="eng-tab" data-panel="causes">3. Root causes</button>
+    <button type="button" class="eng-tab" data-panel="killed">4. Killed hypotheses</button>
+  </nav>
+
+  <main class="eng-main">
+    <section class="eng-card" id="panel-symptoms">
+      <h2>What the client says is wrong</h2>
+      <p class="eng-desc" id="intakeLine">Intake language is treated as a complaint list, not a diagnosis.</p>
+      <div class="sit-grid" id="symGrid"></div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-gold" id="toMeasures">Continue to measures</button>
+        <button type="button" class="btn btn-ghost" id="demoIntake">Load demo intake</button>
+      </div>
+    </section>
+
+    <section class="eng-card panel-hidden" id="panel-measures">
+      <h2>Measures that can prove or kill a cause</h2>
+      <p class="eng-desc">Placeholders until consultation. Diligence results in this session fill cash-cycle and coverage when present.</p>
+      <form><div class="input-grid" id="numGrid"></div></form>
+      <div class="btn-row">
+        <button type="button" class="btn btn-gold" id="runBtn">Test competing causes</button>
+      </div>
+    </section>
+
+    <section class="eng-card panel-hidden" id="panel-causes">
+      <h2>Causes that survived the tests</h2>
+      <p class="eng-desc">KEEP = two or more independent tests fired. WEAK = one test — still a lead, not a prescription.</p>
+      <div id="causeBody"></div>
+      <div class="btn-row">
+        <a class="btn btn-gold" href="/internal/results.html">Open results dashboard</a>
+        <a class="btn btn-ghost" href="/client/index.html">Client-visible logic</a>
+      </div>
+    </section>
+
+    <section class="eng-card panel-hidden" id="panel-killed">
+      <h2>Hypotheses the evidence does not support</h2>
+      <p class="eng-desc">Showing what was ruled out is how this stays professional. Guessing keeps every story alive.</p>
+      <div id="killBody"></div>
+    </section>
+  </main>
+
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/diligence.js"></script>
+  <script src="/internal/js/rootcause.js"></script>
+  <script>
+    (function () {
+      var selected = {};
+      function show(id) {
+        ["symptoms", "measures", "causes", "killed"].forEach(function (p) {
+          document.getElementById("panel-" + p).classList.toggle("panel-hidden", p !== id);
+        });
+        document.querySelectorAll(".eng-tab").forEach(function (t) {
+          t.classList.toggle("is-on", t.getAttribute("data-panel") === id);
+        });
+      }
+      function paintSymptoms() {
+        var d = ISI.rootcause.intake();
+        document.getElementById("intakeLine").textContent = d.companyName
+          ? (d.companyName + " stated: “" + (d.preventing || d.prompt || "see intake") + "”. That is the symptom set, not the cause.")
+          : "No intake in this session yet. Select the complaints they named, or load the construction demo.";
+        var detected = ISI.rootcause.detectSymptoms(d);
+        detected.forEach(function (id) { selected[id] = true; });
+        var grid = document.getElementById("symGrid");
+        grid.innerHTML = "";
+        Object.keys(ISI.rootcause.SYMPTOMS).forEach(function (id) {
+          var s = ISI.rootcause.SYMPTOMS[id];
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "sit" + (selected[id] ? " is-on" : "");
+          b.innerHTML = "<strong>" + s.label + "</strong><span>" + s.whyNotCause + "</span>";
+          b.addEventListener("click", function () {
+            selected[id] = !selected[id];
+            paintSymptoms();
+          });
+          grid.appendChild(b);
+        });
+      }
+      function paintNums() {
+        var g = document.getElementById("numGrid");
+        g.innerHTML = "";
+        var d = ISI.rootcause.intake();
+        ISI.rootcause.NUMERIC_FIELDS.forEach(function (f) {
+          var val = f.value;
+          if (f.id === "winRate" && d.winRate) val = d.winRate;
+          var wrap = document.createElement("div");
+          wrap.className = "input-group";
+          wrap.innerHTML = "<label for='n-" + f.id + "'>" + f.label + "</label><input id='n-" + f.id + "' type='number' step='any' value='" + val + "'>";
+          g.appendChild(wrap);
+        });
+      }
+      function readNums() {
+        var o = {};
+        ISI.rootcause.NUMERIC_FIELDS.forEach(function (f) {
+          o[f.id] = document.getElementById("n-" + f.id).value;
+        });
+        return o;
+      }
+      function card(item, tone) {
+        return '<div class="test"><div class="q">' + item.label +
+          ' <span class="badge ' + tone + '">' + item.status + " · " + item.score + "/" + item.of + "</span></div>" +
+          '<p class="because"><strong>Fired:</strong> ' + (item.fired.join("; ") || "none") +
+          "<br><strong>Did not fire:</strong> " + (item.missed.join("; ") || "none") + "</p></div>";
+      }
+      function run() {
+        var symptoms = Object.keys(selected).filter(function (k) { return selected[k]; });
+        var res = ISI.rootcause.run({ symptoms: symptoms, numeric: readNums() });
+        ISI.store.saveResult("rootcause", res);
+        var html = '<div class="verdict"><div class="val">' + res.keep.length + " proven</div><div class='lbl'>" + res.headline + "</div></div>";
+        if (res.keep.length) {
+          html += "<h3 class='group-label'>KEEP</h3>";
+          res.keep.forEach(function (x) { html += card(x, "Green"); });
+        }
+        if (res.weak.length) {
+          html += "<h3 class='group-label'>WEAK — needs one more test</h3>";
+          res.weak.forEach(function (x) { html += card(x, "Yellow"); });
+        }
+        if (!res.keep.length && !res.weak.length) {
+          html += "<p class='eng-desc'>Every competing cause was killed. Recast the measures or the symptom set.</p>";
+        }
+        document.getElementById("causeBody").innerHTML = html;
+        document.getElementById("killBody").innerHTML = res.killed.map(function (x) { return card(x, "Red"); }).join("") ||
+          "<p class='eng-desc'>No hypotheses were fully killed. Unusual — check that measures were entered.</p>";
+        show("causes");
+      }
+      document.querySelectorAll(".eng-tab").forEach(function (t) {
+        t.addEventListener("click", function () { show(t.getAttribute("data-panel")); });
+      });
+      document.getElementById("toMeasures").addEventListener("click", function () { show("measures"); });
+      document.getElementById("runBtn").addEventListener("click", run);
+      document.getElementById("demoIntake").addEventListener("click", function () {
+        sessionStorage.setItem("isi_clientIntake", JSON.stringify({
+          companyName: "Piedmont Mechanical LLC",
+          trade: "mechanical",
+          revenueRange: "15-30",
+          preventing: "Revenue is down and we keep missing the forecast. Margins are gone.",
+          prompt: "Missed forecast four quarters in a row",
+          pipelineConsistency: "inconsistent",
+          winRate: "24",
+          bdProcess: "ad hoc",
+          marginErosion: "buyout and discounting on negotiated work",
+          proposalFrustration: "slow turnaround, inconsistent proposals",
+          jobProfitVisibility: "low",
+          estimatingConfidence: "5",
+          bdOpsComm: "poor",
+          handoffs: "breaks between estimating and PM",
+          bottlenecks: "estimating queue and field overtime",
+          deptConflict: "ops vs BD on what we should bid",
+          leadershipConfidence: "5",
+          leadershipGaps: "no bench behind the owner",
+          understaffedRoles: "estimator and PM",
+          growthBreak: "estimating and cash",
+          nights: "payroll and collections",
+          hiddenCosts: "rework and overtime",
+          kpisTracked: "revenue and backlog only",
+          timeSink: "firefighting every bid",
+          blockedOpps: "cannot staff the work we already have",
+          statedSymptoms: "revenue_down,margin_down,forecast_miss,cash_tight"
+        }));
+        selected = {};
+        paintSymptoms();
+        paintNums();
+      });
+      paintSymptoms();
+      paintNums();
+    })();
+  </script>
+</body>
+</html>

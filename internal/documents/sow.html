@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Statement of Work | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <main class="pr-wrap">
+    <p class="pr-kicker">Template · not legal advice · attach to Terms of Engagement</p>
+    <h1>Statement of Work</h1>
+    <form class="pr-panel pr-form-grid" id="f">
+      <div><label for="client">Client</label><input id="client" value="Placeholder Manufacturing Co."></div>
+      <div><label for="kit">Engagement type</label>
+        <select id="kit">
+          <option>Growth & Turnaround Diagnostic</option>
+          <option>Margin & Capital Diagnostic</option>
+          <option>Operations & Throughput Diagnostic</option>
+          <option>Quality / yield study</option>
+          <option>CAPEX / investment study</option>
+          <option>Capital Projects Diagnostic</option>
+          <option>Supply Chain & Inventory Diagnostic</option>
+          <option>Fractional Business Development</option>
+        </select>
+      </div>
+      <div><label for="start">Start date</label><input id="start" type="date"></div>
+      <div><label for="weeks">Duration (weeks)</label><input id="weeks" type="number" value="6"></div>
+      <div><label for="fee">Professional fee ($)</label><input id="fee" type="number" value="45000"></div>
+      <div><label for="deliver">Primary deliverable</label><input id="deliver" value="Diagnostic packet, prioritized roadmap, and working session with leadership."></div>
+    </form>
+    <div class="pr-actions">
+      <button type="button" class="btn btn-gold" id="gen">Generate</button>
+      <button type="button" class="btn btn-ghost" onclick="window.print()">Print / PDF</button>
+      <a class="btn btn-ghost" href="/website/legal/terms.html">Terms of Engagement</a>
+    </div>
+    <article class="doc" id="doc"></article>
+  </main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/shell.js"></script>
+  <script>
+    ISI.shell.render("docs");
+    document.getElementById("start").value = new Date().toISOString().slice(0, 10);
+    function gen() {
+      var client = document.getElementById("client").value;
+      var kit = document.getElementById("kit").value;
+      document.getElementById("doc").innerHTML =
+        "<h2>STATEMENT OF WORK</h2>" +
+        "<p>This Statement of Work (“SOW”) is issued under the ISI Consulting, LLC Terms of Engagement and describes services for <strong>" + client + "</strong>.</p>" +
+        "<p><strong>1. Services.</strong> ISI will perform a <strong>" + kit + "</strong> using ISI’s proprietary diagnostic and quantitative tools. Client will provide timely access to data, personnel, and facilities reasonably required.</p>" +
+        "<p><strong>2. Period.</strong> Work is scheduled to begin " + document.getElementById("start").value + " and continue approximately " + document.getElementById("weeks").value + " weeks, subject to data availability.</p>" +
+        "<p><strong>3. Deliverable.</strong> " + document.getElementById("deliver").value + " Models and engines remain ISI intellectual property. Client receives the engagement outputs and may use them internally.</p>" +
+        "<p><strong>4. Fees.</strong> Professional fee of " + Number(document.getElementById("fee").value).toLocaleString("en-US", { style: "currency", currency: "USD" }) + ", plus reasonable pre-approved expenses. Invoices are due net 15.</p>" +
+        "<p><strong>5. Assumptions.</strong> Placeholders will be replaced with Client’s actual figures. Recommendations are advisory. No outcome is guaranteed. Confidentiality is as in the NDA and Terms.</p>" +
+        "<p><strong>6. Change control.</strong> Material scope changes require a written change order.</p>" +
+        "<p style='margin-top:2rem'>ISI Consulting, LLC ________________ Date ________</p>" +
+        "<p>" + client + " ________________ Date ________</p>";
+      ISI.store.saveResult("sow", { client: client, kit: kit });
+    }
+    document.getElementById("gen").addEventListener("click", gen);
+    gen();
+  </script>
+</body>
+</html>
