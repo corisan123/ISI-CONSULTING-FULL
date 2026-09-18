@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Resolution dashboard | ISI Consulting</title>
+  <link rel="stylesheet" href="/internal/css/engagement.css">
+</head>
+<body class="eng client-view">
+  <header class="eng-top">
+    <a class="eng-brand" href="/website/index.html">
+      <div class="eng-mark">ISI</div>
+      <div>
+        <h1>Resolution <span>dashboard</span></h1>
+        <p class="eng-sub" id="sub">Polished file for the room — constraints, metrics, and the 90-day load</p>
+      </div>
+    </a>
+    <div class="eng-top-links">
+      <button type="button" class="btn btn-gold" id="print">Print / PDF</button>
+      <a class="practitioner-only" href="/internal/results.html">Practice results</a>
+    </div>
+  </header>
+
+  <main class="eng-main" id="board">
+    <section class="eng-card">
+      <p class="eng-desc" id="fileMeta"></p>
+      <div class="verdict" id="verdictBox">
+        <div class="val" id="verdict">—</div>
+        <div class="lbl" id="narrative"></div>
+      </div>
+    </section>
+
+    <section class="eng-card">
+      <h2>Metrics that govern the file</h2>
+      <p class="eng-desc">KPIs from diligence, diagnostic input, and the quantified path. Duplicates removed.</p>
+      <div class="kpi-row" id="kpis"></div>
+    </section>
+
+    <section class="eng-card" id="probCard" hidden>
+      <h2>Range of outcomes</h2>
+      <p class="eng-desc">P10 / P50 / P90 from the named case. This is a range, not a promise.</p>
+      <div class="kpi-row" id="probs"></div>
+    </section>
+
+    <section class="eng-card">
+      <h2>Constraints on the table</h2>
+      <p class="eng-desc">Each constraint appears once. Symptoms that did not survive the test are listed separately so they are not worked twice.</p>
+      <div id="constraints"></div>
+    </section>
+
+    <section class="eng-card" id="killedCard" hidden>
+      <h2>Stories that did not survive</h2>
+      <div id="killed"></div>
+    </section>
+
+    <section class="eng-card">
+      <h2>Implementation strategy to load</h2>
+      <p class="eng-desc" id="winnerLine"></p>
+      <div class="tree-path" id="impl"></div>
+    </section>
+  </main>
+
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/synthesis.js"></script>
+  <script>
+    (function () {
+      var s = ISI.synthesis.run();
+      document.getElementById("fileMeta").textContent =
+        s.company + (s.industry ? " · " + s.industry : "") +
+        (s.studyLabel ? " · " + s.studyLabel : "") +
+        " · placeholders until replaced in consultation";
+      document.getElementById("verdict").textContent = s.verdict;
+      document.getElementById("narrative").textContent = s.narrative;
+      document.getElementById("winnerLine").textContent = s.winner
+        ? "Recommended path: " + s.winner + ". Workstreams below are the load for the next 90 days."
+        : "Workstreams spawn from the study type. Run the chain if this list is empty.";
+
+      var kpis = document.getElementById("kpis");
+      if (!s.kpis.length) {
+        kpis.innerHTML = "<p class='eng-desc'>No metrics stored yet. Run diligence or the diagnostic glimpse, then return.</p>";
+      } else {
+        s.kpis.forEach(function (k) {
+          var d = document.createElement("div");
+          d.className = "kpi";
+          d.innerHTML = "<div class='val'>" + k.value + "</div><div class='lbl'>" + k.label + "</div>";
+          kpis.appendChild(d);
+        });
+      }
+
+      if (s.probabilities) {
+        document.getElementById("probCard").hidden = false;
+        var probs = document.getElementById("probs");
+        [["P10", s.probabilities.p10], ["P50", s.probabilities.p50], ["P90", s.probabilities.p90], ["Mean", s.probabilities.mean]].forEach(function (p) {
+          var d = document.createElement("div");
+          d.className = "kpi";
+          d.innerHTML = "<div class='val'>" + p[1] + "</div><div class='lbl'>" + p[0] + "</div>";
+          probs.appendChild(d);
+        });
+      }
+
+      var box = document.getElementById("constraints");
+      if (!s.constraints.length) {
+        box.innerHTML = "<p class='eng-desc'>No proven constraints yet. KEEP causes from structured diagnosis and failed diligence tests appear here — once each.</p>";
+      } else {
+        s.constraints.forEach(function (c) {
+          var d = document.createElement("div");
+          d.className = "test";
+          d.innerHTML = "<div class='q'>" + c.family + " · " + c.label +
+            " <span class='badge'>" + c.status + "</span></div><p class='because'>" + (c.evidence || "") + "</p>";
+          box.appendChild(d);
+        });
+      }
+
+      if (s.killed.length) {
+        document.getElementById("killedCard").hidden = false;
+        var kbox = document.getElementById("killed");
+        s.killed.forEach(function (k) {
+          var d = document.createElement("div");
+          d.className = "test";
+          d.innerHTML = "<div class='q'>" + k.label + "</div><p class='because'>" + k.why + "</p>";
+          kbox.appendChild(d);
+        });
+      }
+
+      var impl = document.getElementById("impl");
+      if (!s.implementation.length) {
+        impl.innerHTML = "<p class='eng-desc'>Open Study setup, save a type, or run the wired chain. Implementation lanes will load here.</p>";
+      } else {
+        s.implementation.forEach(function (p) {
+          var el = document.createElement("div");
+          el.className = "tree-node";
+          el.innerHTML = "<div class='kind'>" + p.phase + " · " + p.lane + "</div><h3>" + p.name + "</h3><p>" + p.owner + " · " + p.method + "</p>";
+          impl.appendChild(el);
+        });
+      }
+
+      document.getElementById("print").addEventListener("click", function () { window.print(); });
+    })();
+  </script>
+</body>
+</html>

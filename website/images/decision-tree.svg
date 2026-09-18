@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="ISI decision tree illustration">
+  <rect width="640" height="360" fill="#0F1F3D"/>
+  <g fill="none" stroke="#8fa8c4" stroke-width="1.6">
+    <path d="M80 180 H200"/>
+    <path d="M200 180 L320 90 H460"/>
+    <path d="M200 180 L320 270 H460"/>
+    <path d="M460 90 L560 50"/>
+    <path d="M460 90 L560 130"/>
+    <path d="M460 270 L560 230"/>
+    <path d="M460 270 L560 310"/>
+  </g>
+  <circle cx="80" cy="180" r="14" fill="#C9A235"/>
+  <circle cx="200" cy="180" r="12" fill="#1a3358" stroke="#C9A235"/>
+  <circle cx="320" cy="90" r="12" fill="#1a3358" stroke="#8fa8c4"/>
+  <circle cx="320" cy="270" r="12" fill="#1a3358" stroke="#8fa8c4"/>
+  <rect x="548" y="38" width="56" height="24" rx="3" fill="#C9A235"/>
+  <rect x="548" y="118" width="56" height="24" rx="3" fill="#1a3358"/>
+  <rect x="548" y="218" width="56" height="24" rx="3" fill="#1a3358"/>
+  <rect x="548" y="298" width="56" height="24" rx="3" fill="#C9A235"/>
+  <text x="40" y="36" fill="#C9A235" font-family="Segoe UI, sans-serif" font-size="13" letter-spacing="2">ISI · DECISION TREE</text>
+</svg>

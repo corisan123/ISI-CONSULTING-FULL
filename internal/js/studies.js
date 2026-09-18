@@ -30,7 +30,7 @@
       methods: ["scrum", "agile", "mece"],
       workstreams: [
         { id: "ws-diag", name: "Diagnostic fact-base", swimlane: "ISI", owner: "Engagement lead", method: "MECE + root cause" },
-        { id: "ws-comm", name: "Win rate & pipeline quality", swimlane: "Client BD", owner: "BD owner", method: "Conversion math" },
+        { id: "ws-comm", name: "Win rate & pipeline quality", swimlane: "Client Business Development", owner: "Business Development owner", method: "Conversion math" },
         { id: "ws-price", name: "Price, mix, discount leakage", swimlane: "Client Finance", owner: "CFO / controller", method: "Margin bridge" },
         { id: "ws-cap", name: "Delivery can absorb won work", swimlane: "Client Ops", owner: "Ops lead", method: "Throughput" }
       ],
@@ -187,6 +187,62 @@
       poc: [
         { id: "eac", label: "EAC vs budget is on the table", pass: "Leadership sees the dollar gap, not a Gantt color." },
         { id: "float", label: "Critical path named", pass: "One recovery action tied to float, not a status meeting." }
+      ]
+    },
+    coaching: {
+      id: "coaching",
+      label: "Coaching / cadence study",
+      question: "Which weekly behaviors must change for the number to move?",
+      diligenceSit: "commercial",
+      scenarioModel: "bid",
+      methods: ["scrum", "kaizen", "agile"],
+      workstreams: [
+        { id: "ws-cad", name: "Weekly commercial cadence", swimlane: "Client Leadership", owner: "CEO / GM", method: "Calendar + owners" },
+        { id: "ws-qual", name: "Qualification standard", swimlane: "Client Business Development", owner: "Business Development owner", method: "Gate used, not posted" },
+        { id: "ws-mar", name: "Margin discipline in the loop", swimlane: "Client Finance", owner: "Controller", method: "Job-level contribution" },
+        { id: "ws-coach", name: "Seat coaching", swimlane: "ISI", owner: "Engagement lead", method: "Observed behavior" }
+      ],
+      mece: {
+        question: "Where does the weekly operating system fail?",
+        branches: [
+          { name: "Cadence", children: ["Meeting exists", "Decisions recorded", "Owners named"] },
+          { name: "Qualification", children: ["Gate used", "Unqualified volume"] },
+          { name: "Margin in the loop", children: ["Estimate vs actual", "Discount authority"] },
+          { name: "Skill", children: ["Estimator", "PM", "Business development staff"] }
+        ],
+        mistakes: ["A workshop is not a cadence.", "Do not coach a seat that is vacant — that is a hire or a fractional seat."]
+      },
+      poc: [
+        { id: "week", label: "Cadence ran without ISI in the room", pass: "One week of notes with owners and a number." },
+        { id: "gate", label: "Qualification used on live bids", pass: "A bid was stopped or recast by the gate." }
+      ]
+    },
+    startup: {
+      id: "startup",
+      label: "Startup / venture study",
+      question: "Does this venture have a fundable sequence, or a slide?",
+      diligenceSit: "capital",
+      scenarioModel: "npv",
+      methods: ["mece", "scenarios", "diligence"],
+      workstreams: [
+        { id: "ws-offer", name: "Offer and who pays", swimlane: "Founder", owner: "Founder", method: "Named buyer" },
+        { id: "ws-unit", name: "Unit economics", swimlane: "ISI", owner: "Engagement lead", method: "Contribution, cash cycle" },
+        { id: "ws-cap", name: "Capital and runway", swimlane: "Founder Finance", owner: "Founder", method: "13-week cash" },
+        { id: "ws-90", name: "90-day proof", swimlane: "ISI", owner: "Engagement lead", method: "One measurable proof" }
+      ],
+      mece: {
+        question: "Is this a plan that can be funded and run?",
+        branches: [
+          { name: "Demand", children: ["Named buyer", "Willingness to pay"] },
+          { name: "Unit economics", children: ["Contribution", "Cost-to-serve", "Cash cycle"] },
+          { name: "Capital", children: ["Runway", "Use of funds", "Next raise or profit"] },
+          { name: "Proof", children: ["90-day test", "Kill condition"] }
+        ],
+        mistakes: ["A TAM slide is not demand.", "Do not use a construction GC template on a shop that does not yet exist."]
+      },
+      poc: [
+        { id: "buyer", label: "One named buyer conversation with a price", pass: "A number the buyer did not reject." },
+        { id: "cash", label: "13-week cash with a kill date", pass: "Runway is dated, not hoped." }
       ]
     }
   };

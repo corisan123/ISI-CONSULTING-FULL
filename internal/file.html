@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Complete file | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/engagement.css">
+</head>
+<body class="eng">
+  <header class="eng-top">
+    <a class="eng-brand" href="/internal/training.html">
+      <div class="eng-mark">ISI</div>
+      <div>
+        <h1>Complete <span>file</span></h1>
+        <p class="eng-sub">Inputs, discovery, throughputs, results, actions — one study type, no duplicate workstreams</p>
+      </div>
+    </a>
+    <div class="eng-top-links">
+      <button type="button" class="btn btn-gold" onclick="window.print()">Print</button>
+      <a href="/client/resolution.html">Room view</a>
+    </div>
+  </header>
+  <main class="eng-main" id="main"></main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/synthesis.js"></script>
+  <script>
+    (function () {
+      var s = ISI.synthesis.run();
+      var intake = {};
+      try { intake = JSON.parse(sessionStorage.getItem("isi_clientIntake") || "{}"); } catch (e) { intake = {}; }
+      var disc = {};
+      try { disc = JSON.parse(sessionStorage.getItem("isi_discovery") || "{}"); } catch (e) { disc = {}; }
+      var backup = {
+        commercial: "Win rate, qualification, and delivery absorption. Proof: conversion sample, not a pipeline screenshot.",
+        financial: "Cash and earnings quality before a growth thesis. Proof: STOP/CAUTION/GO with formulas.",
+        capex: "NPV after WACC and operational dependency. Proof: sign of NPV or a named kill condition.",
+        manufacturing: "Constraint identity, then exploit. Proof: one resource, one lost-T dollar.",
+        quality: "Special vs common cause and cost of poor quality. Proof: limits plotted, COPQ in dollars.",
+        project: "EAC and critical path, not a Gantt color. Proof: dollar gap and one float action.",
+        coaching: "Weekly behavior change. Proof: cadence used, not a workshop slide.",
+        startup: "Unit economics and 90-day proof. Proof: a fundable sequence, not a template pack."
+      };
+      var bus = ISI.store.getBus() || {};
+      var type = (bus.study && bus.study.type) || "commercial";
+      var html = "";
+      html += "<section class='eng-card'><h2>File</h2><p class='eng-desc'>" + s.company + " · " + (s.studyLabel || type) + "</p>";
+      html += "<div class='verdict'><div class='val'>" + s.verdict + "</div><div class='lbl'>" + s.narrative + "</div></div></section>";
+      html += "<section class='eng-card'><h2>Discovery / intake</h2><p class='eng-desc'>";
+      html += (intake.preventing || intake.prompt || disc.notes || "No intake in this session. Load /intake or run the chain.");
+      html += "</p></section>";
+      html += "<section class='eng-card'><h2>Inputs stored</h2><div class='kpi-row'>";
+      s.kpis.forEach(function (k) {
+        html += "<div class='kpi'><div class='val'>" + k.value + "</div><div class='lbl'>" + k.label + "</div></div>";
+      });
+      html += "</div></section>";
+      html += "<section class='eng-card'><h2>Throughput — unique constraints</h2>";
+      if (!s.constraints.length) html += "<p class='eng-desc'>Run diagnosis and kits. Constraints appear once.</p>";
+      s.constraints.forEach(function (c) {
+        html += "<div class='test'><div class='q'>" + c.family + " · " + c.label + "</div><p class='because'>" + (c.evidence || "") + "</p></div>";
+      });
+      html += "</section>";
+      html += "<section class='eng-card'><h2>Actionable steps (90 days)</h2>";
+      s.implementation.forEach(function (p) {
+        html += "<div class='tree-node'><div class='kind'>" + p.phase + "</div><h3>" + p.name + "</h3><p>" + p.owner + " · " + p.method + "</p></div>";
+      });
+      html += "</section>";
+      html += "<section class='eng-card'><h2>Proven backup for this project type</h2><p class='eng-desc'>" + (backup[type] || backup.commercial) + "</p>";
+      html += "<p class='formula'>Study type sets MECE, methods, and proof. Do not copy another type’s packet onto this file.</p></section>";
+      document.getElementById("main").innerHTML = html;
+    })();
+  </script>
+</body>
+</html>

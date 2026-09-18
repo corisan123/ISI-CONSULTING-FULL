@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Niche delivery intake | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <main class="pr-wrap">
+    <p class="pr-kicker">Internal · one study, one delivery map</p>
+    <h1>Niche delivery intake</h1>
+    <p class="lede">Not a one-size-fits-all questionnaire. Answers here reconfigure workstreams. Save before you open the study type.</p>
+    <form id="f" class="pr-panel">
+      <div class="pr-form-grid">
+        <div>
+          <label for="niche">Primary niche</label>
+          <select id="niche">
+            <option value="construction">Construction / GC / specialty</option>
+            <option value="aec">AEC / architecture-adjacent</option>
+            <option value="fab">Fabrication / millwork / building products</option>
+            <option value="mfg">Manufacturing / automation</option>
+            <option value="venture">Startup / spin-out</option>
+          </select>
+        </div>
+        <div>
+          <label for="seat">Is the Business Development seat the constraint?</label>
+          <select id="seat">
+            <option value="yes">Yes — fractional seat first</option>
+            <option value="maybe">Unclear — diagnose first</option>
+            <option value="no">No — cash, throughput, or a live project</option>
+          </select>
+        </div>
+        <div>
+          <label for="money">Does the file involve a financial decision this quarter?</label>
+          <select id="money">
+            <option value="yes">Yes — diligence first</option>
+            <option value="no">No — operational or commercial only</option>
+          </select>
+        </div>
+        <div>
+          <label for="study">Likely study type</label>
+          <select id="study">
+            <option value="commercial">Commercial / growth</option>
+            <option value="financial">Financial / diligence</option>
+            <option value="capex">CAPEX / cell vs exploit</option>
+            <option value="manufacturing">Manufacturing / TOC</option>
+            <option value="quality">Quality / SPC</option>
+            <option value="project">Capital project / EVM</option>
+            <option value="coaching">Coaching / cadence</option>
+            <option value="startup">Startup / venture</option>
+          </select>
+        </div>
+      </div>
+      <div style="margin-top:1rem">
+        <label for="preventing">What is preventing the number from moving?</label>
+        <textarea id="preventing" rows="4" placeholder="Facts, not the preferred story."></textarea>
+      </div>
+      <div style="margin-top:1rem">
+        <label for="proof">What would count as proof in 90 days?</label>
+        <textarea id="proof" rows="3" placeholder="One measurable. Not a workshop."></textarea>
+      </div>
+      <div class="pr-actions">
+        <button class="btn btn-gold" type="submit">Save delivery map</button>
+        <a class="btn btn-navy" href="/internal/study.html">Open study setup</a>
+      </div>
+      <p id="ok" class="lede" hidden>Saved in this browser. Study setup will spawn workstreams from the type you named.</p>
+    </form>
+  </main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/studies.js"></script>
+  <script src="/internal/js/shell.js"></script>
+  <script>
+    ISI.shell.render("programs");
+    var bus = ISI.store.getBus() || {};
+    var d = bus.delivery || {};
+    ["niche","seat","money","study","preventing","proof"].forEach(function (id) {
+      if (d[id]) document.getElementById(id).value = d[id];
+    });
+    document.getElementById("f").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var delivery = {
+        niche: document.getElementById("niche").value,
+        seat: document.getElementById("seat").value,
+        money: document.getElementById("money").value,
+        study: document.getElementById("study").value,
+        preventing: document.getElementById("preventing").value,
+        proof: document.getElementById("proof").value
+      };
+      var company = (ISI.store.read().engagement || {}).company;
+      ISI.store.setBus({
+        delivery: delivery,
+        study: ISI.studies.spawn(delivery.study, company)
+      });
+      ISI.store.logEvent("intake", delivery.study + " · " + delivery.niche);
+      document.getElementById("ok").hidden = false;
+    });
+  </script>
+</body>
+</html>

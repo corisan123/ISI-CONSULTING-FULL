@@ -20,7 +20,7 @@
       <form id="sessionForm" class="pr-form-grid">
         <div>
           <label for="company">Company</label>
-          <input id="company" name="company" value="Placeholder Manufacturing Co.">
+          <input id="company" name="company" value="Client company (placeholder)">
         </div>
         <div>
           <label for="contact">Contact</label>
@@ -51,6 +51,8 @@
             <option value="operations">Operations / throughput</option>
             <option value="capital">Capital project / schedule</option>
             <option value="supply">Supply chain / inventory</option>
+            <option value="coaching">Coaching / cadence</option>
+            <option value="startup">Startup / venture</option>
           </select>
         </div>
       </form>
@@ -65,9 +67,34 @@
       <h2>Diagnostic kits</h2>
       <p class="lede">Discovery first. Due diligence when money is involved. Then the matched lens. Programs are wired — run the chain and the next tool is already populated.</p>
       <div class="pr-grid">
+        <a class="pr-card" href="/internal/programs.html">
+          <h3>Programs by constraint</h3>
+          <p>Kits grouped by commercial, cash, throughput, project, coaching, venture.</p>
+          <div class="go">Open catalog →</div>
+        </a>
+        <a class="pr-card" href="/internal/intake.html">
+          <h3>Niche delivery intake</h3>
+          <p>Construction, AEC, fab, manufacturing, or venture. Answers spawn the study — not a one-size form.</p>
+          <div class="go">Map the delivery →</div>
+        </a>
+        <a class="pr-card" href="/internal/engines.html">
+          <h3>Engine analytics + tracking</h3>
+          <p>Last run of each diagnostic and tool, plus a session log. What leadership sees is the resolution dashboard.</p>
+          <div class="go">Open tracking →</div>
+        </a>
+        <a class="pr-card" href="/internal/toolbox.html">
+          <h3>A la carte toolbox</h3>
+          <p>One box, one Excel formula or live program. Use without running the chain.</p>
+          <div class="go">Open toolbox →</div>
+        </a>
+        <a class="pr-card" href="/client/resolution.html">
+          <h3>Client resolution dashboard</h3>
+          <p>Unique constraints, KPIs, ranges, 90-day load — what leadership sees in the room.</p>
+          <div class="go">Open dashboard →</div>
+        </a>
         <a class="pr-card" href="/internal/study.html">
           <h3>Study setup</h3>
-          <p>Commercial, financial, CAPEX, manufacturing, quality, or live project. Workstreams and swim lanes spawn with the type.</p>
+          <p>Commercial, financial, CAPEX, manufacturing, quality, project, coaching, or startup. Workstreams and swim lanes spawn with the type.</p>
           <div class="go">Configure the study →</div>
         </a>
         <a class="pr-card" href="/internal/pipeline.html">
@@ -165,7 +192,9 @@
       margin: "/internal/diagnostics/margin.html",
       operations: "/internal/diagnostics/operations.html",
       capital: "/internal/diagnostics/capital.html",
-      supply: "/internal/diagnostics/supply.html"
+      supply: "/internal/diagnostics/supply.html",
+      coaching: "/internal/study.html",
+      startup: "/internal/study.html"
     };
     function fillSession(data) {
       var e = data.engagement;

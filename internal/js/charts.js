@@ -234,6 +234,37 @@
     }
   }
 
+  function scatterFit(canvas, x, y, fit) {
+    var s = size(canvas);
+    var ctx = s.ctx;
+    var pad = { t: 16, r: 16, b: 28, l: 44 };
+    var n = Math.min(x.length, y.length);
+    if (!n) return;
+    var xmin = Math.min.apply(null, x.slice(0, n));
+    var xmax = Math.max.apply(null, x.slice(0, n));
+    var ymin = Math.min.apply(null, y.slice(0, n));
+    var ymax = Math.max.apply(null, y.slice(0, n));
+    if (xmin === xmax) { xmin -= 1; xmax += 1; }
+    if (ymin === ymax) { ymin -= 1; ymax += 1; }
+    function X(v) { return pad.l + ((v - xmin) / (xmax - xmin)) * (s.w - pad.l - pad.r); }
+    function Y(v) { return s.h - pad.b - ((v - ymin) / (ymax - ymin)) * (s.h - pad.t - pad.b); }
+    axes(ctx, s.w, s.h, pad);
+    ctx.fillStyle = GOLD;
+    for (var i = 0; i < n; i++) {
+      ctx.beginPath();
+      ctx.arc(X(x[i]), Y(y[i]), 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    if (fit) {
+      ctx.strokeStyle = NAVY;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(X(xmin), Y(fit.intercept + fit.slope * xmin));
+      ctx.lineTo(X(xmax), Y(fit.intercept + fit.slope * xmax));
+      ctx.stroke();
+    }
+  }
+
   global.ISI = global.ISI || {};
   global.ISI.charts = {
     histogram: histogram,
@@ -242,6 +273,7 @@
     tornado: tornado,
     radar: radar,
     heatmap: heatmap,
+    scatterFit: scatterFit,
     NAVY: NAVY,
     GOLD: GOLD,
     STEEL: STEEL,

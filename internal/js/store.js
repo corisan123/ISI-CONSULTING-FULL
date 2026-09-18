@@ -11,7 +11,7 @@
   function empty() {
     return {
       engagement: {
-        company: "Placeholder Manufacturing Co.",
+        company: "Client company (placeholder)",
         contact: "Alex Rivera",
         email: "alex.rivera@placeholder.example",
         industry: "Manufacturing",
@@ -21,7 +21,8 @@
       results: {},
       kpis: {},
       bus: {},
-      lastTool: null
+      lastTool: null,
+      log: []
     };
   }
 
@@ -34,11 +35,18 @@
         engagement: Object.assign(empty().engagement, parsed.engagement || {}),
         results: parsed.results || {},
         kpis: parsed.kpis || {},
-        bus: parsed.bus || {}
+        bus: parsed.bus || {},
+        log: parsed.log || []
       });
     } catch (err) {
       return empty();
     }
+  }
+
+  function appendLog(data, kind, detail) {
+    data.log = data.log || [];
+    data.log.unshift({ at: new Date().toISOString(), kind: kind, detail: detail || "" });
+    if (data.log.length > 80) data.log = data.log.slice(0, 80);
   }
 
   function write(data) {
@@ -59,12 +67,14 @@
       payload: payload
     };
     data.lastTool = toolId;
+    appendLog(data, "run", toolId);
     return write(data);
   }
 
   function setEngagement(patch) {
     var data = read();
     Object.assign(data.engagement, patch || {});
+    appendLog(data, "session", (patch && patch.company) || "engagement updated");
     return write(data);
   }
 
@@ -106,7 +116,14 @@
       investment: 450000,
       horizon: 5
     };
+    appendLog(demo, "session", "demo loaded");
     return write(demo);
+  }
+
+  function logEvent(kind, detail) {
+    var data = read();
+    appendLog(data, kind, detail);
+    return write(data);
   }
 
   global.ISI = global.ISI || {};
@@ -119,6 +136,7 @@
     setKpis: setKpis,
     setBus: setBus,
     getBus: getBus,
+    logEvent: logEvent,
     readDiagnosticInput: readDiagnosticInput,
     resetDemo: resetDemo,
     empty: empty

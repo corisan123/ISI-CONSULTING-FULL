@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ISI Consulting — FAQ accordion
  */
 (function () {
@@ -23,15 +23,15 @@
     },
     {
       q: "Who actually does the work, and how many seats do you run at once?",
-      a: "Daniel Reid leads the work — MBA, PMP, LEED AP, founder. This is boutique capacity, not a bench of juniors rotating through your file. Fractional BD, coaching, and project-management support are scoped so the same person who owned commercial numbers in construction, automation, and manufacturing stays on the workstream."
+      a: "Daniel Reid leads the work — MBA, PMP, LEED AP, founder. This is boutique capacity, not a bench of juniors rotating through your file. Fractional Business Development, coaching, and project-management support are scoped so the same person who owned commercial numbers in construction, automation, and manufacturing stays on the workstream."
     },
     {
       q: "What happens to the information we put in intake and discovery?",
       a: "Answers are saved on your device as you type so Back does not wipe them. We treat everything shared as confidential from first contact. A formal NDA and Statement of Work follow when an engagement starts. We do not publish your numbers as a public calculator."
     },
     {
-      q: "Our estimator, BD, or PM seat isn't holding. Can you step in?",
-      a: "Yes — that is the fractional BD path, and the reason the site exists. We install cadence, qualification, and margin discipline inside the company rather than writing a report and leaving. Manufacturing best-practice and project-management studies follow the same rule: exploit the constraint before you hire or buy."
+      q: "Our estimator , Business Development, or PM seat isn't holding. Can you step in?",
+      a: "Yes — that is the Fractional Business Development path, and the reason the site exists. We install cadence, qualification, and margin discipline inside the company rather than writing a report and leaving. Manufacturing best-practice and project-management studies follow the same rule: exploit the constraint before you hire or buy."
     },
     {
       q: "Are we a good fit to work together?",

@@ -1,0 +1,23 @@
+{
+  "firm": "ISI Consulting",
+  "phone": "704.213.3530",
+  "phoneHref": "tel:+17042133530",
+  "email": "dreid@isiconsults.com",
+  "hours": "Monday–Friday, 9:00 AM – 5:00 PM ET",
+  "calendly": "https://calendly.com/contact-isi-consults",
+  "logo": "images/logo.png",
+  "favicon": "images/favicon.png",
+  "copy": {
+    "home.kicker": "The tollgate",
+    "home.h1": "Fractional Business Development leadership for construction and AEC",
+    "home.subhead": "A senior commercial operator inside the firm — pipeline, qualification, and weekly cadence — without a full-time executive hire. Other workstreams open only after this seat is real.",
+    "home.why.h2": "An operator in the commercial seat",
+    "home.why.lead": "Daniel Reid, MBA, PMP, LEED AP, founded ISI to put a commercial operator in the seat — the same work run as National Sales Manager, VP of Business Development, and Director of Sales across construction, architecture, manufacturing, and automation.",
+    "home.why.punch": "Fractional Business Development is the tollgate. Everything else follows the constraint.",
+    "home.why.body": "If the gap is a missing commercial leader, we install one. If the gap is margin, cash, throughput, or a broken project system, the diagnostic opens — after the Business Development seat is honest about what it can and cannot close.",
+    "home.solutions.h2": "The Business Development seat first. The rest only if proven.",
+    "home.solutions.lead": "Fractional Business Development leadership is the engagement the site is built on. Strategy, financial solutions, startup plans, project management, coaching, and manufacturing practice sit behind that gate — construction and AEC.",
+    "home.cta.h2": "Start at the commercial seat",
+    "home.cta.body": "Most construction and AEC firms feel the pressure in the pipeline first. A short consultation names whether fractional Business Development is the engagement — or whether finance, operations, or a diagnostic should open instead."
+  }
+}

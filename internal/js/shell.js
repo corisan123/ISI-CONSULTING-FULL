@@ -7,6 +7,41 @@
 
   var TOC = [
     {
+      id: "train",
+      label: "Training",
+      href: "/internal/training.html",
+      items: [
+        { href: "/internal/training.html", label: "How to use (no file corruption)", hint: "Browser access, grouped vs a la carte" },
+        { href: "/internal/engines.html", label: "Engine analytics", hint: "Last run of each diagnostic + tracking log" },
+        { href: "/internal/file.html", label: "Complete file", hint: "Inputs, throughputs, actions, backup" },
+        { href: "/client/resolution.html", label: "Room dashboard", hint: "What leadership sees" }
+      ]
+    },
+    {
+      id: "programs",
+      label: "Programs",
+      href: "/internal/programs.html",
+      items: [
+        { href: "/internal/programs.html", label: "Constraint catalog", hint: "Kits grouped by family" },
+        { href: "/internal/intake.html", label: "Niche delivery intake", hint: "Study type + proof, not a generic form" },
+        { href: "/internal/toolbox.html", label: "A la carte toolbox", hint: "One box, one formula or program" },
+        { href: "/internal/study.html", label: "Study types", hint: "Workstreams by type" }
+      ]
+    },
+    {
+      id: "toolbox",
+      label: "A la carte",
+      href: "/internal/toolbox.html",
+      items: [
+        { href: "/internal/toolbox.html", label: "Toolbox home", hint: "Filter by family, run a single box" },
+        { href: "/internal/tools/finance.html", label: "NPV / IRR / WACC", hint: "Full financial engine" },
+        { href: "/internal/tools/regression.html", label: "Regression", hint: "OLS modeling" },
+        { href: "/internal/tools/mece.html", label: "MECE", hint: "Issue trees" },
+        { href: "/internal/tools/matrix.html", label: "Decision matrix", hint: "Weighted score" },
+        { href: "/internal/tools/pivot.html", label: "Excel XML / CSV", hint: "Export transforms" }
+      ]
+    },
+    {
       id: "home",
       label: "Bench",
       href: "/internal/index.html",
@@ -16,7 +51,8 @@
         { href: "/internal/index.html", label: "Practice home", hint: "TOC, live session, activate tools" },
         { href: "/internal/results.html", label: "Engagement results", hint: "Symptom vs proven cause vs financial gates" },
         { href: "/internal/index.html#dashboard", label: "Practice rollup", hint: "Last tool outputs" },
-        { href: "/internal/index.html#session", label: "Engagement session", hint: "Company + constraint" }
+        { href: "/internal/index.html#session", label: "Engagement session", hint: "Company + constraint" },
+        { href: "/client/resolution.html", label: "Client resolution dashboard", hint: "KPIs, unique constraints, 90-day load" }
       ]
     },
     {
@@ -46,7 +82,8 @@
         { href: "/internal/tools/pivot.html", label: "Pivot & Excel transform", hint: "Group large tables, export CSV / Excel XML" },
         { href: "/internal/tools/risk.html", label: "Risk register", hint: "Probability × impact, EMV" },
         { href: "/internal/tools/kpis.html", label: "KPI library", hint: "Activate measures by constraint" },
-        { href: "/internal/tools/stats.html", label: "Statistics bench", hint: "Internal — 15+ procedures" }
+        { href: "/internal/tools/stats.html", label: "Statistics bench", hint: "Internal — 15+ procedures" },
+        { href: "/internal/tools/regression.html", label: "Regression modeling", hint: "OLS, R², LINEST equivalent" }
       ]
     },
     {
@@ -91,6 +128,7 @@
       href: "/internal/index.html#dashboard",
       items: [
         { href: "/internal/index.html#dashboard", label: "Practice dashboard", hint: "Last tool outputs" },
+        { href: "/internal/engines.html", label: "Engine tracking", hint: "Last run of each tool + session log" },
         { href: "/internal/results.html", label: "Engagement results", hint: "Board-ready: stated vs proven vs killed" },
         { href: "/diagnostic/summary.html", label: "Growth diagnostic summary", hint: "Existing last tab" },
         { href: "/diagnostic/dashboard.html", label: "Growth diagnostic dashboard", hint: "Existing engine dashboard" }

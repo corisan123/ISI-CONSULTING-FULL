@@ -1,215 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title>Revenue Operations — ISI Consulting</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet"/>
-  <script src="https://unpkg.com/lucide@latest" defer></script>
-  <style>
-  :root{--navy:#0F1F3D;--navy-light:#1a2f52;--gold:#C9A235;--gold-hover:#d4b04a;--light-gray:#F7F8FA;--text:#1A1A1A;--muted:#6B7280;--transition:0.3s ease;}
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;scroll-padding-top:88px;}
-  body{font-family:'Inter',sans-serif;color:var(--text);background:#fff;-webkit-font-smoothing:antialiased;overflow-x:clip;}
-  h1,h2,h3,h4,h5{font-family:'Playfair Display',serif;}
-  .btn-primary{background:var(--gold);color:var(--navy);font-weight:600;padding:13px 28px;border-radius:5px;text-decoration:none;font-family:'Inter',sans-serif;font-size:0.875rem;display:inline-block;transition:background var(--transition),transform var(--transition);}
-  .btn-primary:hover{background:var(--gold-hover);transform:translateY(-2px);}
-  .btn-outline{border:2px solid var(--gold);color:var(--navy);font-weight:600;padding:11px 26px;border-radius:5px;text-decoration:none;font-family:'Inter',sans-serif;font-size:0.875rem;display:inline-block;transition:all var(--transition);}
-  .btn-outline:hover{background:var(--gold);color:var(--navy);transform:translateY(-2px);}
-  .btn-outline-white{border:2px solid rgba(255,255,255,0.6);color:#fff;font-weight:600;padding:11px 26px;border-radius:5px;text-decoration:none;font-family:'Inter',sans-serif;font-size:0.875rem;display:inline-block;transition:all var(--transition);}
-  .btn-outline-white:hover{border-color:#fff;background:rgba(255,255,255,0.1);}
-  .gold-bar{width:48px;height:3px;background:var(--gold);border-radius:2px;margin-bottom:20px;}
-  .section{padding:80px 24px;}
-  .container{max-width:1100px;margin:0 auto;}
-  .diff-card{background:#fff;border-top:3px solid var(--gold);border-radius:6px;padding:28px;box-shadow:0 2px 12px rgba(15,31,61,0.07);}
-  .check-row{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--light-gray);border-radius:6px;}
-  .pull-quote{border-left:4px solid var(--gold);padding:16px 24px;background:rgba(201,162,53,0.06);border-radius:0 6px 6px 0;font-style:italic;font-size:1.05rem;color:var(--navy);margin:32px 0;line-height:1.65;}
-  .who-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:24px;}
-  @media(max-width:768px){.section{padding:56px 20px;}h1{font-size:2rem!important;}h2{font-size:1.5rem!important;}.two-col{grid-template-columns:1fr!important;}.three-col{grid-template-columns:1fr!important;}}
-</style>
+  <title>Commercial Operating System | ISI Consulting</title>
+  <meta name="description" content="Pipeline architecture, CRM cadence, and proposal hygiene for construction and AEC. Not a public RevOps product.">
+  <link rel="stylesheet" href="../css/site.css">
 </head>
-<body style="padding-top:88px;"><nav id="navbar" class="fixed top-0 left-0 right-0 z-50" style="background:var(--navy);">
-  <div style="max-width:1200px;margin:0 auto;padding:0 24px;height:68px;display:flex;align-items:center;justify-content:space-between;">
-    <a href="../index.html" style="font-family:'Playfair Display',serif;color:#fff;font-size:1.2rem;font-weight:700;text-decoration:none;">Consulting</a>
-    <div class="nav-links" style="display:flex;align-items:center;gap:32px;">
-      <a href="../index.html" class="nav-link" style="color:rgba(255,255,255,0.8);font-size:0.875rem;font-weight:500;text-decoration:none;">Home</a>
-      <a href="../about.html" class="nav-link" style="color:rgba(255,255,255,0.8);font-size:0.875rem;font-weight:500;text-decoration:none;">About</a>
-      <a href="../philosophy.html" class="nav-link" style="color:rgba(255,255,255,0.8);font-size:0.875rem;font-weight:500;text-decoration:none;">Philosophy</a>
-      <a href="index.html" class="nav-link" style="color:rgba(255,255,255,0.8);font-size:0.875rem;font-weight:500;text-decoration:none;">Services</a>
-      <a href="../contact.html" class="nav-link" style="color:rgba(255,255,255,0.8);font-size:0.875rem;font-weight:500;text-decoration:none;">Contact</a>
-      <a href="https://calendly.com/contact-isi-consults" target="_blank" rel="noopener noreferrer" class="btn-primary">Schedule</a>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="../index.html">ISI <span>Consulting</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+      <nav class="site-nav" id="primary-nav" aria-label="Primary">
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../about.html">About</a></li>
+          <li><a href="index.html">Services</a></li>
+          <li><a href="../contact.html">Contact</a></li>
+          <li><a class="nav-cta" href="https://calendly.com/contact-isi-consults" target="_blank" rel="noopener noreferrer">Schedule</a></li>
+        </ul>
+      </nav>
     </div>
-    <button id="menu-btn" style="display:none;background:none;border:none;cursor:pointer;padding:4px;" aria-label="Menu">
-      <i data-lucide="menu" style="color:#fff;width:24px;height:24px;"></i>
-    </button>
-  </div>
-  <div id="mobile-menu" style="display:none;background:#1a2f52;padding:16px 24px 24px;">
-    <div style="display:flex;flex-direction:column;gap:16px;">
-      <a href="../index.html" style="color:rgba(255,255,255,0.8);font-size:0.9rem;text-decoration:none;">Home</a>
-      <a href="../about.html" style="color:rgba(255,255,255,0.8);font-size:0.9rem;text-decoration:none;">About</a>
-      <a href="../philosophy.html" style="color:rgba(255,255,255,0.8);font-size:0.9rem;text-decoration:none;">Philosophy</a>
-      <a href="index.html" style="color:rgba(255,255,255,0.8);font-size:0.9rem;text-decoration:none;">Services</a>
-      <a href="../contact.html" style="color:rgba(255,255,255,0.8);font-size:0.9rem;text-decoration:none;">Contact</a>
-      <a href="https://calendly.com/contact-isi-consults" target="_blank" rel="noopener noreferrer" class="btn-primary" style="text-align:center;">Schedule</a>
-    </div>
-  </div>
-</nav>
-<section style="background:var(--navy);padding:100px 24px 80px;position:relative;overflow:hidden;">
-  <div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent,transparent 40px,rgba(255,255,255,0.012) 40px,rgba(255,255,255,0.012) 41px);pointer-events:none;"></div>
-  <div class="container" style="position:relative;z-index:1;">
-    <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;color:var(--gold);font-size:0.8rem;font-weight:500;text-decoration:none;margin-bottom:24px;letter-spacing:0.06em;text-transform:uppercase;">
-      <i data-lucide="arrow-left" style="width:14px;height:14px;"></i> All Services
-    </a>
-    <div style="display:inline-block;background:rgba(201,162,53,0.15);border:1px solid var(--gold);border-radius:4px;padding:4px 12px;font-size:0.75rem;font-weight:600;color:var(--gold);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:20px;">Engagement</div>
-    <h1 style="font-size:2.8rem;font-weight:700;color:#fff;line-height:1.15;margin-bottom:20px;max-width:700px;">Revenue Operations</h1>
-    <p style="color:rgba(255,255,255,0.7);font-size:1.15rem;line-height:1.7;max-width:620px;margin-bottom:36px;">Pipeline architecture, conversion discipline, and commercial funnel alignment. We identify exactly where revenue leaks — and build the system to stop it.</p>
-    <div style="display:flex;flex-wrap:wrap;gap:12px;">
-      <a href="https://calendly.com/contact-isi-consults" target="_blank" rel="noopener noreferrer" class="btn-primary">Schedule a Conversation</a>
-      <a href="../forms/client-intake.html" class="btn-outline-white">Start intake</a>
-    </div>
-  </div>
-</section>
-<section class="section" style="background:var(--light-gray);">
-  <div class="container">
-    <div class="gold-bar"></div>
-    <h2 style="font-size:1.9rem;color:var(--navy);margin-bottom:16px;">Why Revenue Operations With ISI Is Different</h2>
-    <p style="color:var(--muted);font-size:1rem;line-height:1.7;max-width:680px;margin-bottom:40px;">Most revenue problems aren't pipeline problems — they're systems problems. The pipeline is a symptom. ISI goes upstream: we audit the full commercial architecture, find where revenue is leaking, and rebuild the system from the ground up. Not in theory. In your business, with your team, against your actual numbers.</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;" class="three-col">
-      <div class="diff-card">
-        <i data-lucide="search" style="color:var(--gold);width:28px;height:28px;margin-bottom:12px;"></i>
-        <h4 style="font-size:1rem;color:var(--navy);margin-bottom:8px;">We Start with the Audit, Not the Answer</h4>
-        <p style="font-size:0.875rem;color:var(--muted);line-height:1.65;">We don't arrive with a prescribed framework. We run a full pipeline and funnel audit before making a single recommendation. The evidence drives the engagement.</p>
-      </div>
-      <div class="diff-card">
-        <i data-lucide="layers" style="color:var(--gold);width:28px;height:28px;margin-bottom:12px;"></i>
-        <h4 style="font-size:1rem;color:var(--navy);margin-bottom:8px;">Commercial Architecture, Not Sales Training</h4>
-        <p style="font-size:0.875rem;color:var(--muted);line-height:1.65;">ISI builds the system — pipeline stages, conversion criteria, handoff protocols, forecasting discipline — not just coaching skills. Structural problems need structural solutions.</p>
-      </div>
-      <div class="diff-card">
-        <i data-lucide="bar-chart-2" style="color:var(--gold);width:28px;height:28px;margin-bottom:12px;"></i>
-        <h4 style="font-size:1rem;color:var(--navy);margin-bottom:8px;">Decision-Grade Clarity on Every Output</h4>
-        <p style="font-size:0.875rem;color:var(--muted);line-height:1.65;">Every deliverable from this engagement is actionable. A rebuilt pipeline, a funnel model, a conversion playbook. Never a deck of observations.</p>
-      </div></div>
-    <div class="pull-quote">"We don't coach your sales team. We rebuild the commercial system they operate inside — so performance becomes structural, not personal."</div>
-  </div>
-</section>
-<section class="section">
-  <div class="container">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;" class="two-col">
-      <div>
-        <div class="gold-bar"></div>
-        <h2 style="font-size:1.9rem;color:var(--navy);margin-bottom:20px;">What Revenue Operations Involves</h2>
-        <p style="color:var(--muted);font-size:0.95rem;line-height:1.75;margin-bottom:20px;">Revenue Operations is the right engagement when your pipeline looks active but revenue isn't converting — or when you can't explain why deals are stalling, margins are eroding, or your commercial team is working hard without results.</p><p style="color:var(--muted);font-size:0.95rem;line-height:1.75;margin-bottom:20px;">We begin with a full pipeline and funnel audit: stage definitions, conversion rates at each step, deal velocity, close ratios, and where opportunities are actually dying. We then trace those breakdowns back to system failures — unclear ICP, poor stage discipline, weak handoff protocols, or missing forecasting infrastructure.</p><p style="color:var(--muted);font-size:0.95rem;line-height:1.75;margin-bottom:20px;">The output is a rebuilt commercial architecture: pipeline stages with clear criteria, conversion benchmarks, a sales process design your team can actually follow, and a forecasting model that gives leadership real visibility.</p>
-      </div>
-      <div>
-        <h3 style="font-size:1.1rem;color:var(--navy);margin-bottom:20px;font-family:'Inter',sans-serif;font-weight:600;">What You Receive</h3>
-        <div style="display:flex;flex-direction:column;gap:12px;">
-        <div class="check-row">
-          <i data-lucide="check-circle" style="color:var(--gold);width:18px;height:18px;flex-shrink:0;"></i>
-          <span style="font-size:0.9rem;color:var(--navy);font-weight:500;">Pipeline Architecture Audit</span>
-        </div>
-        <div class="check-row">
-          <i data-lucide="check-circle" style="color:var(--gold);width:18px;height:18px;flex-shrink:0;"></i>
-          <span style="font-size:0.9rem;color:var(--navy);font-weight:500;">Funnel Rebuild</span>
-        </div>
-        <div class="check-row">
-          <i data-lucide="check-circle" style="color:var(--gold);width:18px;height:18px;flex-shrink:0;"></i>
-          <span style="font-size:0.9rem;color:var(--navy);font-weight:500;">Sales Process Design</span>
-        </div>
-        <div class="check-row">
-          <i data-lucide="check-circle" style="color:var(--gold);width:18px;height:18px;flex-shrink:0;"></i>
-          <span style="font-size:0.9rem;color:var(--navy);font-weight:500;">Conversion Benchmarking</span>
-        </div>
-        <div class="check-row">
-          <i data-lucide="check-circle" style="color:var(--gold);width:18px;height:18px;flex-shrink:0;"></i>
-          <span style="font-size:0.9rem;color:var(--navy);font-weight:500;">Forecasting Model</span>
-        </div>
-        <div class="check-row">
-          <i data-lucide="check-circle" style="color:var(--gold);width:18px;height:18px;flex-shrink:0;"></i>
-          <span style="font-size:0.9rem;color:var(--navy);font-weight:500;">ICP Clarity Report</span>
-        </div></div>
+  </header>
+  <main>
+    <div class="page-header">
+      <div class="container">
+        <p class="kicker" style="color:var(--accent)">Inside the commercial seat</p>
+        <h1>Commercial operating system</h1>
+        <p class="lede">Pipeline architecture, weekly review, CRM that can be governed, and proposal / estimate-to-close hygiene. This is operator work, not a software license and not a public toolkit.</p>
       </div>
     </div>
-  </div>
-</section>
-<section class="section" style="background:var(--navy);">
-  <div class="container">
-    <div class="gold-bar"></div>
-    <h2 style="font-size:1.9rem;color:#fff;margin-bottom:16px;">Who This Engagement Is For</h2>
-    <p style="color:rgba(255,255,255,0.65);font-size:1rem;line-height:1.7;max-width:640px;margin-bottom:40px;">We work with owners, CEOs, COOs, and boards of industrial, construction, project-driven, and professional services companies — typically $10M to $150M — where leadership is the primary decision-maker.</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;" class="three-col">
-      <div class="who-card">
-        <i data-lucide="factory" style="color:var(--gold);width:24px;height:24px;margin-bottom:12px;"></i>
-        <h4 style="color:#fff;font-size:0.95rem;margin-bottom:8px;font-family:'Inter',sans-serif;font-weight:600;">Industrial & Manufacturing</h4>
-        <p style="color:rgba(255,255,255,0.55);font-size:0.82rem;line-height:1.6;">Margin compression, capacity issues, operational misalignment.</p>
+    <section class="section section-alt">
+      <div class="container">
+        <div class="outcome-banner">
+          <div class="label">Outcome</div>
+          <p>A commercial engine that can be governed weekly. The number is owned. Unqualified volume is named. Follow-up is a cadence, not heroics.</p>
+        </div>
+        <p class="prose">Firms that tried “more activity” usually need an operator in the Business Development seat. That is the engagement the website is built on.</p>
+        <p class="prose"><a class="btn btn-primary" href="fractional-business-development.html">Fractional Business Development</a>
+           <a class="btn btn-outline" href="../timeline.html" style="margin-left:0.5rem">Client timeline</a></p>
       </div>
-      <div class="who-card">
-        <i data-lucide="hard-hat" style="color:var(--gold);width:24px;height:24px;margin-bottom:12px;"></i>
-        <h4 style="color:#fff;font-size:0.95rem;margin-bottom:8px;font-family:'Inter',sans-serif;font-weight:600;">Construction & Project-Driven</h4>
-        <p style="color:rgba(255,255,255,0.55);font-size:0.82rem;line-height:1.6;">Pipeline volatility, estimating discipline, growth stalls.</p>
-      </div>
-      <div class="who-card">
-        <i data-lucide="briefcase" style="color:var(--gold);width:24px;height:24px;margin-bottom:12px;"></i>
-        <h4 style="color:#fff;font-size:0.95rem;margin-bottom:8px;font-family:'Inter',sans-serif;font-weight:600;">Professional Services & B2B</h4>
-        <p style="color:rgba(255,255,255,0.55);font-size:0.82rem;line-height:1.6;">Revenue stall, client concentration risk, scaling friction.</p>
-      </div></div>
-  </div>
-</section>
-<section class="section" style="background:var(--light-gray);text-align:center;">
-  <div class="container" style="max-width:620px;">
-    <div class="gold-bar" style="margin:0 auto 20px;"></div>
-    <h2 style="font-size:1.8rem;color:var(--navy);margin-bottom:16px;">Ready to Stop the Revenue Leak?</h2>
-    <p style="color:var(--muted);font-size:0.95rem;line-height:1.7;margin-bottom:32px;">Start with a conversation. We'll tell you exactly what we'd audit, what we'd find, and whether this engagement fits your situation.</p>
-    <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;">
-      <a href="https://calendly.com/contact-isi-consults" target="_blank" rel="noopener noreferrer" class="btn-primary">Schedule a Conversation</a>
-      <a href="../forms/client-intake.html" class="btn-outline">Start intake</a>
-    </div>
-  </div>
-</section><footer style="background:var(--navy);color:#fff;padding:60px 0 32px;">
-  <div style="max-width:1200px;margin:0 auto;padding:0 24px;">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:40px;margin-bottom:48px;">
-      <div>
-        <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin:0 0 12px;color:#fff;">Consulting</h3>
-        <p style="color:rgba(255,255,255,0.55);font-size:0.85rem;line-height:1.7;margin:0;"><em>Iron Sharpens Iron</em><br>Transforming revenue, margin, and operational performance for industrial and project-driven companies.</p>
-      </div>
-      <div>
-        <h4 style="color:rgba(255,255,255,0.7);font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin:0 0 16px;">Navigate</h4>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <a href="../index.html" style="color:rgba(255,255,255,0.55);font-size:0.875rem;text-decoration:none;">Home</a>
-          <a href="../about.html" style="color:rgba(255,255,255,0.55);font-size:0.875rem;text-decoration:none;">About</a>
-          <a href="../philosophy.html" style="color:rgba(255,255,255,0.55);font-size:0.875rem;text-decoration:none;">Philosophy</a>
-          <a href="index.html" style="color:rgba(255,255,255,0.55);font-size:0.875rem;text-decoration:none;">Services</a>
-          <a href="../contact.html" style="color:rgba(255,255,255,0.55);font-size:0.875rem;text-decoration:none;">Contact</a>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand">ISI <span>Consulting</span></div>
+          <p>Fractional Business Development leadership for construction and AEC.</p>
+        </div>
+        <div>
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="index.html">Services</a></li>
+            <li><a href="../contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Engage</h4>
+          <ul>
+            <li><a href="https://calendly.com/contact-isi-consults" target="_blank" rel="noopener noreferrer">Schedule</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="../legal/privacy.html">Privacy Policy</a></li>
+          </ul>
         </div>
       </div>
-      <div>
-        <h4 style="color:rgba(255,255,255,0.7);font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin:0 0 16px;">Engage</h4>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <a href="https://calendly.com/contact-isi-consults" target="_blank" rel="noopener noreferrer" style="color:rgba(255,255,255,0.55);font-size:0.875rem;text-decoration:none;">Schedule a Call</a>
-          <a href="../forms/client-intake.html" style="color:rgba(255,255,255,0.55);font-size:0.875rem;text-decoration:none;">Client intake</a>
-          <a href="../growth-diagnostic-guide.html" style="color:rgba(255,255,255,0.55);font-size:0.875rem;text-decoration:none;">Diagnostic Guide</a>
-          <a href="index.html" style="color:rgba(255,255,255,0.55);font-size:0.875rem;text-decoration:none;">All Services</a>
-        </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 ISI Consulting. All rights reserved.</span>
+        <span>dreid@isiconsults.com</span>
       </div>
     </div>
-    <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:24px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;">
-      <p style="color:rgba(255,255,255,0.35);font-size:0.8rem;margin:0;">&copy; 2026 ISI Consulting. All rights reserved.</p>
-      <p style="color:rgba(255,255,255,0.35);font-size:0.8rem;margin:0;">contact@isiconsults.com</p>
-    </div>
-  </div>
-</footer><script>
-  lucide.createIcons();
-  const menuBtn=document.getElementById('menu-btn');
-  const mobileMenu=document.getElementById('mobile-menu');
-  const navLinks=document.querySelector('.nav-links');
-  const mq=window.matchMedia('(max-width:768px)');
-  function handleMQ(e){if(e.matches){if(navLinks)navLinks.style.display='none';if(menuBtn)menuBtn.style.display='block';}else{if(navLinks)navLinks.style.display='flex';if(menuBtn)menuBtn.style.display='none';if(mobileMenu)mobileMenu.style.display='none';}}
-  handleMQ(mq);mq.addListener(handleMQ);
-  if(menuBtn&&mobileMenu){menuBtn.addEventListener('click',()=>{mobileMenu.style.display=mobileMenu.style.display==='none'?'block':'none';});}
-  window.addEventListener('scroll',()=>{const n=document.getElementById('navbar');n.style.boxShadow=window.scrollY>20?'0 4px 20px rgba(0,0,0,0.35)':'none';});
-  document.querySelectorAll('.nav-link').forEach(l=>{l.addEventListener('mouseenter',()=>l.style.color='var(--gold)');l.addEventListener('mouseleave',()=>l.style.color='rgba(255,255,255,0.8)');});
-</script></body></html>
+  </footer>
+  <script src="../js/site.js"></script>
+</body>
+</html>

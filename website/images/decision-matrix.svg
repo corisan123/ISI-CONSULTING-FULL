@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="ISI decision matrix illustration">
+  <rect width="640" height="360" fill="#0F1F3D"/>
+  <g stroke="#8fa8c4" stroke-width="1">
+    <rect x="120" y="70" width="400" height="240" fill="none"/>
+    <line x1="220" y1="70" x2="220" y2="310"/>
+    <line x1="320" y1="70" x2="320" y2="310"/>
+    <line x1="420" y1="70" x2="420" y2="310"/>
+    <line x1="120" y1="130" x2="520" y2="130"/>
+    <line x1="120" y1="190" x2="520" y2="190"/>
+    <line x1="120" y1="250" x2="520" y2="250"/>
+  </g>
+  <rect x="222" y="132" width="96" height="56" fill="#C9A235" opacity=".9"/>
+  <rect x="322" y="192" width="96" height="56" fill="#C9A235" opacity=".45"/>
+  <rect x="422" y="72" width="96" height="56" fill="#1a3358"/>
+  <text x="40" y="36" fill="#C9A235" font-family="Segoe UI, sans-serif" font-size="13" letter-spacing="2">ISI · DECISION MATRIX</text>
+</svg>

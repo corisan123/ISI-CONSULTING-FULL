@@ -7,7 +7,7 @@
 
   function demoIntake() {
     return {
-      companyName: "Piedmont Mechanical LLC",
+      companyName: "Client company (placeholder)",
       trade: "mechanical",
       revenueRange: "15-30",
       preventing: "Revenue is down and we keep missing the forecast. Margins are gone.",
@@ -37,12 +37,12 @@
   }
 
   var INTERVENTIONS = [
-    { id: "bd", name: "BD process rebuild", test: function (d) { return /no|weak|inconsistent|ad hoc/i.test(d.bdProcess || "") || /low|inconsistent/i.test(d.pipelineConsistency || ""); } },
+    { id: "bd", name: "Business development process rebuild", test: function (d) { return /no|weak|inconsistent|ad hoc/i.test(d.bdProcess || "") || /low|inconsistent/i.test(d.pipelineConsistency || ""); } },
     { id: "proposal", name: "Proposal system overhaul", test: function (d) { return Number(d.winRate) < 30 || /frustrat|slow|inconsist/i.test(d.proposalFrustration || ""); } },
     { id: "margin", name: "Margin recovery and pricing discipline", test: function (d) { return /estimat|discount|job cost|handoff|buyout/i.test(d.marginErosion || "") || /low|no/i.test(d.jobProfitVisibility || ""); } },
     { id: "cadence", name: "Leadership cadence reset", test: function (d) { return Number(d.leadershipConfidence) <= 6 || /align|conflict|handoff/i.test(d.deptConflict || ""); } },
-    { id: "training", name: "Training systems for PMs, estimators, BD", test: function (d) { return /under|gap|thin|no bench/i.test(d.leadershipGaps || d.understaffedRoles || ""); } },
-    { id: "align", name: "Alignment between BD, Ops, and Finance", test: function (d) { return /poor|break|silo/i.test(d.handoffs || d.bdOpsComm || ""); } }
+    { id: "training", name: "Training systems for PMs, estimators, and business development", test: function (d) { return /under|gap|thin|no bench/i.test(d.leadershipGaps || d.understaffedRoles || ""); } },
+    { id: "align", name: "Alignment between business development, operations, and finance", test: function (d) { return /poor|break|silo/i.test(d.handoffs || d.bdOpsComm || ""); } }
   ];
 
   function n(v, d) {

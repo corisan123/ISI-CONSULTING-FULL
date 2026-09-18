@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Regression modeling | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <main class="pr-wrap">
+    <p class="pr-kicker">Internal · Excel LINEST equivalent · not public</p>
+    <h1>Regression analysis modeling</h1>
+    <p class="lede">Ordinary least squares on paired series. Slope, intercept, R², residual standard error, and a one-step forecast. Paste demand vs price, hours vs cost, or any X/Y the file requires. Excel: =LINEST(y,x,TRUE,TRUE).</p>
+    <p class="formula">ŷ = a + bX &nbsp;|&nbsp; R² = 1 − SS<sub>res</sub>/SS<sub>tot</sub> &nbsp;|&nbsp; Pearson r on the same pairs</p>
+
+    <form id="regForm" class="pr-panel">
+      <h2>Paired series</h2>
+      <label for="x">X (driver — comma or space separated)</label>
+      <textarea id="x">1,2,3,4,5,6,7,8,9,10,11,12</textarea>
+      <label for="y" style="margin-top:0.75rem">Y (outcome)</label>
+      <textarea id="y">118,121,119,130,128,141,137,146,152,148,160,158</textarea>
+      <div class="pr-form-grid" style="margin-top:0.75rem">
+        <div><label for="xhat">Forecast X</label><input id="xhat" type="number" step="any" value="13"></div>
+      </div>
+      <div class="pr-actions">
+        <button class="btn btn-gold" type="submit">Fit model</button>
+        <a class="btn btn-ghost" href="/internal/tools/stats.html">Full statistics bench</a>
+      </div>
+    </form>
+
+    <div class="pr-metrics" id="metrics"></div>
+    <div class="pr-panel">
+      <h2>Fit</h2>
+      <canvas id="chart" class="chart"></canvas>
+      <p id="note" class="lede"></p>
+    </div>
+  </main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/charts.js"></script>
+  <script src="/internal/js/shell.js"></script>
+  <script>
+    ISI.shell.render("tools");
+    document.getElementById("regForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var x = ISI.math.parseSeries(document.getElementById("x").value);
+      var y = ISI.math.parseSeries(document.getElementById("y").value);
+      var fit = ISI.math.linreg(x, y);
+      var r = ISI.math.pearson(x, y);
+      var xhat = Number(document.getElementById("xhat").value);
+      var yhat = fit.intercept + fit.slope * xhat;
+      document.getElementById("metrics").innerHTML =
+        '<div class="pr-metric"><div class="lbl">Slope</div><div class="val">' + fit.slope.toFixed(3) + "</div></div>" +
+        '<div class="pr-metric"><div class="lbl">Intercept</div><div class="val">' + fit.intercept.toFixed(2) + "</div></div>" +
+        '<div class="pr-metric"><div class="lbl">R²</div><div class="val">' + (fit.r2 * 100).toFixed(1) + "%</div></div>" +
+        '<div class="pr-metric"><div class="lbl">Pearson r</div><div class="val">' + (isFinite(r) ? r.toFixed(3) : "—") + "</div></div>" +
+        '<div class="pr-metric"><div class="lbl">ŷ at X=' + xhat + '</div><div class="val">' + yhat.toFixed(1) + "</div></div>";
+      document.getElementById("note").textContent =
+        "Excel LINEST on the same pairs. A weak R² is a finding — do not force a story onto noise.";
+      if (ISI.charts && ISI.charts.scatterFit) {
+        ISI.charts.scatterFit(document.getElementById("chart"), x, y, fit);
+      } else if (ISI.charts && ISI.charts.line) {
+        ISI.charts.line(document.getElementById("chart"), y, { label: "Y" });
+      }
+      ISI.store.saveResult("regression", { slope: fit.slope, intercept: fit.intercept, r2: fit.r2, yhat: yhat });
+    });
+  </script>
+</body>
+</html>

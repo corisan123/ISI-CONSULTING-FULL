@@ -89,15 +89,15 @@
     system: {
       title: "The Unified Growth System",
       html:
-        "<p>Fractional BD leadership is the tollgate. Diagnostic intelligence and targeted interventions open only when that seat proves they are needed — sequenced so you do not buy a catalog of tools before the commercial constraint is named.</p>" +
+        "<p>Fractional Business Development leadership is the tollgate. Diagnostic intelligence and targeted interventions open only when that seat proves they are needed — sequenced so you do not buy a catalog of tools before the commercial constraint is named.</p>" +
         "<p>Study type reconfigures the work: a manufacturing throughput study does not run like a cash turnaround or a CAPEX case. The engines stay with the firm.</p>" +
-        '<div class="overlay-actions"><a class="btn btn-primary" href="services/fractional-business-development.html">Fractional BD</a><a class="btn btn-outline" href="system.html">See the system</a></div>'
+        '<div class="overlay-actions"><a class="btn btn-primary" href="services/fractional-business-development.html">Fractional Business Development</a><a class="btn btn-outline" href="system.html">See the system</a></div>'
     },
     fractional: {
-      title: "Fractional BD leadership",
+      title: "Fractional Business Development leadership",
       html:
-        "<p>The engagement this practice is built on. A senior commercial operator inside the company — pipeline architecture, qualification standards, CRM discipline, proposal cadence — without a full-time VP of BD.</p>" +
-        "<p>Daniel Reid has owned that seat: $48 million in automation transactions over 24 months, profit centers from inception to $6.2 million at 67%+ gross margin, and $1.8 million in awards in 12 months after a stalled commercial rebuild. Strategy, finance, PM, and manufacturing practice follow only if the constraint is not the BD seat.</p>" +
+        "<p>The engagement this practice is built on. A senior commercial operator inside the company — pipeline architecture, qualification standards, CRM discipline, proposal cadence — without a full-time VP of Business Development.</p>" +
+        "<p>That seat has produced $48 million in automation transactions over 24 months, profit centers from inception to $6.2 million at 67%+ gross margin, and $1.8 million in awards in 12 months after a stalled commercial rebuild — across construction products, mechanical contracting, and industrial automation. Strategy, finance, project management, and manufacturing practice follow only if the constraint is not the Business Development seat.</p>" +
         '<div class="overlay-actions"><a class="btn btn-primary" href="services/fractional-business-development.html">The offering</a><a class="btn btn-outline" href="forms/client-intake.html">Start intake</a></div>'
     },
     strategy: {
@@ -123,6 +123,18 @@
       html:
         "<p>Shop, yard, and fabrication practice for construction-serving manufacturers: bottlenecks, waste, throughput, and a rhythm the crew can actually run.</p>" +
         '<div class="overlay-actions"><a class="btn btn-primary" href="services/operational-alignment.html">Process work</a><a class="btn btn-outline" href="forms/client-intake.html">Start intake</a></div>'
+    },
+    coaching: {
+      title: "Coaching &amp; training",
+      html:
+        "<p>PMs, estimators, and business development staff: cadence, qualification, and margin discipline installed as weekly behavior — not a workshop that expires on Monday.</p>" +
+        '<div class="overlay-actions"><a class="btn btn-primary" href="services/leadership-alignment.html">Coaching</a><a class="btn btn-outline" href="https://calendly.com/contact-isi-consults" target="_blank" rel="noopener noreferrer">Schedule</a></div>'
+    },
+    startup: {
+      title: "Startup &amp; business plan",
+      html:
+        "<p>Customized business-plan development for new or spinning-out construction and AEC ventures. Built from numbers, not a template pack.</p>" +
+        '<div class="overlay-actions"><a class="btn btn-primary" href="programs.html">Programs</a><a class="btn btn-outline" href="forms/client-intake.html">Start intake</a></div>'
     }
   };
 
@@ -323,6 +335,73 @@
     window.addEventListener("resize", sync);
   }
 
+  function siteRoot() {
+    var s = document.querySelector('script[src*="site.js"]');
+    if (!s || !s.getAttribute("src")) return "";
+    var src = s.src || s.getAttribute("src");
+    return src.replace(/js\/site\.js(\?.*)?$/, "");
+  }
+
+  function applyBrand(content, root) {
+    if (!content) return;
+    var icon = document.querySelector('link[rel="icon"]') || document.createElement("link");
+    icon.rel = "icon";
+    icon.type = "image/png";
+    icon.href = root + content.favicon;
+    document.head.appendChild(icon);
+
+    document.querySelectorAll("a.logo").forEach(function (a) {
+      if (a.querySelector("img.logo-mark")) return;
+      var img = document.createElement("img");
+      img.className = "logo-mark keep-color";
+      img.src = root + content.logo;
+      img.alt = content.firm || "ISI Consulting";
+      a.insertBefore(img, a.firstChild);
+    });
+
+    document.querySelectorAll("a[href^='mailto:']").forEach(function (a) {
+      var href = a.getAttribute("href") || "";
+      if (href.indexOf("isiconsults.com") === -1) return;
+      a.setAttribute("href", "mailto:" + content.email);
+      if ((a.textContent || "").indexOf("@") !== -1) a.textContent = content.email;
+    });
+    document.querySelectorAll(".footer-bottom span").forEach(function (s) {
+      if ((s.textContent || "").indexOf("@isiconsults.com") !== -1) s.textContent = content.email;
+    });
+
+    document.querySelectorAll('a[href^="tel:"]').forEach(function (a) {
+      var t = (a.textContent || "").replace(/\s/g, "");
+      if (t.indexOf("555") !== -1 || t.indexOf("704") !== -1 || t.indexOf("+1") !== -1) {
+        a.setAttribute("href", content.phoneHref);
+        a.textContent = content.phone;
+      }
+    });
+    document.querySelectorAll(".footer-bottom").forEach(function (row) {
+      if (row.querySelector("[data-isi-phone]")) return;
+      var a = document.createElement("a");
+      a.setAttribute("data-isi-phone", "");
+      a.href = content.phoneHref;
+      a.textContent = content.phone;
+      row.appendChild(a);
+    });
+
+    if (content.copy) {
+      document.querySelectorAll("[data-copy]").forEach(function (el) {
+        var key = el.getAttribute("data-copy");
+        var val = content.copy[key];
+        if (val) el.textContent = val;
+      });
+    }
+  }
+
+  function initBrand() {
+    var root = siteRoot();
+    fetch(root + "content.json", { cache: "no-store" })
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .then(function (content) { applyBrand(content, root); })
+      .catch(function () {});
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     initNav();
     markCurrentNav();
@@ -334,5 +413,6 @@
     initToggles();
     initCountUp();
     initScrollProgress();
+    initBrand();
   });
 })();

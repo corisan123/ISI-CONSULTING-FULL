@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ISI Consulting — start/gate page
  * Consult vs Engage toggle, then scenario chips. Not a public engine.
  */
@@ -10,24 +10,24 @@
   var SCENARIOS = [
     {
       id: "bd",
-      chip: "Fractional BD",
-      title: "Fractional BD leadership",
+      chip: "Fractional Business Development",
+      title: "Fractional Business Development leadership",
       href: "services/fractional-business-development.html",
       blurb: "The tollgate. A commercial operator in the seat.",
       consult: {
         leftKicker: "What the conversation covers",
         leftTitle: "A short consultation",
         left: [
-          "Whether the gap is a missing BD seat or something downstream",
+          "Whether the gap is a missing Business Development seat or something downstream",
           "Pipeline, qualification, and who owns the weekly cadence",
           "Whether a full-time hire is even the right next spend"
         ],
-        leftCta: "How fractional BD works",
+        leftCta: "How Fractional Business Development works",
         rightKicker: "Request time",
         rightTitle: "Schedule a consultation",
         right: [
           "Daniel Reid takes the call — boutique capacity, not a rotating bench",
-          "You leave with a named next step: BD seat, intake, or not yet",
+          "You leave with a named next step: Business Development seat, intake, or not yet",
           "No public calculator. Numbers stay in the engagement"
         ]
       },
@@ -36,7 +36,7 @@
         leftTitle: "Confidentiality, then the file",
         left: [
           "Confidentiality notice before detailed commercial facts",
-          "Nine-section intake: company, leadership, BD, operations, margin",
+          "Nine-section intake: company, leadership , Business Development, operations, margin",
           "Drafts stay on this device so Back does not wipe them"
         ],
         leftCta: "Forms in order",
@@ -45,7 +45,7 @@
         rightTitle: "Start client intake",
         right: [
           "Stated symptoms are captured. Causes are not assumed",
-          "Fractional BD is the default path unless intake proves otherwise",
+          "Fractional Business Development is the default path unless intake proves otherwise",
           "Discovery follows intake when the file is ready"
         ],
         rightHref: "forms/client-intake.html"
@@ -71,7 +71,7 @@
         right: [
           "Due diligence first whenever money is involved",
           "Live formulas stay in the engagement, not on this page",
-          "Honest next step: intake, BD seat, or not a fit"
+          "Honest next step: intake, Business Development seat, or not a fit"
         ]
       },
       engage: {
@@ -88,7 +88,7 @@
         rightTitle: "Start client intake",
         right: [
           "Margin, cash, and forecast misses belong in the file",
-          "If the real gap is the BD seat, we say so",
+          "If the real gap is the Business Development seat, we say so",
           "Discovery follows when the numbers are in"
         ],
         rightHref: "forms/client-intake.html"
@@ -114,7 +114,7 @@
         right: [
           "Construction and AEC language: estimate, buyout, retainage",
           "Named next step on the actual constraint",
-          "The same operator who runs BD can stay on the workstream"
+          "The same operator who runs Business Development can stay on the workstream"
         ]
       },
       engage: {
@@ -131,7 +131,7 @@
         rightTitle: "Start client intake",
         right: [
           "Live-project facts, not a generic PM workshop",
-          "If commercial leadership is the real gap, BD remains the gate",
+          "If commercial leadership is the real gap, Business Development remains the gate",
           "Discovery after intake"
         ],
         rightHref: "forms/client-intake.html"
@@ -173,8 +173,8 @@
         rightKicker: "Open a file",
         rightTitle: "Start client intake",
         right: [
-          "If the yard cannot keep up because BD is undisciplined, we say so",
-          "Manufacturing practice follows the BD tollgate",
+          "If the yard cannot keep up because Business Development is undisciplined, we say so",
+          "Manufacturing practice follows the Business Development tollgate",
           "Discovery after intake"
         ],
         rightHref: "forms/client-intake.html"
@@ -199,7 +199,7 @@
         rightTitle: "Schedule a consultation",
         right: [
           "Built from numbers, not a downloaded outline",
-          "Fractional BD is often the first operating seat after formation",
+          "Fractional Business Development is often the first operating seat after formation",
           "Clear go / no-go on whether ISI is the right partner"
         ]
       },
@@ -217,7 +217,7 @@
         rightTitle: "Start client intake",
         right: [
           "Capture the venture as it actually is",
-          "If the missing piece is a BD operator, that is the gate",
+          "If the missing piece is a Business Development operator, that is the gate",
           "Discovery after intake"
         ],
         rightHref: "forms/client-intake.html"
@@ -228,12 +228,12 @@
       chip: "Coaching",
       title: "Coaching &amp; training",
       href: "services/leadership-alignment.html",
-      blurb: "PMs, estimators, and BD staff — weekly behavior.",
+      blurb: "PMs, estimators, and business development staff — weekly behavior.",
       consult: {
         leftKicker: "What the conversation covers",
         leftTitle: "A capability conversation",
         left: [
-          "Which seat is not holding: estimator, BD, or PM",
+          "Which seat is not holding: estimator , Business Development, or PM",
           "Cadence and qualification vs. another classroom day",
           "Whether coaching sticks without a commercial operating system"
         ],
@@ -251,7 +251,7 @@
         leftTitle: "Who needs the seat, not a seminar",
         left: [
           "Confidentiality before naming people and gaps",
-          "Intake on bandwidth, leadership, and BD maturity",
+          "Intake on bandwidth, leadership, and Business Development maturity",
           "Coaching is an intervention, not the default product"
         ],
         leftCta: "Forms in order",
@@ -259,7 +259,7 @@
         rightKicker: "Open a file",
         rightTitle: "Start client intake",
         right: [
-          "If the company needs a BD leader more than a workshop, we say so",
+          "If the company needs a Business Development leader more than a workshop, we say so",
           "Same person who diagnoses stays on the workstream",
           "Discovery after intake"
         ],

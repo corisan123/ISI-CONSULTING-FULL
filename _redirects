@@ -33,6 +33,30 @@
 /faq/             /website/faq.html   301
 /start            /website/start.html   301
 /start/           /website/start.html   301
+/system           /website/system.html   301
+/system/          /website/system.html   301
+/programs         /website/programs.html   301
+/programs/        /website/programs.html   301
+/peek             /website/peek.html   301
+/peek/            /website/peek.html   301
+/timeline         /website/timeline.html   301
+/timeline/        /website/timeline.html   301
+/intake           /website/forms/client-intake.html   301
+/intake/          /website/forms/client-intake.html   301
+/discovery        /website/forms/discovery.html   301
+/discovery/       /website/forms/discovery.html   301
+/forms            /website/forms/index.html   301
+/forms/           /website/forms/index.html   301
+/services/fractional-business-development   /website/services/fractional-business-development.html   301
+/services/fractional-business-development/  /website/services/fractional-business-development.html   301
+/services/strategy   /website/services/growth-turnaround-diagnostic.html   301
+/services/strategy/  /website/services/growth-turnaround-diagnostic.html   301
+/services/financial  /website/services/corporate-turnaround.html   301
+/services/financial/ /website/services/corporate-turnaround.html   301
+/services/operations /website/services/operational-alignment.html   301
+/services/operations/ /website/services/operational-alignment.html   301
+/services/coaching   /website/services/leadership-alignment.html   301
+/services/coaching/  /website/services/leadership-alignment.html   301
 
 # Diagnostic entry. Scoring and later steps keep their own files.
 /diagnostic       /diagnostic/input.html   302

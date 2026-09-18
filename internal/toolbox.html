@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>A la carte toolbox | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <main class="pr-wrap">
+    <p class="pr-kicker">Internal · a la carte · not the constraint catalog</p>
+    <h1>Toolbox — one box, one tool</h1>
+    <p class="lede">Constraint kits stay grouped on the programs bench. This page is the second toolbox: each formula, Excel equivalent, and live program opens on its own. Use a single box in a meeting without running the ten-program chain.</p>
+    <p class="formula">Excel column is the worksheet equivalent. Live column opens the working program. Numbers are placeholders until consultation.</p>
+
+    <div class="tb-filters" id="filters"></div>
+    <div class="tb-grid" id="grid"></div>
+  </main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/shell.js"></script>
+  <script src="/internal/js/toolbox.js"></script>
+  <script>
+    ISI.shell.render("toolbox");
+    var family = "all";
+
+    function money(n) {
+      if (n == null || !isFinite(n)) return "—";
+      if (Math.abs(n) >= 1) return ISI.shell.money(n);
+      return n.toFixed(3);
+    }
+
+    function paint() {
+      var bar = document.getElementById("filters");
+      bar.innerHTML = "";
+      ISI.toolbox.FAMILIES.forEach(function (f) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "btn " + (f.id === family ? "btn-navy" : "btn-ghost");
+        b.textContent = f.label;
+        b.addEventListener("click", function () { family = f.id; paint(); });
+        bar.appendChild(b);
+      });
+      var grid = document.getElementById("grid");
+      grid.innerHTML = "";
+      ISI.toolbox.ITEMS.filter(function (item) {
+        return family === "all" || item.family === family;
+      }).forEach(function (item) {
+        var box = document.createElement("article");
+        box.className = "tb-box";
+        var fields = (item.fields || []).map(function (field) {
+          return "<label>" + field.label + "<input data-f='" + field.id + "' value='" + String(field.value).replace(/'/g, "&#39;") + "'></label>";
+        }).join("");
+        box.innerHTML =
+          "<div class='tb-tag'>" + item.family + "</div>" +
+          "<h3>" + item.title + "</h3>" +
+          "<p class='tb-xl'>Excel: <code>" + item.excel + "</code></p>" +
+          "<p class='tb-f'>" + item.formula + "</p>" +
+          (fields ? "<form class='tb-form'>" + fields + "<button type='submit' class='btn btn-gold'>Run this box</button></form><div class='tb-out' hidden></div>" : "") +
+          "<a class='go' href='" + item.href + "'>Open full program →</a>";
+        if (item.run) {
+          var form = box.querySelector("form");
+          var out = box.querySelector(".tb-out");
+          form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            var data = {};
+            form.querySelectorAll("[data-f]").forEach(function (inp) {
+              data[inp.getAttribute("data-f")] = inp.value;
+            });
+            var result = item.run(data, ISI.math);
+            var shown = result.pct ? ISI.shell.pct(result.value) : (Math.abs(result.value) >= 20 ? money(result.value) : (isFinite(result.value) ? Number(result.value).toFixed(2) : "—"));
+            out.hidden = false;
+            out.innerHTML = "<strong>" + shown + "</strong><span>" + (result.note || "") + "</span>";
+            ISI.store.saveResult("toolbox-" + item.id, result);
+          });
+        }
+        grid.appendChild(box);
+      });
+    }
+    paint();
+  </script>
+</body>
+</html>

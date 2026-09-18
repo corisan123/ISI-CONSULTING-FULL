@@ -28,6 +28,13 @@
       <h2 id="winner">Run the chain or recompute</h2>
       <p class="eng-desc" id="blurb">Weights: expected value 40%, cash at risk 20%, fit to proven causes 25%, diligence 15%.</p>
       <div id="body"></div>
+      <form id="solo" class="eng-card" style="margin-top:1rem">
+        <h2>A la carte scorer</h2>
+        <p class="eng-desc">Use when the chain has not been run. Three alternatives, four criteria. Excel: =SUMPRODUCT(weights, scores).</p>
+        <div id="soloGrid"></div>
+        <div class="btn-row"><button type="submit" class="btn btn-gold">Score this box</button></div>
+        <p id="soloOut" class="eng-desc"></p>
+      </form>
       <div class="btn-row">
         <a class="btn btn-gold" href="/internal/pipeline.html">Run wired chain</a>
       </div>
@@ -56,6 +63,43 @@
       html += "</tbody></table>";
       el.innerHTML = html;
     }
+
+    var alts = ["Exploit constraint", "Buy capacity", "Defer"];
+    var crit = [
+      { id: "ev", label: "Expected value", w: 0.4 },
+      { id: "cash", label: "Cash at risk", w: 0.2 },
+      { id: "fit", label: "Fit to proven cause", w: 0.25 },
+      { id: "dd", label: "Diligence gate", w: 0.15 }
+    ];
+    var g = document.getElementById("soloGrid");
+    var tbl = "<table class='proof-table'><thead><tr><th>Alternative</th>";
+    crit.forEach(function (c) { tbl += "<th>" + c.label + "</th>"; });
+    tbl += "</tr></thead><tbody>";
+    alts.forEach(function (a, i) {
+      tbl += "<tr><td>" + a + "</td>";
+      crit.forEach(function (c) {
+        tbl += "<td><input data-a='" + i + "' data-c='" + c.id + "' type='number' min='0' max='10' step='1' value='" + (7 - i) + "'></td>";
+      });
+      tbl += "</tr>";
+    });
+    tbl += "</tbody></table>";
+    g.innerHTML = tbl;
+    document.getElementById("solo").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var best = { label: "", total: -1 };
+      var lines = [];
+      alts.forEach(function (a, i) {
+        var t = 0;
+        crit.forEach(function (c) {
+          var inp = g.querySelector("[data-a='" + i + "'][data-c='" + c.id + "']");
+          t += Number(inp.value) * c.w;
+        });
+        lines.push(a + ": " + t.toFixed(2));
+        if (t > best.total) best = { label: a, total: t };
+      });
+      document.getElementById("soloOut").textContent = "Winner: " + best.label + " (" + best.total.toFixed(2) + "). " + lines.join(" · ");
+      if (ISI.store) ISI.store.saveResult("matrix-solo", best);
+    });
   </script>
 </body>
 </html>

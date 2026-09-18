@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="ISI Monte Carlo illustration">
+  <rect width="640" height="360" fill="#0F1F3D"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M40 300 C120 290 160 80 320 160 C420 210 500 40 600 90" stroke="#5b7a9d" stroke-width="1.5" opacity=".45"/>
+    <path d="M40 300 C130 270 180 120 320 180 C430 230 520 90 600 130" stroke="#8fa8c4" stroke-width="1.5" opacity=".5"/>
+    <path d="M40 300 C140 250 200 140 320 150 C440 160 530 110 600 70" stroke="#C9A235" stroke-width="2.6"/>
+    <path d="M40 300 C150 280 210 200 320 220 C450 250 540 180 600 190" stroke="#5b7a9d" stroke-width="1.5" opacity=".4"/>
+    <path d="M40 300 C110 310 190 240 320 250 C460 265 540 240 600 250" stroke="#8fa8c4" stroke-width="1.5" opacity=".35"/>
+  </g>
+  <circle cx="600" cy="70" r="5" fill="#C9A235"/>
+  <text x="40" y="36" fill="#C9A235" font-family="Segoe UI, sans-serif" font-size="13" letter-spacing="2">ISI · MONTE CARLO</text>
+</svg>

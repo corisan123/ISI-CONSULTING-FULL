@@ -132,7 +132,22 @@ body.practice {
 h1 { font-size: 1.7rem; margin: 0 0 0.5rem; color: var(--navy); }
 .lede { color: var(--muted); max-width: 70ch; margin: 0 0 1.25rem; }
 
-.pr-grid {
+.flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.75rem 0 1rem;
+}
+.flow-step {
+  background: var(--navy);
+  color: #fff;
+  padding: 0.45rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+.flow-arrow { color: var(--gold); font-weight: 700; }
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1rem;
@@ -298,6 +313,37 @@ table.pr-table {
 }
 .gantt-bar.delay { background: #b42318; }
 .gantt-bar.ok { background: #067647; }
+.tb-filters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0 0 1.25rem; }
+.tb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+.tb-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.05rem 1.1rem;
+}
+.tb-box h3 { margin: 0.2rem 0 0.45rem; color: var(--navy); font-size: 1.05rem; }
+.tb-tag {
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 700;
+}
+.tb-xl, .tb-f { margin: 0 0 0.4rem; font-size: 0.82rem; color: var(--muted); }
+.tb-xl code { font-size: 0.78rem; }
+.tb-form label { margin-top: 0.35rem; }
+.tb-out { margin: 0.6rem 0; padding: 0.45rem 0.55rem; background: #eef2f7; border-radius: 4px; }
+.tb-out strong { display: block; color: var(--navy); }
+.tb-box .go { display: inline-block; margin-top: 0.5rem; font-weight: 600; font-size: 0.85rem; color: var(--navy-mid); }
+.pr-photo-grid .pr-photo-card { padding: 0; overflow: hidden; }
+.pr-photo-card img { width: 100%; height: 132px; object-fit: cover; display: block; }
+.pr-photo-card h3, .pr-photo-card p, .pr-photo-card .go { padding-left: 1.1rem; padding-right: 1.1rem; }
+.pr-photo-card h3 { margin-top: 0.85rem; }
+.pr-photo-card .go { padding-bottom: 1rem; }
 @media print {
   .pr-header, .pr-mega, .pr-actions, .banner { display: none !important; }
   body.practice { background: #fff; }

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" role="img" aria-label="ISI benchmarking illustration">
+  <rect width="640" height="360" fill="#0F1F3D"/>
+  <g fill="#1a3358">
+    <rect x="80" y="210" width="70" height="90"/>
+    <rect x="180" y="160" width="70" height="140"/>
+    <rect x="280" y="120" width="70" height="180"/>
+    <rect x="380" y="80" width="70" height="220"/>
+    <rect x="480" y="50" width="70" height="250" fill="#C9A235"/>
+  </g>
+  <line x1="70" y1="300" x2="570" y2="300" stroke="#8fa8c4" stroke-width="1"/>
+  <text x="40" y="36" fill="#C9A235" font-family="Segoe UI, sans-serif" font-size="13" letter-spacing="2">ISI · BENCHMARKING</text>
+</svg>

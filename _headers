@@ -9,3 +9,14 @@
 
 https://*.pages.dev/*
   X-Robots-Tag: noindex, nofollow, noarchive
+
+/internal/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+/client/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+/src/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+/intelligence/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+
