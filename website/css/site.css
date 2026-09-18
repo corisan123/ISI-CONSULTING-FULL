@@ -468,6 +468,8 @@ a.card:hover .card-link,
   border-top: 1px solid var(--border);
   margin: 0 0 1.75rem;
   padding: 1.5rem 0 0;
+  min-width: 0;
+  width: 100%;
 }
 .form-section legend {
   font-size: 1.05rem;
@@ -535,8 +537,9 @@ a.card:hover .card-link,
 .form-group textarea,
 .form-group select {
   width: 100%;
-  padding: 0.65rem 0.8rem;
-  border: 1px solid var(--border);
+  min-height: 48px;
+  padding: 0.7rem 0.85rem;
+  border: 2px solid #8fa8c4;
   border-radius: var(--radius);
   font: inherit;
   color: var(--text);
@@ -815,9 +818,11 @@ a.card:hover .card-link,
 .isi-form .form-group input,
 .isi-form .form-group select,
 .isi-form .form-group textarea {
+  display: block;
   width: 100%;
+  min-height: 48px;
   padding: 0.8rem 0.95rem;
-  border: 1px solid var(--border);
+  border: 2px solid #8fa8c4;
   border-radius: var(--radius);
   font: inherit;
   font-size: 1rem;
@@ -825,6 +830,17 @@ a.card:hover .card-link,
   background: #fff;
   transition: border-color 0.15s, box-shadow 0.15s;
   margin-bottom: 0;
+}
+.isi-form .form-group input[type="checkbox"],
+.isi-form .form-group input[type="radio"],
+.form-section .check input {
+  display: inline-block;
+  width: auto;
+  min-height: 1.15rem;
+  min-width: 1.15rem;
+  padding: 0;
+  border: 1px solid #8fa8c4;
+  margin-right: 0.35rem;
 }
 
 .isi-form > input:focus,

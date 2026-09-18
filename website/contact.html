@@ -42,11 +42,15 @@
           <ul class="contact-details">
             <li>
               <strong>Email</strong>
-              <a href="mailto:dreid@isiconsults.com">dreid@isiconsults.com</a>
+              <a href="mailto:contact@isiconsults.com">contact@isiconsults.com</a>
+            </li>
+            <li>
+              <strong>Direct</strong>
+              <a href="mailto:dreid@isiconsults.com" data-keep-email>dreid@isiconsults.com</a>
             </li>
             <li>
               <strong>Phone</strong>
-              <a href="tel:+17042133530">704.213.3530</a>
+              <a href="tel:+14847507338">484.750.7338</a>
             </li>
             <li>
               <strong>Hours</strong>
@@ -59,29 +63,36 @@
         </div>
 
         <div class="form-block">
-          <form id="contactForm" class="isi-form" novalidate>
+          <form id="contactForm" class="isi-form" method="POST" action="https://formsubmit.co/contact@isiconsults.com" novalidate>
             <h2 style="margin-top:0">Contact ISI Consulting</h2>
-            <div class="form-success" aria-live="polite">Thank you! Your message has been sent.</div>
+            <p>This message is delivered to <strong>contact@isiconsults.com</strong>. A copy can also go to the direct inbox.</p>
+            <div class="form-success" aria-live="polite">Sending to contact@isiconsults.com…</div>
+            <input type="hidden" name="_subject" value="ISI Consulting website — Contact">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_cc" value="dreid@isiconsults.com">
+            <input type="hidden" name="_next" value="https://isiconsults.com/forms/thanks">
+            <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
 
             <div class="form-group">
               <label for="contactNameField">Name</label>
-              <input type="text" id="contactNameField" name="contactNameField" required autocomplete="name">
+              <input type="text" id="contactNameField" name="name" required autocomplete="name" placeholder="Type your name">
               <div class="error">Please enter your name.</div>
             </div>
 
             <div class="form-group">
               <label for="contactEmailField">Email</label>
-              <input type="email" id="contactEmailField" name="contactEmailField" required autocomplete="email">
+              <input type="email" id="contactEmailField" name="email" required autocomplete="email" placeholder="you@company.com">
               <div class="error">Please enter a valid email address.</div>
             </div>
 
             <div class="form-group">
               <label for="contactMessageField">Message</label>
-              <textarea id="contactMessageField" name="contactMessageField" required></textarea>
+              <textarea id="contactMessageField" name="message" required placeholder="Type your message"></textarea>
               <div class="error">Please enter a message.</div>
             </div>
 
-            <button class="btn btn-primary" type="submit" onclick="return submitContact()">Send Message</button>
+            <button class="btn btn-primary" type="submit">Send Message</button>
           </form>
         </div>
       </div>
@@ -129,7 +140,7 @@
       </div>
       <div class="footer-bottom">
         <span>&copy; 2026 ISI Consulting. All rights reserved.</span>
-        <span>dreid@isiconsults.com</span>
+        <span>contact@isiconsults.com</span>
       </div>
     </div>
   </footer>

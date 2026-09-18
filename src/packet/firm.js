@@ -7,9 +7,9 @@ export var firm = {
   division: "",
   tagline: "Business Clarity. Operational Truth.",
   address: ["Advisory practice", "United States"],
-  phone: "704.213.3530",
-  email: "dreid@isiconsults.com",
-  emailAlt: "contact@isiconsults.com",
+  phone: "484.750.7338",
+  email: "contact@isiconsults.com",
+  emailAlt: "dreid@isiconsults.com",
   hours: "Monday–Friday, 9:00 AM – 5:00 PM ET",
   copyright: "© 2026 ISI Consulting. All rights reserved.",
   confidentiality:

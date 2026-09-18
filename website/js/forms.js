@@ -71,6 +71,7 @@
     var data = {};
     form.querySelectorAll("input, select, textarea").forEach(function (el) {
       if (!el.name && !el.id) return;
+      if (el.disabled) return;
       var key = el.name || el.id;
       if (el.type === "checkbox" && el.name === "statedSymptoms") return;
       if (el.type === "checkbox") data[key] = el.checked;
@@ -131,10 +132,22 @@
     if (!form) return;
     var next = form.getAttribute("data-next");
     if (!next) return;
-    /* Brief pause so the success message is visible */
     setTimeout(function () {
       window.location.href = next;
     }, 700);
+  }
+
+  /**
+   * After local save, POST the real HTML form to FormSubmit so contact@ receives it.
+   * First use: FormSubmit emails contact@ a confirmation link — click it once.
+   */
+  function deliverToInbox(form) {
+    if (!form) return;
+    if (!form.getAttribute("action") || form.getAttribute("action").indexOf("formsubmit.co") === -1) {
+      maybeNavigate(form);
+      return;
+    }
+    form.submit();
   }
 
   function triggerGuideDownload() {
@@ -206,10 +219,10 @@
     } catch (err) {}
     showSuccess(
       form,
-      "Thank you. Your intake has been saved on this device. Continue to commercial metrics or book a consultation."
+      "Saving intake and sending a copy to contact@isiconsults.com…"
     );
-    maybeNavigate(form);
-    return false;
+    deliverToInbox(form);
+    return true;
   }
 
   /**
@@ -218,46 +231,28 @@
   function submitDiscovery() {
     var form = document.getElementById("discoveryForm");
     clearErrors(form);
+    if (!form) return false;
 
-    var required = [
-      "annualRevenue",
-      "grossMargin",
-      "ebitda",
-      "pipelineValue",
-      "closeRate",
-      "avgDealSize",
-      "salesCycle",
-      "customerConcentration",
-      "salesTeamCapacity",
-      "costToServe",
-      "bottlenecks"
-    ];
+    var required = [];
+    form.querySelectorAll("fieldset[data-group]").forEach(function (set) {
+      if (set.hidden) return;
+      set.querySelectorAll("[data-req]").forEach(function (el) {
+        if (el.id) required.push(el.id);
+      });
+    });
+    if (!required.length) {
+      window.location.href = "discovery.html";
+      return false;
+    }
     var ok = requireFields(required);
     if (!ok) return false;
 
-    var data = {
-      annualRevenue: val("annualRevenue"),
-      grossMargin: val("grossMargin"),
-      ebitda: val("ebitda"),
-      pipelineValue: val("pipelineValue"),
-      closeRate: val("closeRate"),
-      avgDealSize: val("avgDealSize"),
-      salesCycle: val("salesCycle"),
-      customerConcentration: val("customerConcentration"),
-      salesTeamCapacity: val("salesTeamCapacity"),
-      costToServe: val("costToServe"),
-      bottlenecks: val("bottlenecks"),
-      submittedAt: new Date().toISOString()
-    };
-
-    console.log("Discovery Questionnaire submitted:", data);
+    var data = serializeLive(form);
+    data.submittedAt = new Date().toISOString();
     store("isi_discovery", data);
-    showSuccess(
-      form,
-      "Discovery data saved locally. Continuing to consultation scheduling…"
-    );
-    maybeNavigate(form);
-    return false;
+    showSuccess(form, "Saving discovery and sending a copy to contact@isiconsults.com…");
+    deliverToInbox(form);
+    return true;
   }
 
   /**
@@ -317,10 +312,10 @@
       submittedAt: new Date().toISOString()
     };
 
-    console.log("Contact Form Submitted:", data);
     store("isi_contact", data);
-    showSuccess(form, "Thank you! Your message has been sent.");
-    return false;
+    showSuccess(form, "Sending to contact@isiconsults.com…");
+    deliverToInbox(form);
+    return true;
   }
 
   /**
@@ -350,7 +345,6 @@
     return false;
   }
 
-  /* Wire submit buttons that use type=submit inside isi-forms without inline onclick */
   function bindFormSubmit(formId, handler) {
     var form = document.getElementById(formId);
     if (!form) return;

@@ -45,8 +45,14 @@
             <li><a href="discovery.html">3. Discovery</a></li>
             <li><a href="../schedule.html">4. Schedule</a></li>
           </ol>
-          <form id="clientIntakeForm" class="isi-form" data-next="discovery.html" novalidate>
+          <form id="clientIntakeForm" class="isi-form" method="POST" action="https://formsubmit.co/contact@isiconsults.com" data-next="discovery.html" novalidate>
             <div class="form-success" aria-live="polite">Intake saved on this device.</div>
+            <input type="hidden" name="_subject" value="ISI Consulting website — Client intake">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_cc" value="dreid@isiconsults.com">
+            <input type="hidden" name="_next" value="https://isiconsults.com/discovery">
+            <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
 
             <fieldset class="form-section">
               <legend>Section 1 — Company profile</legend>
@@ -54,12 +60,12 @@
               <div class="isi-form-grid">
                 <div class="form-group">
                   <label for="companyName">Legal business name</label>
-                  <input id="companyName" name="companyName" required autocomplete="organization">
+                  <input id="companyName" name="companyName" type="text" required autocomplete="organization" placeholder="Type the legal business name">
                   <div class="error">Required.</div>
                 </div>
                 <div class="form-group">
                   <label for="contactName">Your name</label>
-                  <input id="contactName" name="contactName" required autocomplete="name">
+                  <input id="contactName" name="contactName" type="text" required autocomplete="name" placeholder="Type your name">
                   <div class="error">Required.</div>
                 </div>
                 <div class="form-group">

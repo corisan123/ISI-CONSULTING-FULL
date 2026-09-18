@@ -360,6 +360,7 @@
     });
 
     document.querySelectorAll("a[href^='mailto:']").forEach(function (a) {
+      if (a.hasAttribute("data-keep-email")) return;
       var href = a.getAttribute("href") || "";
       if (href.indexOf("isiconsults.com") === -1) return;
       a.setAttribute("href", "mailto:" + content.email);
@@ -371,7 +372,7 @@
 
     document.querySelectorAll('a[href^="tel:"]').forEach(function (a) {
       var t = (a.textContent || "").replace(/\s/g, "");
-      if (t.indexOf("555") !== -1 || t.indexOf("704") !== -1 || t.indexOf("+1") !== -1) {
+      if (t.indexOf("555") !== -1 || t.indexOf("704") !== -1 || t.indexOf("484") !== -1 || t.indexOf("+1") !== -1) {
         a.setAttribute("href", content.phoneHref);
         a.textContent = content.phone;
       }

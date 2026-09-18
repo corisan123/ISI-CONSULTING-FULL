@@ -7,8 +7,9 @@ Open `website/COPY-FOR-CLAUDE.md` with Claude. Change sentences only. Spell out 
 ## Contact
 
 - Firm: ISI Consulting
-- Phone: 704.213.3530
-- Email: dreid@isiconsults.com
+- Phone: 484.750.7338
+- Email: contact@isiconsults.com
+- Direct: dreid@isiconsults.com
 - Hours: Monday–Friday, 9:00 AM – 5:00 PM ET
 - Calendly: https://calendly.com/contact-isi-consults
 

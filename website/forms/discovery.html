@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title>Discovery Questionnaire | ISI Consulting</title>
-  <meta name="description" content="Discovery questionnaire capturing revenue, margin, pipeline, and operational metrics for ISI Consulting diagnostics.">
+  <title>Discovery | ISI Consulting</title>
+  <meta name="description" content="Discovery questionnaires grouped by constraint: commercial, financial, operations, project, coaching, and startup. Construction and AEC.">
   <link rel="stylesheet" href="../css/site.css">
 </head>
 <body>
@@ -17,7 +17,6 @@
         <ul>
           <li><a href="../index.html">Home</a></li>
           <li><a href="../about.html">About</a></li>
-          <li><a href="../philosophy.html">Philosophy</a></li>
           <li><a href="../services/index.html">Services</a></li>
           <li><a href="../contact.html">Contact</a></li>
           <li><a class="nav-cta" href="https://calendly.com/contact-isi-consults" target="_blank" rel="noopener noreferrer">Schedule</a></li>
@@ -29,96 +28,155 @@
   <main>
     <div class="page-header">
       <div class="container">
-        <h1>Discovery Questionnaire</h1>
-        <p class="lede">Capture the financial and commercial metrics that ground a Growth &amp; Turnaround Diagnostic. Estimates are fine—precision can be refined later.</p>
+        <h1 id="discoveryTitle">Discovery — choose the constraint family</h1>
+        <p class="lede" id="discoveryLede">Not one generic questionnaire. Pick the group that matches the file. Similar studies share a page.</p>
       </div>
     </div>
 
     <section class="section section-alt">
       <div class="container">
-        <div class="form-block form-block-xl" style="margin-inline:auto">
-          <h2 style="margin-top:0">Discovery Metrics</h2>
-          <p>Step 3 of 4. Metrics ground the study. Go back to intake anytime — those answers are still there.</p>
-          <ol class="form-steps">
-            <li><a href="../legal/nda.html">1. Confidentiality</a></li>
-            <li><a href="client-intake.html">2. Intake</a></li>
-            <li class="is-current">3. Discovery</li>
-            <li><a href="../schedule.html">4. Schedule</a></li>
-          </ol>
-          <form id="discoveryForm" class="isi-form" data-next="../schedule.html" novalidate>
+        <ol class="form-steps">
+          <li><a href="../legal/nda.html">1. Confidentiality</a></li>
+          <li><a href="client-intake.html">2. Intake</a></li>
+          <li class="is-current">3. Discovery</li>
+          <li><a href="../schedule.html">4. Schedule</a></li>
+        </ol>
+
+        <div id="discoveryHub" class="card-grid">
+          <a class="card" href="discovery.html?g=commercial">
+            <h3>Commercial / Business Development</h3>
+            <p>Pipeline, win rate, qualification, proposal cycle. The default when the seat is the constraint.</p>
+            <span class="card-link">Open this discovery →</span>
+          </a>
+          <a class="card" href="discovery.html?g=financial">
+            <h3>Financial / cash / turnaround</h3>
+            <p>Liquidity, coverage, job profit, cash cycle. Use when money is the gate this quarter.</p>
+            <span class="card-link">Open this discovery →</span>
+          </a>
+          <a class="card" href="discovery.html?g=operations">
+            <h3>Manufacturing / operations</h3>
+            <p>Constraint, throughput, quality, inventory. Shop and fabrication files.</p>
+            <span class="card-link">Open this discovery →</span>
+          </a>
+          <a class="card" href="discovery.html?g=project">
+            <h3>Capital project / schedule</h3>
+            <p>CPI, SPI, EAC, float, change orders. Live work that may not recover on a Gantt color.</p>
+            <span class="card-link">Open this discovery →</span>
+          </a>
+          <a class="card" href="discovery.html?g=coaching">
+            <h3>Coaching / cadence</h3>
+            <p>Weekly operating system, owners, qualification used on live bids. Not a workshop.</p>
+            <span class="card-link">Open this discovery →</span>
+          </a>
+          <a class="card" href="discovery.html?g=startup">
+            <h3>Startup / venture</h3>
+            <p>Named buyer, unit economics, runway, 90-day proof. Not a template pack.</p>
+            <span class="card-link">Open this discovery →</span>
+          </a>
+        </div>
+
+        <div class="form-block form-block-xl" style="margin-inline:auto;margin-top:1.5rem">
+          <form id="discoveryForm" class="isi-form" method="POST" action="https://formsubmit.co/contact@isiconsults.com" data-next="../schedule.html" hidden novalidate>
             <div class="form-success" aria-live="polite">Discovery data saved locally.</div>
+            <input type="hidden" name="_subject" value="ISI Consulting website — Discovery">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_cc" value="dreid@isiconsults.com">
+            <input type="hidden" name="_next" value="https://isiconsults.com/schedule">
+            <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+            <input type="hidden" id="discoveryGroup" name="discoveryGroup" value="">
 
-            <div class="isi-form-grid">
-              <div class="form-group">
-                <label for="annualRevenue">Annual Revenue</label>
-                <input type="text" id="annualRevenue" name="annualRevenue" required placeholder="e.g., $25M">
-                <div class="error">Please enter annual revenue.</div>
+            <fieldset class="form-section" data-group="commercial" hidden>
+              <legend>Commercial / Business Development</legend>
+              <p class="sec-help">Estimates are fine. Precision is refined in consultation.</p>
+              <div class="isi-form-grid">
+                <div class="form-group"><label for="c_revenue">Annual revenue</label><input id="c_revenue" name="c_revenue" type="text" data-req placeholder="e.g., $25M"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="c_win">Proposal win rate (%)</label><input id="c_win" name="c_win" type="text" data-req placeholder="e.g., 24"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="c_pipe">Pipeline value you would defend in a review</label><input id="c_pipe" name="c_pipe" type="text" data-req placeholder="e.g., $8M"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="c_cycle">Typical pursuit cycle</label><input id="c_cycle" name="c_cycle" type="text" data-req placeholder="e.g., 6–9 months"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="c_owner">Who owns the weekly commercial number today?</label><input id="c_owner" name="c_owner" type="text" data-req placeholder="Name and seat"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="c_qual">Is a qualification gate used on live bids?</label>
+                  <select id="c_qual" name="c_qual" data-req><option value="">Select…</option><option>Used</option><option>Posted but not used</option><option>None</option></select><div class="error">Required.</div></div>
+                <div class="form-group form-group-span"><label for="c_leak">Where does margin leak in the commercial loop?</label><textarea id="c_leak" name="c_leak" data-req placeholder="Discount, mix, estimate vs actual, unpaid extras…"></textarea><div class="error">Required.</div></div>
               </div>
+            </fieldset>
 
-              <div class="form-group">
-                <label for="grossMargin">Gross Margin (%)</label>
-                <input type="text" id="grossMargin" name="grossMargin" required placeholder="e.g., 28%">
-                <div class="error">Please enter gross margin.</div>
+            <fieldset class="form-section" data-group="financial" hidden>
+              <legend>Financial / cash / turnaround</legend>
+              <div class="isi-form-grid">
+                <div class="form-group"><label for="f_rev">Annual revenue</label><input id="f_rev" name="f_rev" type="text" data-req placeholder="e.g., $18M"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="f_ebitda">EBITDA or operating profit</label><input id="f_ebitda" name="f_ebitda" type="text" data-req placeholder="e.g., $1.2M or 6%"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="f_cash">Cash on hand / line availability</label><input id="f_cash" name="f_cash" type="text" data-req placeholder="e.g., $400K cash, $1M line"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="f_dso">Days sales outstanding (or “unknown”)</label><input id="f_dso" name="f_dso" type="text" data-req placeholder="e.g., 62 days"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="f_job">Job-level profit visibility</label>
+                  <select id="f_job" name="f_job" data-req><option value="">Select…</option><option>Clear during the job</option><option>Only at closeout</option><option>Low / none</option></select><div class="error">Required.</div></div>
+                <div class="form-group"><label for="f_debt">Debt service pressure this year</label>
+                  <select id="f_debt" name="f_debt" data-req><option value="">Select…</option><option>Manageable</option><option>Tight</option><option>The constraint</option></select><div class="error">Required.</div></div>
+                <div class="form-group form-group-span"><label for="f_decision">What financial decision is on the table this quarter?</label><textarea id="f_decision" name="f_decision" data-req placeholder="Recapitalize, sell a unit, fund a turnaround, hire, acquire…"></textarea><div class="error">Required.</div></div>
               </div>
+            </fieldset>
 
-              <div class="form-group">
-                <label for="ebitda">EBITDA</label>
-                <input type="text" id="ebitda" name="ebitda" required placeholder="e.g., $2.1M or 8%">
-                <div class="error">Please enter EBITDA.</div>
+            <fieldset class="form-section" data-group="operations" hidden>
+              <legend>Manufacturing / operations</legend>
+              <div class="isi-form-grid">
+                <div class="form-group"><label for="o_constraint">What do you believe the constraint resource is?</label><input id="o_constraint" name="o_constraint" type="text" data-req placeholder="A cell, a trade, a person, a machine"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="o_util">Utilization at that resource</label><input id="o_util" name="o_util" type="text" data-req placeholder="e.g., 92% or unknown"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="o_wip">WIP / days on hand</label><input id="o_wip" name="o_wip" type="text" data-req placeholder="e.g., 45 days"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="o_otif">On-time / OTIF</label><input id="o_otif" name="o_otif" type="text" data-req placeholder="e.g., 78%"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="o_scrap">Scrap / rework as a cost</label><input id="o_scrap" name="o_scrap" type="text" data-req placeholder="e.g., $18K / month or unknown"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="o_capex">Is a cell or capex being proposed?</label>
+                  <select id="o_capex" name="o_capex" data-req><option value="">Select…</option><option>Yes</option><option>Considering</option><option>No</option></select><div class="error">Required.</div></div>
+                <div class="form-group form-group-span"><label for="o_stall">Where does work stall?</label><textarea id="o_stall" name="o_stall" data-req placeholder="Queue, quality escape, materials, signature, change order…"></textarea><div class="error">Required.</div></div>
               </div>
+            </fieldset>
 
-              <div class="form-group">
-                <label for="pipelineValue">Pipeline Value</label>
-                <input type="text" id="pipelineValue" name="pipelineValue" required placeholder="e.g., $8M">
-                <div class="error">Please enter pipeline value.</div>
+            <fieldset class="form-section" data-group="project" hidden>
+              <legend>Capital project / schedule</legend>
+              <div class="isi-form-grid">
+                <div class="form-group"><label for="p_name">Project name (or type)</label><input id="p_name" name="p_name" type="text" data-req placeholder="Do not name a third-party owner if under NDA"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="p_bac">Budget at completion</label><input id="p_bac" name="p_bac" type="text" data-req placeholder="e.g., $4.2M"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="p_cpi">CPI if known</label><input id="p_cpi" name="p_cpi" type="text" data-req placeholder="e.g., 0.86 or unknown"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="p_spi">SPI if known</label><input id="p_spi" name="p_spi" type="text" data-req placeholder="e.g., 0.91 or unknown"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="p_co">Change-order load</label><input id="p_co" name="p_co" type="text" data-req placeholder="Count or $"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="p_float">Is the critical path named?</label>
+                  <select id="p_float" name="p_float" data-req><option value="">Select…</option><option>Yes</option><option>Disputed</option><option>No</option></select><div class="error">Required.</div></div>
+                <div class="form-group form-group-span"><label for="p_risk">What would make this unrecoverable?</label><textarea id="p_risk" name="p_risk" data-req placeholder="Float gone, cash, claims, commissioning…"></textarea><div class="error">Required.</div></div>
               </div>
+            </fieldset>
 
-              <div class="form-group">
-                <label for="closeRate">Close Rate (%)</label>
-                <input type="text" id="closeRate" name="closeRate" required placeholder="e.g., 22%">
-                <div class="error">Please enter close rate.</div>
+            <fieldset class="form-section" data-group="coaching" hidden>
+              <legend>Coaching / cadence</legend>
+              <div class="isi-form-grid">
+                <div class="form-group"><label for="h_cadence">Does a weekly commercial meeting exist?</label>
+                  <select id="h_cadence" name="h_cadence" data-req><option value="">Select…</option><option>Yes, with decisions recorded</option><option>Yes, status only</option><option>No</option></select><div class="error">Required.</div></div>
+                <div class="form-group"><label for="h_owner">Named owner of the number</label><input id="h_owner" name="h_owner" type="text" data-req placeholder="Seat, not a committee"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="h_gate">Qualification used on a live bid in the last 30 days?</label>
+                  <select id="h_gate" name="h_gate" data-req><option value="">Select…</option><option>Yes — a bid was stopped or recast</option><option>Talked about only</option><option>No</option></select><div class="error">Required.</div></div>
+                <div class="form-group"><label for="h_seat">Is the Business Development seat vacant?</label>
+                  <select id="h_seat" name="h_seat" data-req><option value="">Select…</option><option>Staffed</option><option>Part-time / founder</option><option>Vacant</option></select><div class="error">Required.</div></div>
+                <div class="form-group form-group-span"><label for="h_behavior">Which weekly behavior must change for the number to move?</label><textarea id="h_behavior" name="h_behavior" data-req placeholder="Follow-up, estimate review, discount authority, pipeline hygiene…"></textarea><div class="error">Required.</div></div>
               </div>
+            </fieldset>
 
-              <div class="form-group">
-                <label for="avgDealSize">Average Deal Size</label>
-                <input type="text" id="avgDealSize" name="avgDealSize" required placeholder="e.g., $175K">
-                <div class="error">Please enter average deal size.</div>
+            <fieldset class="form-section" data-group="startup" hidden>
+              <legend>Startup / venture</legend>
+              <div class="isi-form-grid">
+                <div class="form-group"><label for="s_offer">What is the offer, in one sentence?</label><input id="s_offer" name="s_offer" type="text" data-req placeholder="Who pays for what"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="s_buyer">Named first buyer (role, not a logo)</label><input id="s_buyer" name="s_buyer" type="text" data-req placeholder="e.g., GC purchasing, plant manager"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="s_price">Price the buyer did not reject</label><input id="s_price" name="s_price" type="text" data-req placeholder="A number, or “no conversation yet”"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="s_runway">Runway in weeks</label><input id="s_runway" name="s_runway" type="text" data-req placeholder="e.g., 16"><div class="error">Required.</div></div>
+                <div class="form-group"><label for="s_unit">Unit economics known?</label>
+                  <select id="s_unit" name="s_unit" data-req><option value="">Select…</option><option>Contribution modeled</option><option>Partial</option><option>Not yet</option></select><div class="error">Required.</div></div>
+                <div class="form-group form-group-span"><label for="s_proof">What is the 90-day proof, and what kills the plan?</label><textarea id="s_proof" name="s_proof" data-req placeholder="One measurable and a dated kill condition"></textarea><div class="error">Required.</div></div>
               </div>
+            </fieldset>
 
-              <div class="form-group">
-                <label for="salesCycle">Sales Cycle</label>
-                <input type="text" id="salesCycle" name="salesCycle" required placeholder="e.g., 6–9 months">
-                <div class="error">Please enter sales cycle length.</div>
-              </div>
-
-              <div class="form-group">
-                <label for="customerConcentration">Customer Concentration</label>
-                <input type="text" id="customerConcentration" name="customerConcentration" required placeholder="e.g., Top 3 = 55% of revenue">
-                <div class="error">Please describe customer concentration.</div>
-              </div>
-
-              <div class="form-group">
-                <label for="salesTeamCapacity">Sales Team Capacity</label>
-                <input type="text" id="salesTeamCapacity" name="salesTeamCapacity" required placeholder="e.g., 4 AEs, 1 manager">
-                <div class="error">Please describe sales team capacity.</div>
-              </div>
-
-              <div class="form-group">
-                <label for="costToServe">Cost to Serve</label>
-                <input type="text" id="costToServe" name="costToServe" required placeholder="e.g., High / rising with project complexity">
-                <div class="error">Please describe cost to serve.</div>
-              </div>
-
-              <div class="form-group form-group-span">
-                <label for="bottlenecks">Primary Bottlenecks</label>
-                <textarea id="bottlenecks" name="bottlenecks" required placeholder="Where does work stall—pipeline quality, estimating, production, project handoff, leadership decisions?"></textarea>
-                <div class="error">Please describe primary bottlenecks.</div>
-              </div>
-            </div>
-
-            <button class="btn btn-primary" type="submit" onclick="return submitDiscovery()">Submit Discovery</button>
+            <p class="pr-actions" style="margin-top:1rem">
+              <button class="btn btn-primary" type="submit">Submit this discovery</button>
+              <a class="btn btn-outline" href="discovery.html">Choose a different group</a>
+            </p>
           </form>
-          <p style="margin-top:1.25rem;margin-bottom:0;font-size:0.9rem"><a href="client-intake.html">← Client Intake</a> · <a href="index.html">All forms</a> · <a href="https://calendly.com/contact-isi-consults" target="_blank" rel="noopener noreferrer">Skip to Schedule</a></p>
+          <p style="margin-top:1.25rem;margin-bottom:0;font-size:0.9rem"><a href="client-intake.html">← Intake</a> · <a href="../schedule.html">Schedule</a></p>
         </div>
       </div>
     </section>
@@ -129,15 +187,12 @@
       <div class="footer-grid">
         <div>
           <div class="footer-brand">ISI <span>Consulting</span></div>
-          <p>Iron Sharpens Iron — transforming revenue, margin, and operational performance for industrial and project-driven companies.</p>
+          <p>Fractional Business Development leadership for construction and AEC.</p>
         </div>
         <div>
           <h4>Navigate</h4>
           <ul>
             <li><a href="../index.html">Home</a></li>
-            <li><a href="../about.html">About</a></li>
-            <li><a href="../philosophy.html">Philosophy</a></li>
-            <li><a href="../services/index.html">Services</a></li>
             <li><a href="../contact.html">Contact</a></li>
           </ul>
         </div>
@@ -145,19 +200,13 @@
           <h4>Engage</h4>
           <ul>
             <li><a href="https://calendly.com/contact-isi-consults" target="_blank" rel="noopener noreferrer">Schedule</a></li>
-            <li><a href="index.html">Forms</a></li>
-            <li><a href="client-intake.html">Client Intake</a></li>
-            <li><a href="lead-magnet.html">Lead Magnet</a></li>
-            <li><a href="../templates/resource-library.html">Resources</a></li>
+            <li><a href="client-intake.html">Intake</a></li>
           </ul>
         </div>
         <div>
           <h4>Legal</h4>
           <ul>
-            <li><a href="../legal/nda.html">Confidentiality Notice</a></li>
-            <li><a href="../legal/terms.html">Terms of Engagement</a></li>
             <li><a href="../legal/privacy.html">Privacy Policy</a></li>
-            <li><a href="../legal/disclaimer.html">Consulting Disclaimer</a></li>
           </ul>
         </div>
       </div>
@@ -169,5 +218,6 @@
   </footer>
   <script src="../js/site.js"></script>
   <script src="../js/forms.js"></script>
+  <script src="../js/discovery.js"></script>
 </body>
 </html>
