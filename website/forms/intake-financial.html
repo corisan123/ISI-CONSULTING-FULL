@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Financial intake | ISI Consulting</title>
+  <link rel="stylesheet" href="../css/site.css">
+</head>
+<body data-isi-protect>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="../index.html">ISI <span>Consulting</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+      <nav class="site-nav" id="primary-nav"><ul>
+        <li><a href="intake.html">All intakes</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+        <li><a class="nav-cta" href="https://calendly.com/contact-isi-consults" target="_blank" rel="noopener noreferrer">Schedule</a></li>
+      </ul></nav>
+    </div>
+  </header>
+  <main>
+    <div class="page-header"><div class="container">
+      <p class="kicker">Financial family</p>
+      <h1>Financial intake</h1>
+      <p class="lede">Cash, margin, profitability, and the decision on the table this quarter. Diligence is first whenever money is involved. Type in every box. Engines are not on this page.</p>
+    </div></div>
+    <section class="section section-alt"><div class="container">
+      <div class="form-block form-block-xl" style="margin-inline:auto">
+        <form id="groupIntakeForm" class="isi-form" data-group="financial" method="POST" action="https://formsubmit.co/contact@isiconsults.com" novalidate>
+          <input type="hidden" name="_subject" value="ISI intake — Financial">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_cc" value="dreid@isiconsults.com">
+          <input type="hidden" name="_next" value="https://isiconsults.com/glimpse/financial">
+          <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+          <fieldset class="form-section">
+            <legend>Who is filing this</legend>
+            <div class="isi-form-grid">
+              <div class="form-group"><label for="companyName">Legal business name</label><input id="companyName" name="Company" type="text" required placeholder="Type the legal name"><div class="error">Required.</div></div>
+              <div class="form-group"><label for="contactName">Your name</label><input id="contactName" name="Contact" type="text" required placeholder="Type your name"><div class="error">Required.</div></div>
+              <div class="form-group"><label for="email">Email</label><input id="email" name="Email" type="email" required placeholder="you@company.com"><div class="error">Valid email required.</div></div>
+              <div class="form-group"><label for="phone">Phone</label><input id="phone" name="Phone" type="tel" required placeholder="484.750.7338"><div class="error">Required.</div></div>
+            </div>
+          </fieldset>
+          <fieldset class="form-section">
+            <legend>Financial facts — not the preferred story</legend>
+            <div class="form-group"><label for="fin_decision">What financial decision is on the table this quarter?</label><textarea id="fin_decision" name="Decision this quarter" required placeholder="Recapitalize, sell a unit, fund a turnaround, hire, acquire, hold…"></textarea><div class="error">Required.</div></div>
+            <div class="isi-form-grid">
+              <div class="form-group"><label for="fin_rev">Annual revenue (estimate is fine)</label><input id="fin_rev" name="Annual revenue" type="text" required placeholder="e.g., $18M"><div class="error">Required.</div></div>
+              <div class="form-group"><label for="fin_profit">Job-level profit visibility</label>
+                <select id="fin_profit" name="Job profit visibility" required><option value="">Select…</option><option>Clear during the job</option><option>Only at closeout</option><option>Low / none</option></select><div class="error">Required.</div></div>
+              <div class="form-group"><label for="fin_cash">Cash and line — tightness this month</label>
+                <select id="fin_cash" name="Cash tightness" required><option value="">Select…</option><option>Not the issue</option><option>Tight</option><option>The constraint</option></select><div class="error">Required.</div></div>
+              <div class="form-group"><label for="fin_cover">Debt service / coverage pressure</label>
+                <select id="fin_cover" name="Coverage pressure" required><option value="">Select…</option><option>Manageable</option><option>Watching it</option><option>The gate</option></select><div class="error">Required.</div></div>
+            </div>
+            <div class="form-group"><label for="fin_leak">Where do you believe margin is leaking?</label><textarea id="fin_leak" name="Where margin leaks" required placeholder="Mix, discount, extras, estimate vs actual, retainage…"></textarea><div class="error">Required.</div></div>
+            <div class="form-group"><label for="fin_kpis">Which financial numbers does leadership actually review weekly?</label><textarea id="fin_kpis" name="Weekly financial numbers" required placeholder="Name them. “The P&amp;L” is not a weekly operating number."></textarea><div class="error">Required.</div></div>
+            <div class="form-group"><label for="fin_open">If diligence says STOP, will that be allowed to stand?</label>
+              <select id="fin_open" name="Will a STOP be allowed" required><option value="">Select…</option><option>Yes</option><option>Only with a recast</option><option>We need a growth story anyway</option></select><div class="error">Required.</div></div>
+          </fieldset>
+          <button class="btn btn-primary" type="submit">Submit financial intake</button>
+        </form>
+        <p style="margin-top:1rem"><a href="intake.html">← Other groups</a></p>
+      </div>
+    </div></section>
+  </main>
+  <script src="../js/site.js"></script>
+  <script src="../js/forms.js"></script>
+  <script src="../js/intake-group.js"></script>
+  <script src="../js/protect.js"></script>
+</body>
+</html>

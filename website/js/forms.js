@@ -151,14 +151,7 @@
   }
 
   function triggerGuideDownload() {
-    var href = "/website/assets/isi-growth-diagnostic-guide-placeholder.txt";
-    var a = document.createElement("a");
-    a.href = href;
-    a.download = "isi-growth-diagnostic-guide-placeholder.txt";
-    a.rel = "noopener";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+    window.location.href = "/website/guides/growth-diagnostic-guide.html";
   }
 
   /**
@@ -340,7 +333,7 @@
 
     console.log("Lead Magnet Request:", email);
     store("isi_leadMagnet", data);
-    showSuccess(form, "Your download is ready.");
+    showSuccess(form, "Opening the Growth Diagnostic Guide.");
     triggerGuideDownload();
     return false;
   }
@@ -379,4 +372,9 @@
   global.submitSchedule = submitSchedule;
   global.submitContact = submitContact;
   global.submitLeadMagnet = submitLeadMagnet;
+  global.ISI = global.ISI || {};
+  global.ISI.forms = {
+    deliverToInbox: deliverToInbox,
+    store: store
+  };
 })(typeof window !== "undefined" ? window : this);

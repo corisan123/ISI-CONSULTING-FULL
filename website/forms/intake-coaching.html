@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Coaching and training intake | ISI Consulting</title>
+  <link rel="stylesheet" href="../css/site.css">
+</head>
+<body data-isi-protect>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="logo" href="../index.html">ISI <span>Consulting</span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+      <nav class="site-nav" id="primary-nav"><ul>
+        <li><a href="intake.html">All intakes</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+        <li><a class="nav-cta" href="https://calendly.com/contact-isi-consults" target="_blank" rel="noopener noreferrer">Schedule</a></li>
+      </ul></nav>
+    </div>
+  </header>
+  <main>
+    <div class="page-header"><div class="container">
+      <p class="kicker">Behavior, not a workshop</p>
+      <h1>Coaching and training intake</h1>
+      <p class="lede">PMs, estimators, and Business Development staff. A vacant seat cannot be coached — that file belongs on Fractional Business Development, not here.</p>
+    </div></div>
+    <section class="section section-alt"><div class="container">
+      <div class="form-block form-block-xl" style="margin-inline:auto">
+        <form id="groupIntakeForm" class="isi-form" data-group="coaching" method="POST" action="https://formsubmit.co/contact@isiconsults.com" novalidate>
+          <input type="hidden" name="_subject" value="ISI intake — Coaching">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_cc" value="dreid@isiconsults.com">
+          <input type="hidden" name="_next" value="https://isiconsults.com/glimpse/coaching">
+          <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+          <fieldset class="form-section">
+            <legend>Who is filing this</legend>
+            <div class="isi-form-grid">
+              <div class="form-group"><label for="companyName">Legal business name</label><input id="companyName" name="Company" type="text" required placeholder="Type the legal name"><div class="error">Required.</div></div>
+              <div class="form-group"><label for="contactName">Your name</label><input id="contactName" name="Contact" type="text" required placeholder="Type your name"><div class="error">Required.</div></div>
+              <div class="form-group"><label for="email">Email</label><input id="email" name="Email" type="email" required placeholder="you@company.com"><div class="error">Valid email required.</div></div>
+              <div class="form-group"><label for="phone">Phone</label><input id="phone" name="Phone" type="tel" required placeholder="484.750.7338"><div class="error">Required.</div></div>
+            </div>
+          </fieldset>
+          <fieldset class="form-section">
+            <legend>What must change weekly</legend>
+            <div class="form-group"><label for="co_seat">Is the seat being coached actually occupied?</label>
+              <select id="co_seat" name="Seat occupied" required><option value="">Select…</option><option>Yes — named people in seat</option><option>Partly — founder is covering</option><option>No — vacant (use Fractional Business Development intake instead)</option></select><div class="error">Required.</div></div>
+            <div class="form-group"><label for="co_who">Who is being coached? (roles, not a department name)</label><input id="co_who" name="Roles being coached" type="text" required placeholder="PM, estimator, Business Development staff"><div class="error">Required.</div></div>
+            <div class="isi-form-grid">
+              <div class="form-group"><label for="co_cadence">Does a weekly meeting exist that records decisions?</label>
+                <select id="co_cadence" name="Weekly cadence" required><option value="">Select…</option><option>Yes — decisions and owners</option><option>Status meeting only</option><option>No</option></select><div class="error">Required.</div></div>
+              <div class="form-group"><label for="co_gate">Has qualification been used on a live bid in 30 days?</label>
+                <select id="co_gate" name="Qualification used in 30 days" required><option value="">Select…</option><option>Yes</option><option>Talked about only</option><option>No / not applicable</option></select><div class="error">Required.</div></div>
+            </div>
+            <div class="form-group"><label for="co_behavior">Which weekly behavior must change for the number to move?</label><textarea id="co_behavior" name="Behavior that must change" required placeholder="Follow-up, estimate review, discount authority, pipeline hygiene, handoff…"></textarea><div class="error">Required.</div></div>
+            <div class="form-group"><label for="co_proof">What proof in 90 days is not a workshop slide?</label><textarea id="co_proof" name="90-day coaching proof" required placeholder="One week of notes with owners, run without ISI in the room."></textarea><div class="error">Required.</div></div>
+          </fieldset>
+          <button class="btn btn-primary" type="submit">Submit coaching intake</button>
+        </form>
+        <p style="margin-top:1rem"><a href="intake.html">← Other groups</a></p>
+      </div>
+    </div></section>
+  </main>
+  <script src="../js/site.js"></script>
+  <script src="../js/forms.js"></script>
+  <script src="../js/intake-group.js"></script>
+  <script src="../js/protect.js"></script>
+</body>
+</html>

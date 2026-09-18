@@ -9,6 +9,8 @@
     if (!root) return;
     ["contextmenu", "dragstart", "copy", "cut", "selectstart"].forEach(function (evt) {
       root.addEventListener(evt, function (e) {
+        var t = e.target && e.target.tagName;
+        if (t === "INPUT" || t === "TEXTAREA" || t === "SELECT") return;
         e.preventDefault();
       });
     });
@@ -81,7 +83,7 @@
 
   function go(key) {
     if (key === "diag") {
-      window.location.assign("/diagnostic/input.html");
+      window.location.assign("/intake");
       return;
     }
     if (key === "consult") {

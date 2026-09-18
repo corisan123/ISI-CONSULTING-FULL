@@ -41,16 +41,22 @@
 /peek/            /website/peek.html   301
 /timeline         /website/timeline.html   301
 /timeline/        /website/timeline.html   301
-/intake           /website/forms/client-intake.html   301
-/intake/          /website/forms/client-intake.html   301
-/discovery        /website/forms/discovery.html   301
-/discovery/       /website/forms/discovery.html   301
-/discovery/commercial   /website/forms/discovery.html?g=commercial   301
-/discovery/financial    /website/forms/discovery.html?g=financial   301
-/discovery/operations   /website/forms/discovery.html?g=operations   301
-/discovery/project      /website/forms/discovery.html?g=project   301
-/discovery/coaching     /website/forms/discovery.html?g=coaching   301
-/discovery/startup      /website/forms/discovery.html?g=startup   301
+/intake           /website/forms/intake.html   301
+/intake/          /website/forms/intake.html   301
+/intake/financial     /website/forms/intake-financial.html   301
+/intake/operations    /website/forms/intake-operations.html   301
+/intake/venture       /website/forms/intake-venture.html   301
+/intake/commercial    /website/forms/intake-commercial.html   301
+/intake/coaching      /website/forms/intake-coaching.html   301
+/discovery        /website/forms/intake.html   301
+/discovery/       /website/forms/intake.html   301
+/glimpse/financial    /website/glimpse/financial.html   301
+/glimpse/operations   /website/glimpse/operations.html   301
+/glimpse/venture      /website/glimpse/venture.html   301
+/glimpse/commercial   /website/glimpse/commercial.html   301
+/glimpse/coaching     /website/glimpse/coaching.html   301
+/guide            /website/guides/growth-diagnostic-guide.html   301
+/guide/           /website/guides/growth-diagnostic-guide.html   301
 /forms            /website/forms/index.html   301
 /forms/           /website/forms/index.html   301
 /forms/thanks     /website/forms/thanks.html   301
@@ -66,9 +72,9 @@
 /services/coaching   /website/services/leadership-alignment.html   301
 /services/coaching/  /website/services/leadership-alignment.html   301
 
-# Diagnostic entry. Scoring and later steps keep their own files.
-/diagnostic       /diagnostic/input.html   302
-/diagnostic/      /diagnostic/input.html   302
+# Diagnostic entry. Public visitors get the intake families, not the internal engine.
+/diagnostic       /website/forms/intake.html   302
+/diagnostic/      /website/forms/intake.html   302
 
 # Practitioner tools exist as files under /internal/. Do not advertise. No /practice alias.
 
