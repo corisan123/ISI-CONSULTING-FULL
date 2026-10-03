@@ -24,6 +24,18 @@
         statedSymptoms: "revenue_down,margin_down,forecast_miss"
       });
     }
+    if (group === "financial") {
+      return Object.assign(base, {
+        finDecision: d["Decision this quarter"] || "",
+        jobProfitVisibility: d["Job profit visibility"] || "",
+        cashTightness: d["Cash tightness"] || "",
+        coveragePressure: d["Coverage pressure"] || "",
+        marginLeak: d["Where margin leaks"] || "",
+        weeklyFinancials: d["Weekly financial numbers"] || "",
+        stopAllowed: d["Will a STOP be allowed"] || "",
+        revenue: d["Annual revenue"] || ""
+      });
+    }
     return Object.assign(base, d);
   }
 

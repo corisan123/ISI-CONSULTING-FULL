@@ -1,106 +1,207 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <title>Engine 2 — Financial &amp; capital | ISI Internal</title>
-  <link rel="stylesheet" href="/internal/css/practice.css">
-</head>
-<body>
-  <main class="pr-wrap">
-    <p class="pr-kicker">Proprietary · Engine 2 · trade secret</p>
-    <h1>Financial &amp; capital diagnostic engine</h1>
-    <p class="lede">Dependency bus: change an upstream input and downstream nodes recompute. Not client-facing.</p>
-    <div class="pr-form-grid">
-      <div>
-        <label for="wacc">WACC (%)</label>
-        <input id="wacc" type="number" value="10" step="0.1">
-      </div>
-      <div>
-        <label for="capex">CAPEX year 0 ($)</label>
-        <input id="capex" type="number" value="750000" step="1000">
-      </div>
-      <div>
-        <label for="cf1">Year 1 incremental CF ($)</label>
-        <input id="cf1" type="number" value="180000" step="1000">
-      </div>
-      <div>
-        <label for="sit">Diligence situation</label>
-        <select id="sit">
-          <option value="turnaround">Turnaround</option>
-          <option value="commercial">Commercial</option>
-          <option value="capital">Capital</option>
-        </select>
-      </div>
-    </div>
-    <div class="pr-actions">
-      <button type="button" class="btn btn-gold" id="runAll">Run full engine</button>
-      <button type="button" class="btn btn-navy" id="shockY1">Shock Y1 CF +20% (recompute from NPV)</button>
-      <a class="btn btn-ghost" href="/internal/index.html">Practice bench</a>
-    </div>
-    <section style="margin-top:1.5rem">
-      <h2>Program run log</h2>
-      <div id="log"></div>
-    </section>
-    <section style="margin-top:1.5rem">
-      <h2>Summary KPIs</h2>
-      <div class="pr-metrics" id="kpis"></div>
-    </section>
-  </main>
-  <script src="/internal/js/store.js"></script>
-  <script src="/internal/js/math.js"></script>
-  <script src="/internal/js/kits.js"></script>
-  <script src="/internal/js/diligence.js"></script>
-  <script src="/internal/js/trees.js"></script>
-  <script src="/internal/js/engine-bus/core.js"></script>
-  <script src="/internal/js/engine-bus/engines/financial.js"></script>
-  <script src="/internal/js/engine-bus/index.js"></script>
-  <script>
-    ISI.engineBus.init();
-    var engine = ISI.engineBus.financial;
-
-    function readForm() {
-      return {
-        waccPct: Number(document.getElementById("wacc").value),
-        capexYear0: Number(document.getElementById("capex").value),
-        investment: Number(document.getElementById("capex").value),
-        cf1: Number(document.getElementById("cf1").value),
-        diligenceSit: document.getElementById("sit").value
-      };
-    }
-
-    function paint(result) {
-      var logEl = document.getElementById("log");
-      logEl.innerHTML = (result.log || []).map(function (row) {
-        return "<div class='pr-panel' style='margin-bottom:0.5rem'><strong>" + row.label + "</strong><br>" + row.headline +
-          (row.detail ? "<br><span class='lede'>" + row.detail + "</span>" : "") + "</div>";
-      }).join("");
-      var sum = engine.getNodeOutput("summary");
-      var kpiEl = document.getElementById("kpis");
-      if (!sum || !sum.kpis) {
-        kpiEl.innerHTML = "";
-        return;
-      }
-      var k = sum.kpis;
-      kpiEl.innerHTML =
-        "<div class='pr-metric'><div class='lbl'>Diligence</div><div class='val'>" + k.diligence + "</div></div>" +
-        "<div class='pr-metric'><div class='lbl'>NPV</div><div class='val'>" + Math.round(k.npv).toLocaleString() + "</div></div>" +
-        "<div class='pr-metric'><div class='lbl'>IRR</div><div class='val'>" + (k.irr * 100).toFixed(1) + "%</div></div>" +
-        "<div class='pr-metric'><div class='lbl'>MC P50</div><div class='val'>" + Math.round(k.p50).toLocaleString() + "</div></div>" +
-        "<div class='pr-metric'><div class='lbl'>Decision score</div><div class='val'>" + k.decisionScore.toFixed(2) + "</div></div>";
-    }
-
-    document.getElementById("runAll").addEventListener("click", function () {
-      engine.setInput(readForm());
-      paint(engine.recompute());
-    });
-    document.getElementById("shockY1").addEventListener("click", function () {
-      var inp = readForm();
-      inp.cf1 = inp.cf1 * 1.2;
-      engine.setInput(inp);
-      paint(engine.invalidateFrom("npv-irr-pv"));
-    });
-  </script>
-</body>
-</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Engine 2 — Financial &amp; capital | ISI Internal</title>
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <main class="pr-wrap">
+    <p class="pr-kicker">Proprietary · Engine 2 · trade secret</p>
+    <h1>Financial &amp; capital diagnostic engine</h1>
+    <p class="lede" id="fileLabel">Diligence → WACC → CAPEX → GAAP depreciation → NPV/IRR/PI → tornado → seeded Monte Carlo → capital matrix — dependency bus.</p>
+    <div class="pr-form-grid">
+      <div>
+        <label for="wacc">WACC (%)</label>
+        <input id="wacc" type="number" value="10" step="0.1">
+      </div>
+      <div>
+        <label for="capex">CAPEX year 0 ($)</label>
+        <input id="capex" type="number" value="750000" step="1000">
+      </div>
+      <div>
+        <label for="cf1">Year 1 incremental CF ($)</label>
+        <input id="cf1" type="number" value="180000" step="1000">
+      </div>
+      <div>
+        <label for="sit">Diligence situation</label>
+        <select id="sit">
+          <option value="turnaround">Turnaround</option>
+          <option value="commercial">Commercial</option>
+          <option value="capital">Capital</option>
+        </select>
+      </div>
+    </div>
+    <div class="pr-actions">
+      <button type="button" class="btn btn-gold" id="runAll">Run full engine</button>
+      <button type="button" class="btn btn-navy" id="shockWacc">WACC +2 pts (invalidate from intake)</button>
+      <button type="button" class="btn btn-navy" id="shockY1">Shock Y1 CF +20% (invalidate from intake)</button>
+      <button type="button" class="btn btn-ghost" id="selfTest">Self-test (assert summary)</button>
+      <a class="btn btn-ghost" href="/internal/family-dashboard.html">Family dashboard</a>
+      <a class="btn btn-ghost" href="/internal/index.html">Practice bench</a>
+    </div>
+    <p id="selfTestOut" class="lede" style="margin-top:0.75rem" aria-live="polite"></p>
+    <section style="margin-top:1.5rem">
+      <h2>Program run log</h2>
+      <div id="log"></div>
+    </section>
+    <section style="margin-top:1.5rem">
+      <h2>Summary KPIs</h2>
+      <div class="pr-metrics" id="kpis"></div>
+    </section>
+  </main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/kits.js"></script>
+  <script src="/internal/js/diligence.js"></script>
+  <script src="/internal/js/trees.js"></script>
+  <script src="/internal/js/engine-bus/core.js"></script>
+  <script src="/internal/js/engine-bus/engines/financial.js"></script>
+  <script src="/internal/js/engine-bus/index.js"></script>
+  <script>
+    ISI.engineBus.init();
+    var engine = ISI.engineBus.financial;
+    var lastNpv = null;
+
+    function readForm() {
+      return {
+        waccPct: Number(document.getElementById("wacc").value),
+        capexYear0: Number(document.getElementById("capex").value),
+        investment: Number(document.getElementById("capex").value),
+        cf1: Number(document.getElementById("cf1").value),
+        diligenceSit: document.getElementById("sit").value
+      };
+    }
+
+    function kpiLabel(key) {
+      var labels = {
+        company: "Engagement file",
+        diligence: "Diligence",
+        wacc: "WACC",
+        npv: "NPV",
+        irr: "IRR",
+        pi: "PI",
+        payback: "Payback (yrs)",
+        sensitivityTop: "Top sensitivity",
+        mcP50: "MC P50 NPV",
+        mcPPositive: "P(NPV>0)",
+        matrixBest: "Matrix best",
+        decisionScore: "Decision score"
+      };
+      return labels[key] || key;
+    }
+
+    function formatKpi(key, val) {
+      if (val == null) return "—";
+      if (key === "wacc" || key === "irr") {
+        return (Number(val) * 100).toFixed(2) + "%";
+      }
+      if (key === "mcPPositive") {
+        return (Number(val) * 100).toFixed(0) + "%";
+      }
+      if (key === "npv" || key === "mcP50") {
+        return "$" + Math.round(Number(val)).toLocaleString();
+      }
+      if (key === "payback" || key === "pi" || key === "decisionScore") {
+        return isFinite(Number(val)) ? Number(val).toFixed(2) : "—";
+      }
+      if (typeof val === "number" && isFinite(val)) {
+        return Number.isInteger(val) ? String(val) : val.toFixed(2);
+      }
+      return String(val);
+    }
+
+    function paint(result) {
+      var logEl = document.getElementById("log");
+      logEl.innerHTML = (result.log || []).map(function (row) {
+        return "<div class='pr-panel' style='margin-bottom:0.5rem'><strong>" + row.label + "</strong><br>" + row.headline +
+          (row.detail ? "<br><span class='lede'>" + row.detail + "</span>" : "") + "</div>";
+      }).join("");
+      var sum = engine.getNodeOutput("summary");
+      var kpiEl = document.getElementById("kpis");
+      var fileLabel = document.getElementById("fileLabel");
+      if (!sum || !sum.kpis) {
+        kpiEl.innerHTML = "";
+        return;
+      }
+      var k = sum.kpis;
+      if (fileLabel && k.company) {
+        fileLabel.textContent = "Active file: " + k.company + " — ISI financial & capital bus.";
+      }
+      lastNpv = k.npv;
+      kpiEl.innerHTML = Object.keys(k).map(function (key) {
+        return "<div class='pr-metric'><div class='lbl'>" + kpiLabel(key) + "</div><div class='val'>" + formatKpi(key, k[key]) + "</div></div>";
+      }).join("");
+    }
+
+    function runSelfTest() {
+      var out = document.getElementById("selfTestOut");
+      engine.setInput(readForm());
+      var result = engine.recompute();
+      paint(result);
+      var sum = engine.getNodeOutput("summary");
+      var errors = [];
+      if (!sum) errors.push("summary node missing");
+      else if (!sum.kpis) errors.push("summary.kpis missing");
+      else {
+        [
+          "diligence", "wacc", "npv", "irr", "pi", "payback",
+          "sensitivityTop", "mcP50", "mcPPositive", "decisionScore", "company"
+        ].forEach(function (req) {
+          if (sum.kpis[req] == null) errors.push("kpi." + req + " missing");
+        });
+      }
+      var logIds = (result.log || []).map(function (r) { return r.id; });
+      [
+        "diligence", "cost-of-capital", "capex-schedule", "depreciation-gaap",
+        "margin-capital-kit", "npv-irr-pv", "sensitivity-1way", "monte-carlo", "decision-matrix"
+      ].forEach(function (id) {
+        if (logIds.indexOf(id) === -1) errors.push("log missing " + id);
+      });
+      if (errors.length) {
+        out.textContent = "Self-test FAILED: " + errors.join("; ");
+        out.style.color = "#b91c1c";
+        return false;
+      }
+      out.textContent = "Self-test passed — summary KPIs and full capital program chain present.";
+      out.style.color = "#166534";
+      return true;
+    }
+
+    document.getElementById("runAll").addEventListener("click", function () {
+      document.getElementById("selfTestOut").textContent = "";
+      engine.setInput(readForm());
+      paint(engine.recompute());
+    });
+
+    document.getElementById("shockWacc").addEventListener("click", function () {
+      document.getElementById("selfTestOut").textContent = "";
+      var before = lastNpv;
+      var inp = readForm();
+      inp.waccPct = inp.waccPct + 2;
+      document.getElementById("wacc").value = inp.waccPct;
+      engine.setInput(inp);
+      paint(engine.invalidateFrom("file-intake"));
+      var after = engine.getNodeOutput("summary");
+      if (after && after.kpis && before != null && after.kpis.npv === before) {
+        document.getElementById("selfTestOut").textContent =
+          "Note: NPV unchanged after WACC shock — check inputs.";
+      }
+    });
+
+    document.getElementById("shockY1").addEventListener("click", function () {
+      document.getElementById("selfTestOut").textContent = "";
+      var inp = readForm();
+      inp.cf1 = inp.cf1 * 1.2;
+      document.getElementById("cf1").value = Math.round(inp.cf1);
+      engine.setInput(inp);
+      paint(engine.invalidateFrom("file-intake"));
+    });
+
+    document.getElementById("selfTest").addEventListener("click", runSelfTest);
+  </script>
+</body>
+</html>
+

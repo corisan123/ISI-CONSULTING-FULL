@@ -61,7 +61,19 @@
       ],
       kits: ["margin"],
       orchestratorEngines: ["expansion", "growth"],
-      summaryKeys: ["diligence", "margin", "finance", "montecarlo", "matrix"]
+      summaryKeys: [
+        "engine2-intake",
+        "diligence",
+        "engine2-wacc",
+        "engine2-capex",
+        "engine2-depreciation",
+        "engine2-margin-kit",
+        "engine2-npv-stack",
+        "sensitivity-1way",
+        "montecarlo",
+        "matrix",
+        "engine2-summary"
+      ]
     },
     operations: {
       id: "operations",
