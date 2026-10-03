@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ISI engine test launcher | local only</title>
+  <style>
+    :root { --navy: #0F1F3D; --gold: #C9A235; --muted: #5a6577; }
+    body { font-family: "Segoe UI", system-ui, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1.25rem; color: #1a2332; line-height: 1.55; }
+    h1 { color: var(--navy); font-size: 1.5rem; }
+    h1 span { color: var(--gold); }
+    .warn { background: #fef3c7; border-left: 4px solid var(--gold); padding: 1rem 1.25rem; margin: 1.25rem 0; font-size: 0.95rem; }
+    ol.steps { margin: 0.5rem 0 1.5rem; padding-left: 1.25rem; }
+    .card { border: 1px solid #dce3ed; border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 0.75rem; }
+    .card h2 { margin: 0 0 0.35rem; font-size: 1.05rem; color: var(--navy); }
+    .card p { margin: 0 0 0.75rem; font-size: 0.88rem; color: var(--muted); }
+    a.btn { display: inline-block; background: var(--navy); color: #fff; text-decoration: none; padding: 0.45rem 0.9rem; border-radius: 6px; font-size: 0.88rem; margin-right: 0.5rem; margin-bottom: 0.35rem; }
+    a.btn-gold { background: var(--gold); color: var(--navy); }
+    code { background: #f4f6f9; padding: 0.1rem 0.35rem; border-radius: 4px; font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <h1>ISI <span>engine testing</span></h1>
+  <p>Proprietary diagnostic engines — practice bench only. Use this page after you start a local server (see below).</p>
+
+  <div class="warn">
+    <strong>Do not double-click engine HTML files.</strong> Scripts load from <code>/internal/js/</code>. You must serve the <strong>repository root</strong> on port <strong>8080</strong>, then open this page at
+    <code>http://localhost:8080/engine-testing/index.html</code>
+  </div>
+
+  <h2>Start server (Windows)</h2>
+  <ol class="steps">
+    <li>Open PowerShell in folder: <code>C:\Users\dreid\GitHub\ISI-CONSULTING-FULL</code></li>
+    <li>Run: <code>.\engine-testing\start-local-server.ps1</code></li>
+    <li>Leave that window open. Open the links below in Chrome or Edge.</li>
+  </ol>
+
+  <h2>Engines (click after server is running)</h2>
+
+  <div class="card">
+    <h2>Engine 1 — Commercial / tollgate</h2>
+    <p>Run full engine → Win rate +10 pts → Self-test → Publish client summary</p>
+    <a class="btn" href="/internal/commercial-engine.html">Open Engine 1</a>
+    <a class="btn btn-gold" href="/engine-testing/checklist-engine1.html">Checklist</a>
+  </div>
+
+  <div class="card">
+    <h2>Engine 2 — Financial &amp; capital</h2>
+    <p>Run → WACC +2 pts → Y1 CF +20% → Self-test → Publish</p>
+    <a class="btn" href="/internal/financial-engine.html">Open Engine 2</a>
+    <a class="btn btn-gold" href="/engine-testing/checklist-engine2.html">Checklist</a>
+  </div>
+
+  <div class="card">
+    <h2>Engine 3 — Operations &amp; throughput</h2>
+    <p>Run → CAPEX +$200K → OEE +8 pts → Self-test → Publish</p>
+    <a class="btn" href="/internal/operations-engine.html">Open Engine 3</a>
+    <a class="btn btn-gold" href="/engine-testing/checklist-engine3.html">Checklist</a>
+  </div>
+
+  <div class="card">
+    <h2>Engine 4 — Venture &amp; sequence</h2>
+    <p>Run → Burn +$15K → Revenue −20% → Self-test → Publish</p>
+    <a class="btn" href="/internal/venture-engine.html">Open Engine 4</a>
+    <a class="btn btn-gold" href="/engine-testing/checklist-engine4.html">Checklist</a>
+  </div>
+
+  <div class="card">
+    <h2>Engine 5 — Project / EVM recovery</h2>
+    <p>Run → EV +5% → Risk EMV +$50K → Self-test → Publish</p>
+    <a class="btn" href="/internal/project-engine.html">Open Engine 5 (project)</a>
+    <a class="btn btn-gold" href="/engine-testing/checklist-engine5-project.html">Checklist</a>
+  </div>
+
+  <div class="card">
+    <h2>Engine 5 — Coaching (no NPV chain)</h2>
+    <p>Run → Self-test → Publish coaching summary</p>
+    <a class="btn" href="/internal/project-engine.html?path=coaching">Open coaching path</a>
+    <a class="btn btn-gold" href="/engine-testing/checklist-engine5-coaching.html">Checklist</a>
+  </div>
+
+  <h2>After publish</h2>
+  <p>
+    <a class="btn" href="/client/summary.html">Client summary</a>
+    <a class="btn" href="/internal/family-dashboard.html">Family dashboard</a>
+  </p>
+  <p style="font-size:0.85rem;color:var(--muted);">Client summary uses the last <strong>Publish</strong> in this browser session. Production site does not expose <code>/internal/</code> or <code>/client/</code> until you deliver milestones.</p>
+</body>
+</html>
