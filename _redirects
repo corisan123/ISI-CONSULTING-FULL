@@ -14,7 +14,7 @@
 /home             /website/index.html   302
 /home/            /website/index.html   302
 
-# HOLDING MODE â€” public marketing URLs â†’ under-construction homepage (restore from website/index.launch.html + revert destinations to launch files).
+# HOLDING MODE - public marketing URLs to under-construction homepage (restore from website/index.launch.html + revert destinations to launch files).
 /about            /website/index.html   302
 /about/           /website/index.html   302
 /philosophy       /website/index.html   302
