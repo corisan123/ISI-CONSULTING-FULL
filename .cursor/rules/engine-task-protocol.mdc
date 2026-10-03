@@ -44,3 +44,13 @@ alwaysApply: true
 - Document test URL and steps in `HANDOFF.md` engine checklist.
 - `engagement-families.js` `entryHref` must match test page.
 - `family-dashboard.html` must show bus summary after a run.
+
+## Completion gate — “Anything missing?” (Daniel, Oct 2026)
+
+Before signing off an engine (and **periodically** during long sprints), **Composer and Task must ask:**
+
+> Is anything missing that would improve this engine — bus dependencies, invalidate/recompute paths, intake wiring, `summaryKeys`, client publish snapshot, test-page flow, internal styling/UX, or HANDOFF checklist gaps?
+
+- If yes: **fix in scope** for that engine id before marking HANDOFF row `[x]` or starting N+1.
+- Report remaining gaps explicitly in the Task return (do not silently defer).
+- Composer runs the same question when merging Task output and when touching the site in parallel (wiring only — no scope creep into other engines).
