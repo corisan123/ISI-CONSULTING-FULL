@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Engine 1 — Commercial / tollgate | ISI Internal</title>
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <main class="pr-wrap">
+    <p class="pr-kicker">Proprietary · Engine 1 · trade secret</p>
+    <h1>Commercial / tollgate diagnostic engine</h1>
+    <p class="lede" id="fileLabel">Qualification, pipeline integrity, commercial trees, fractional BD tollgate — not the generic growth spine.</p>
+
+    <div class="pr-form-grid">
+      <div>
+        <label for="pWin">Win rate (%)</label>
+        <input id="pWin" type="number" value="24" step="1">
+      </div>
+      <div>
+        <label for="gp">GP if won ($)</label>
+        <input id="gp" type="number" value="220000" step="1000">
+      </div>
+      <div>
+        <label for="bidCost">Bid cost ($)</label>
+        <input id="bidCost" type="number" value="18000" step="500">
+      </div>
+      <div>
+        <label for="developCost">Develop / execute cost ($)</label>
+        <input id="developCost" type="number" value="140000" step="1000">
+      </div>
+    </div>
+    <div class="pr-actions">
+      <button type="button" class="btn btn-gold" id="runAll">Run full engine</button>
+      <button type="button" class="btn btn-navy" id="shockWin">Win rate +10 pts (invalidate from intake)</button>
+      <button type="button" class="btn btn-ghost" id="selfTest">Self-test (assert summary)</button>
+      <a class="btn btn-ghost" href="/internal/family-dashboard.html">Family dashboard</a>
+      <a class="btn btn-ghost" href="/internal/index.html">Practice bench</a>
+    </div>
+    <p id="selfTestOut" class="lede" style="margin-top:0.75rem" aria-live="polite"></p>
+
+    <section style="margin-top:1.5rem">
+      <h2>Program run log</h2>
+      <div id="log"></div>
+    </section>
+
+    <section style="margin-top:1.5rem">
+      <h2>Summary KPIs</h2>
+      <div class="pr-metrics" id="kpis"></div>
+    </section>
+  </main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/diligence.js"></script>
+  <script src="/internal/js/trees.js"></script>
+  <script src="/internal/js/rootcause.js"></script>
+  <script src="/internal/js/engine-bus/core.js"></script>
+  <script src="/internal/js/engine-bus/engines/commercial-tollgate.js"></script>
+  <script src="/internal/js/engine-bus/index.js"></script>
+  <script>
+    ISI.engineBus.init();
+    var engine = ISI.engineBus.commercial;
+
+    function readForm() {
+      return {
+        pWin: Number(document.getElementById("pWin").value) / 100,
+        gp: Number(document.getElementById("gp").value),
+        bidCost: Number(document.getElementById("bidCost").value),
+        developCost: Number(document.getElementById("developCost").value)
+      };
+    }
+
+    function kpiLabel(key) {
+      var labels = {
+        company: "Engagement file",
+        diligence: "Diligence",
+        pipelineScore: "Pipeline",
+        tollgate: "Tollgate",
+        treeBest: "Tree best",
+        ev: "EV",
+        sensitivityTop: "Top sensitivity",
+        mcP50: "MC P50 EV",
+        mcPPositive: "P(EV>0)",
+        interventionsActive: "Interventions",
+        matrixBest: "Matrix best",
+        rootcauseKeep: "Root-cause KEEP"
+      };
+      return labels[key] || key;
+    }
+
+    function formatKpi(key, val) {
+      if (val == null) return "—";
+      if (key === "pipelineScore" || key === "mcPPositive") {
+        return (Number(val) * 100).toFixed(key === "pipelineScore" ? 0 : 0) + "%";
+      }
+      if (key === "ev" || key === "mcP50") {
+        return "$" + Math.round(Number(val)).toLocaleString();
+      }
+      if (typeof val === "number" && isFinite(val)) {
+        return Number.isInteger(val) ? String(val) : val.toFixed(2);
+      }
+      return String(val);
+    }
+
+    function paint(result) {
+      var logEl = document.getElementById("log");
+      logEl.innerHTML = (result.log || []).map(function (row) {
+        return "<div class='pr-panel' style='margin-bottom:0.5rem'><strong>" + row.label + "</strong><br>" + row.headline +
+          (row.detail ? "<br><span class='lede'>" + row.detail + "</span>" : "") + "</div>";
+      }).join("");
+      var sum = engine.getNodeOutput("summary");
+      var kpiEl = document.getElementById("kpis");
+      var fileLabel = document.getElementById("fileLabel");
+      if (!sum || !sum.kpis) {
+        kpiEl.innerHTML = "";
+        return;
+      }
+      var k = sum.kpis;
+      if (fileLabel && k.company) {
+        fileLabel.textContent = "Active file: " + k.company + " — proprietary commercial bus.";
+      }
+      kpiEl.innerHTML = Object.keys(k).map(function (key) {
+        return "<div class='pr-metric'><div class='lbl'>" + kpiLabel(key) + "</div><div class='val'>" + formatKpi(key, k[key]) + "</div></div>";
+      }).join("");
+    }
+
+    function runSelfTest() {
+      var out = document.getElementById("selfTestOut");
+      engine.setInput(readForm());
+      var result = engine.recompute();
+      paint(result);
+      var sum = engine.getNodeOutput("summary");
+      var errors = [];
+      if (!sum) errors.push("summary node missing");
+      else if (!sum.kpis) errors.push("summary.kpis missing");
+      else {
+        ["diligence", "pipelineScore", "tollgate", "ev", "mcP50", "interventionsActive"].forEach(function (req) {
+          if (sum.kpis[req] == null) errors.push("kpi." + req + " missing");
+        });
+      }
+      var logIds = (result.log || []).map(function (r) { return r.id; });
+      ["commercial-sensitivity", "commercial-monte-carlo", "commercial-interventions"].forEach(function (id) {
+        if (logIds.indexOf(id) === -1) errors.push("log missing " + id);
+      });
+      if (errors.length) {
+        out.textContent = "Self-test FAILED: " + errors.join("; ");
+        out.style.color = "#b91c1c";
+        return false;
+      }
+      out.textContent = "Self-test passed — summary KPIs and sensitivity / Monte Carlo / interventions nodes present.";
+      out.style.color = "#166534";
+      return true;
+    }
+
+    document.getElementById("runAll").addEventListener("click", function () {
+      document.getElementById("selfTestOut").textContent = "";
+      engine.setInput(readForm());
+      paint(engine.recompute());
+    });
+
+    document.getElementById("shockWin").addEventListener("click", function () {
+      document.getElementById("selfTestOut").textContent = "";
+      var inp = readForm();
+      inp.pWin = Math.min(0.95, inp.pWin + 0.1);
+      document.getElementById("pWin").value = Math.round(inp.pWin * 100);
+      engine.setInput(inp);
+      paint(engine.invalidateFrom("file-intake"));
+    });
+
+    document.getElementById("selfTest").addEventListener("click", runSelfTest);
+  </script>
+</body>
+</html>

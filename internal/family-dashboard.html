@@ -12,18 +12,21 @@
     <p class="pr-kicker">Internal · engagement family dashboard</p>
     <h1 id="famTitle">Engagement family</h1>
     <p class="lede" id="famSub"></p>
+    <p class="lede" id="busNote"></p>
     <div class="pr-actions">
-      <a class="btn btn-gold" id="entryLink" href="/internal/pipeline.html">Open first tool</a>
-      <a class="btn btn-navy" href="/internal/pipeline.html">Run family chain</a>
+      <a class="btn btn-gold" id="entryLink" href="/internal/pipeline.html">Open proprietary engine</a>
+      <a class="btn btn-navy" href="/internal/pipeline.html">Legacy pipeline chain</a>
       <a class="btn btn-ghost" href="/internal/index.html">Practice bench</a>
     </div>
     <section style="margin-top:1.5rem">
-      <h2>KPI tiles (from last browser runs)</h2>
+      <h2>KPI tiles (engine bus + tool store)</h2>
       <div class="pr-grid" id="kpiGrid"></div>
     </section>
   </main>
   <script src="/internal/js/store.js"></script>
   <script src="/internal/js/engagement-families.js"></script>
+  <script src="/internal/js/engine-bus/core.js"></script>
+  <script src="/internal/js/engine-bus/index.js"></script>
   <script src="/internal/js/family-dashboard.js"></script>
   <script>
     ISI.familyDashboard.paint();

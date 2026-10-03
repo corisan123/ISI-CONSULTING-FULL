@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="robots" content="noindex, nofollow">
+
+  <title>Engine 3 — Operations &amp; throughput | ISI Internal</title>
+
+  <link rel="stylesheet" href="/internal/css/practice.css">
+
+</head>
+
+<body>
+
+  <main class="pr-wrap">
+
+    <p class="pr-kicker">Proprietary · Engine 3 · trade secret</p>
+
+    <h1>Operations &amp; throughput diagnostic engine</h1>
+
+    <p class="lede">Constraint kit, throughput diligence, ROI-throughput, CAPEX gate.</p>
+
+    <div class="pr-form-grid">
+
+      <div>
+
+        <label for="demand">Weekly demand (units)</label>
+
+        <input id="demand" type="number" value="1200" step="10">
+
+      </div>
+
+      <div>
+
+        <label for="cap">Constraint capacity (units/wk)</label>
+
+        <input id="cap" type="number" value="900" step="10">
+
+      </div>
+
+      <div>
+
+        <label for="oee">Constraint OEE (%)</label>
+
+        <input id="oee" type="number" value="62" step="1">
+
+      </div>
+
+      <div>
+
+        <label for="capex">Proposed CAPEX ($)</label>
+
+        <input id="capex" type="number" value="450000" step="5000">
+
+      </div>
+
+    </div>
+
+    <div class="pr-actions">
+
+      <button type="button" class="btn btn-gold" id="runAll">Run full engine</button>
+
+      <button type="button" class="btn btn-navy" id="liftOee">OEE +8 pts (from constraint)</button>
+
+      <a class="btn btn-ghost" href="/internal/index.html">Practice bench</a>
+
+    </div>
+
+    <section style="margin-top:1.5rem">
+
+      <h2>Program run log</h2>
+
+      <div id="log"></div>
+
+    </section>
+
+    <section style="margin-top:1.5rem">
+
+      <h2>Summary KPIs</h2>
+
+      <div class="pr-metrics" id="kpis"></div>
+
+    </section>
+
+  </main>
+
+  <script src="/internal/js/store.js"></script>
+
+  <script src="/internal/js/math.js"></script>
+
+  <script src="/internal/js/kits.js"></script>
+
+  <script src="/internal/js/diligence.js"></script>
+
+  <script src="/internal/js/engine-bus/core.js"></script>
+
+  <script src="/internal/js/engine-bus/engines/operations-throughput.js"></script>
+
+  <script src="/internal/js/engine-bus/index.js"></script>
+
+  <script>
+
+    ISI.engineBus.init();
+
+    var engine = ISI.engineBus.operations;
+
+
+
+    function readForm() {
+
+      return {
+
+        demand: Number(document.getElementById("demand").value),
+
+        constraintCap: Number(document.getElementById("cap").value),
+
+        oee: Number(document.getElementById("oee").value),
+
+        proposedCapex: Number(document.getElementById("capex").value)
+
+      };
+
+    }
+
+
+
+    function paint(result) {
+
+      document.getElementById("log").innerHTML = (result.log || []).map(function (row) {
+
+        return "<div class='pr-panel' style='margin-bottom:0.5rem'><strong>" + row.label + "</strong><br>" + row.headline + "</div>";
+
+      }).join("");
+
+      var sum = engine.getNodeOutput("summary");
+
+      var kpiEl = document.getElementById("kpis");
+
+      if (!sum || !sum.kpis) { kpiEl.innerHTML = ""; return; }
+
+      var k = sum.kpis;
+
+      kpiEl.innerHTML =
+
+        "<div class='pr-metric'><div class='lbl'>Diligence</div><div class='val'>" + k.diligence + "</div></div>" +
+
+        "<div class='pr-metric'><div class='lbl'>Weekly gap</div><div class='val'>" + k.weeklyGap + "</div></div>" +
+
+        "<div class='pr-metric'><div class='lbl'>Lost T/yr</div><div class='val'>" + Math.round(k.lostThroughput).toLocaleString() + "</div></div>" +
+
+        "<div class='pr-metric'><div class='lbl'>CAPEX gate</div><div class='val'>" + k.capexGate + "</div></div>" +
+
+        "<div class='pr-metric'><div class='lbl'>OEE</div><div class='val'>" + k.oee + "%</div></div>";
+
+    }
+
+
+
+    document.getElementById("runAll").addEventListener("click", function () {
+
+      engine.setInput(readForm());
+
+      paint(engine.recompute());
+
+    });
+
+    document.getElementById("liftOee").addEventListener("click", function () {
+
+      var oee = Number(document.getElementById("oee").value) + 8;
+
+      document.getElementById("oee").value = oee;
+
+      engine.setInput(readForm());
+
+      paint(engine.invalidateFrom("constraint-ops"));
+
+    });
+
+  </script>
+
+</body>
+
+</html>
+

@@ -5,6 +5,28 @@
 (function () {
   "use strict";
 
+  function mapGroupToClientIntake(data, group) {
+    var d = data || {};
+    var base = {
+      companyName: d.Company || d["Legal business name"] || d["Legal or working name"] || "",
+      trade: d.Industry || d["Industry / sector"] || "Construction",
+      group: group
+    };
+    if (group === "commercial") {
+      return Object.assign(base, {
+        winRate: d["Win rate percent"] || "",
+        pipelineConsistency: d["Pipeline consistency"] || "",
+        bdProcess: d["Qualification used on live bids"] || "",
+        proposalFrustration: d["Pursuit frustration"] || "",
+        leadershipConfidence: "5",
+        leadershipGaps: d["Business Development seat"] || "",
+        kpisTracked: "revenue and backlog",
+        statedSymptoms: "revenue_down,margin_down,forecast_miss"
+      });
+    }
+    return Object.assign(base, d);
+  }
+
   var NEXT = {
     financial: "../glimpse/financial.html",
     operations: "../glimpse/operations.html",
@@ -56,6 +78,9 @@
       sessionStorage.setItem("isi_groupIntake", JSON.stringify(data));
       sessionStorage.setItem("isi_groupIntake_" + group, JSON.stringify(data));
       sessionStorage.setItem("isi_active_engagement_group", group);
+      sessionStorage.setItem("isi_engagement_family", group);
+      var clientIntake = mapGroupToClientIntake(data, group);
+      sessionStorage.setItem("isi_clientIntake", JSON.stringify(clientIntake));
     } catch (err) {}
 
     form.setAttribute("data-next", NEXT[group] || "../schedule.html");

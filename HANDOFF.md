@@ -152,9 +152,35 @@ Code pass on 23 Sep 2026 (Desktop, this repo) finished the list below. Do not in
 
 ---
 
-## Engagement families (client vs internal) — Daniel’s requirement
+## Proprietary diagnostic engines (Daniel — Oct 2026, non-negotiable)
 
-**Goal:** Each consulting family gets its own **discovery path** on the client site and its own **wired engine chain** on the internal bench. Startups ≠ growth/expansion ≠ fractional BD ≠ PM recovery. Trade secret stays off `/website/`; clients see glimpses and (later) a KPI dashboard, not formulas.
+**Not commercial software.** Names like MECE, decision trees, ROI modeling, risk simulation, and “Excel-class” finance are **reference points for sophistication only** — what the industry uses today. ISI builds **our own** implementations in this repo (`/internal/`, `/src/`, `/intelligence/`). **Do not** scope work as “integrate/buy MECE or consulting SaaS.” **Do not** treat `/internal/tools/mece.html` as “the product = MECE”; it is a **placeholder bench** until replaced or absorbed into proprietary engine modules.
+
+**Example lists are not exhaustive.** When Daniel mentions WACC, CAPEX, IRR, NPV, PV, depreciation, probability, sensitivity, scenarios, etc., those are **examples**, not the full tool list and **not** ranked by importance. Agents must **infer the full toolkit** each engine needs (diligence gates, QoE, working capital, throughput accounting, EVM, Monte Carlo, regression/SPC, portfolio trade-offs, stage-gates, kill conditions, and others already in `intelligence/INVENTORY.md` and `/internal/tools/`) and **wire them**, not stop at whatever Daniel typed in one message.
+
+**Target architecture: 4–5 heavily coded diagnostic engines**, each for a **class of similar consulting engagements** (shared intake/discovery + shared internal math and dependency graph). Dissimilar engagement classes get a **different engine**, not a relabeled single spine.
+
+| Engine | Similar project needs (examples) | Client-facing (gated only) | Internal (locked) |
+|--------|----------------------------------|----------------------------|-------------------|
+| **1 — Commercial / tollgate** | Fractional BD, revenue ops, sales maturity, commercial decision support | `intake-commercial`, glimpse, group-keyed needs | Qualification, pipeline hygiene, forecast integrity, commercial trees, tollgate — **not** generic growth scoring for every file |
+| **2 — Financial & capital** | Turnaround, expansion, strategy with money, CAPEX / investment cases | `intake-financial`, glimpse, needs | Diligence → cost of capital → investment / CAPEX → cash flows → NPV/IRR/PV/MIRR → GAAP-aligned depreciation schedules → sensitivity → Monte Carlo → risk → matrix; **dependency bus** recalc downstream when upstream changes |
+| **3 — Operations & throughput** | Manufacturing, operational alignment, constraint / quality / supply | `intake-operations`, glimpse, needs | Constraint ID, throughput accounting, OEE/scrap/WIP, exploit-vs-elevate, working-capital tied to ops — proprietary ops engine |
+| **4 — Venture & sequence** | Startup business plan, spin-out, recast thesis | `intake-venture`, glimpse, needs | Unit economics, runway, kill conditions, diligence gate — **no** “growth diagnostic theater” as default |
+| **5 — Project & program** (and/or leadership where distinct) | PM recovery, EVM, change control; leadership/coaching when behavior-only | `intake-project`, `intake-coaching`, glimpses, needs | EVM recovery engine vs **coaching scorecard engine** (no NPV chain) — may split to five engines or sub-modules under engine 5 |
+
+**Visibility:** Intake and discovery questionnaires live on **`/website/forms/`** (client-facing, no engine JS). **Engines run only on internal paths**; production `_redirects` 404 `/internal/*`, `/src/*`, `/intelligence/*`. Client sees **outputs** (KPIs, bands, narrative) when Daniel chooses to deliver — **not** formulas, weights, or architecture.
+
+**Dependency rule:** Each engine maintains a **directed graph** of programs. When an upstream input changes (intake fact, diligence gate, CAPEX, constraint metric), **dependent nodes re-run automatically** in session — no manual re-opening every tool.
+
+**IP:** Code and methods are **ISI trade secret** (`intelligence/PROTECTION.md`). Copyright registration is **after** test/prove on Desktop — not before.
+
+**Desktop only.** No Cursor Cloud **Agents** for this repo (Cloud = Truth Collective WP lane). **Cursor Task** on Desktop with **`environment: local`** (default) may run parallel subagents on this repo to build engines; **never** `environment: cloud` for ISI. Composer orchestrates site work + Task directives.
+
+---
+
+## Engagement families (client vs internal) — routing table
+
+**Goal:** Client **intake/discovery** maps to one of the **4–5 engines** above. Six **routing labels** on the site can map to five engines (e.g. commercial vs coaching). Trade secret stays off `/website/`.
 
 ### Client-facing (gated `/website/forms/` + `/website/glimpse/`)
 
@@ -182,18 +208,30 @@ Code pass on 23 Sep 2026 (Desktop, this repo) finished the list below. Do not in
 
 **Today:** Many standalone tools (NPV/IRR/WACC, Monte Carlo, trees, matrix, MECE, diligence, margin, ops, capital) listed in `internal/js/engines.js`. **3 Oct 2026:** `internal/js/engagement-families.js` + `ISI.pipeline.runForFamily()` wire **six client intake families** to distinct program chains on `/internal/pipeline.html`; `internal/family-dashboard.html` shows family KPI tiles from session runs. The **classic growth spine** (`/src/engine/isiDiagnosticEngine.js` + scoring → tree → summary) still serves **commercial** only; other families are routed to diligence/kits/EVM paths instead of one generic ten-step chain.
 
-**Still required (multi-week, Desktop only):**
+### Engine completion gate (one at a time — Oct 2026)
 
-1. **Family router** on `internal/index.html` / `internal/study.html`: pick family → load preset workstream + which tools are in the chain.
-2. **Per-family bundles** (examples):
-   - **Venture:** business-plan structure, unit economics, runway, diligence gate, kill condition (no generic growth scoring).
-   - **Financial / expansion:** diligence → WACC → CAPEX → NPV/IRR/PV → scenarios → Monte Carlo → matrix → wired pipeline.
-   - **Commercial:** pipeline/qualification scoring → forecast hygiene → tollgate (not full factory MECE unless file requires).
-   - **Operations:** throughput / constraint → ROI-throughput → capex gate.
-   - **Project:** EVM recovery → change-control → schedule/cost branches.
-   - **Coaching:** behavior scorecard only; no NPV engine.
-3. **Summary / dashboard page:** Replace static `internal/diagnostic/summary.html` copy with a **dependency graph**: when any upstream session key changes, KPI tiles and chart placeholders refresh from stored runs (still browser session until backend). This is the “intelligent Summary” Daniel described; it belongs **internal/gated**, not `/website/`.
-4. Keep Excel-grade math in `/internal/tools/` and `/src/`; do not copy weights into `/website/js/`.
+Work **Engine 1 → 5** in order. **Do not start N+1** until N passes all checks. Task subagents: **one engine id per Task**, `environment: local`, follow `.cursor/rules/engine-task-protocol.mdc`.
+
+| # | Id | Test URL | Acceptance (all required) |
+|---|-----|----------|---------------------------|
+| 1 | `commercial-tollgate` | `/internal/commercial-engine.html` | [x] Full run log (intake → qualification → pipeline → interventions → diligence → tree → 1-way sensitivity → seeded Monte Carlo → tollgate/matrix → summary). [x] Summary KPIs include diligence, pipeline, tollgate, EV, sensitivity top, MC P50/P(EV>0), interventions count, matrix best, root-cause KEEP. [x] Invalidate from `file-intake` when win rate shocks (tree reads live `ctx.inputs`). [x] `isi_clientIntake` from `website/js/intake-group.js` commercial mapping; empty session shows **Engagement file (unset)** — no demo placeholder company. [x] `engagement-families.js` commercial `summaryKeys` match Engine 1 `storeAs` ids. [x] Self-test button on test page asserts summary + required nodes. **Manual test (local http-server on repo root, port 8080):** open `http://localhost:8080/internal/commercial-engine.html` → **Run full engine** → confirm log lists all programs including sensitivity, Monte Carlo, interventions → confirm KPI grid populated → **Win rate +10 pts** → EV and MC P50 change → **Self-test** → green pass line → open `http://localhost:8080/internal/family-dashboard.html` → commercial family shows bus summary + store tiles. Optional: submit `website/forms/intake-commercial.html` first so session `isi_clientIntake` carries company name into engine headline. |
+| 2 | `financial-capital` | `/internal/financial-engine.html` | *(in progress — start only after Daniel’s optional 8080 smoke on row 1 or explicit go)* |
+| 3 | `operations-throughput` | `/internal/operations-engine.html` | blocked |
+| 4 | `venture-sequence` | `/internal/venture-engine.html` | blocked |
+| 5 | `project-program` | `/internal/project-engine.html` | blocked |
+
+**Current sprint:** Engine 2 — `financial-capital`. **Engine 1 code acceptance:** complete (3 Oct 2026 Desktop Task). **Optional operator gate:** one local pass on `http://localhost:8080/internal/commercial-engine.html` (Run full engine → Win rate +10 pts → Self-test → family dashboard).
+
+---
+
+**Still required (multi-week, Desktop only) — real proprietary engines, not page linking:**
+
+1. **`/src/engine/` (or `/internal/js/engine-bus/`) dependency graph** per engine id (1–5): nodes = ISI programs; edges = data contracts; **invalidate + recompute** on upstream change.
+2. **Five engine bundles** implementing the table above — reuse math from `/internal/tools/` and `/internal/js/kits.js` as **libraries**, not as the final product UX.
+3. **Client intake/discovery** per group feeds **engine-specific session keys** (today FormSubmit only; practice import is a later bridge).
+4. **Internal Summary / dashboard** driven by the bus — not static copy, not “growth spine only.”
+5. **Retire or replace** legacy single-spine assumption in `/src/engine/isiDiagnosticEngine.js` as the default for all files.
+6. Never ship engine JS, weights, or distributions on `/website/`.
 
 **Publish rule Daniel set:** Ship the **client-facing** site when discovery routing, links, placeholders, and contact path are correct. **Engines and Summary dashboard can continue on Desktop** after first deploy; they must not block HTML deploy if tiers are respected.
 

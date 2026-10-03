@@ -252,7 +252,7 @@
       });
     });
     if (!required.length) {
-      window.location.href = "discovery.html";
+      window.location.href = "intake.html";
       return false;
     }
     var ok = requireFields(required);

@@ -1,0 +1,42 @@
+---
+description: Mandatory protocols for ISI proprietary engine work and local Task subagents.
+alwaysApply: true
+---
+
+# ISI engine + Task protocol (mandatory)
+
+## Lane
+
+- **ISI only:** `ISI-CONSULTING-FULL`, Desktop Composer + **Task `environment: local` only**.
+- **Never** Cursor Cloud / Cloud Task for this repo. **Never** Truth Collective, TC paths, or WP REST API for engine work.
+- **No** `/website/` engine JS, weights, or formulas. Public pages stay static + gated forms only.
+
+## Completion order (one engine at a time)
+
+1. Engine 1 — `commercial-tollgate` → `/internal/commercial-engine.html`
+2. Engine 2 — `financial-capital` → `/internal/financial-engine.html`
+3. Engine 3 — `operations-throughput` → `/internal/operations-engine.html`
+4. Engine 4 — `venture-sequence` → `/internal/venture-engine.html`
+5. Engine 5 — `project-program` → `/internal/project-engine.html`
+
+**Do not start engine N+1** until engine N passes its acceptance checklist in `HANDOFF.md` (engine section).
+
+## Task directives must include
+
+- Full repo path: `C:\Users\dreid\GitHub\ISI-CONSULTING-FULL`
+- **Single engine id** per Task (never all five at once unless explicitly finishing stubs only).
+- **Forbidden:** editing `_redirects` / `_headers` unless Composer explicitly requests; deleting files; `/website/js/` engine imports; removing 404 rules for `/internal/*`; secrets in git.
+- **Required:** use `ISI.engineBus` pattern; real calls to `ISI.math`, `ISI.diligence`, `ISI.kits`, `ISI.rootcause`, `ISI.trees` where applicable; `storeAs` on each node; summary node with `kpis` object; test page with Run + invalidate demo.
+- **No placeholders:** no `"TODO"`, `"placeholder headline"`, or fake `"OK"` without computed metrics.
+
+## Website safety while engines run
+
+- Engine work under `/internal/`, `/src/engine/`, `/internal/js/engine-bus/` only.
+- Client site fixes: links, styling, intake routing — **Composer** may edit `/website/` without engine code.
+- Do not point public Schedule/Contact at `/internal/`.
+
+## After each engine
+
+- Document test URL and steps in `HANDOFF.md` engine checklist.
+- `engagement-families.js` `entryHref` must match test page.
+- `family-dashboard.html` must show bus summary after a run.

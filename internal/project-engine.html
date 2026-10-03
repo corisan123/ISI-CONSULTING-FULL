@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="robots" content="noindex, nofollow">
+
+  <title>Engine 5 — Project / program | ISI Internal</title>
+
+  <link rel="stylesheet" href="/internal/css/practice.css">
+
+</head>
+
+<body>
+
+  <main class="pr-wrap">
+
+    <p class="pr-kicker">Proprietary · Engine 5 · trade secret</p>
+
+    <h1>Project / program &amp; coaching engine</h1>
+
+    <p class="lede">EVM capital kit + risk for projects; coaching scorecard path without NPV.</p>
+
+    <div class="pr-form-grid">
+
+      <div>
+
+        <label for="path">Study path</label>
+
+        <select id="path">
+
+          <option value="project">Project / EVM recovery</option>
+
+          <option value="coaching">Leadership coaching (no NPV)</option>
+
+        </select>
+
+      </div>
+
+      <div>
+
+        <label for="ev">Earned value EV ($)</label>
+
+        <input id="ev" type="number" value="1680000" step="10000">
+
+      </div>
+
+      <div>
+
+        <label for="ac">Actual cost AC ($)</label>
+
+        <input id="ac" type="number" value="2150000" step="10000">
+
+      </div>
+
+      <div>
+
+        <label for="pv">Planned value PV ($)</label>
+
+        <input id="pv" type="number" value="2100000" step="10000">
+
+      </div>
+
+    </div>
+
+    <div class="pr-actions">
+
+      <button type="button" class="btn btn-gold" id="runAll">Run full engine</button>
+
+      <button type="button" class="btn btn-navy" id="bumpEv">EV +5% (from EVM kit)</button>
+
+      <a class="btn btn-ghost" href="/internal/index.html">Practice bench</a>
+
+    </div>
+
+    <section style="margin-top:1.5rem">
+
+      <h2>Program run log</h2>
+
+      <div id="log"></div>
+
+    </section>
+
+    <section style="margin-top:1.5rem">
+
+      <h2>Summary KPIs</h2>
+
+      <div class="pr-metrics" id="kpis"></div>
+
+    </section>
+
+  </main>
+
+  <script src="/internal/js/store.js"></script>
+
+  <script src="/internal/js/math.js"></script>
+
+  <script src="/internal/js/kits.js"></script>
+
+  <script src="/internal/js/trees.js"></script>
+
+  <script src="/internal/js/rootcause.js"></script>
+
+  <script src="/internal/js/engine-bus/core.js"></script>
+
+  <script src="/internal/js/engine-bus/engines/project-program.js"></script>
+
+  <script src="/internal/js/engine-bus/index.js"></script>
+
+  <script>
+
+    (function applyQueryPath() {
+
+      var m = /[?&]path=([^&]+)/.exec(location.search);
+
+      if (m && (m[1] === "coaching" || m[1] === "project")) {
+
+        document.getElementById("path").value = m[1];
+
+      }
+
+    })();
+
+
+
+    ISI.engineBus.init();
+
+    var engine = ISI.engineBus.project;
+
+
+
+    function readForm() {
+
+      return {
+
+        studyPath: document.getElementById("path").value,
+
+        ev: Number(document.getElementById("ev").value),
+
+        ac: Number(document.getElementById("ac").value),
+
+        pv: Number(document.getElementById("pv").value)
+
+      };
+
+    }
+
+
+
+    function paint(result) {
+
+      document.getElementById("log").innerHTML = (result.log || []).map(function (row) {
+
+        return "<div class='pr-panel' style='margin-bottom:0.5rem'><strong>" + row.label + "</strong><br>" + row.headline + "</div>";
+
+      }).join("");
+
+      var sum = engine.getNodeOutput("summary");
+
+      var kpiEl = document.getElementById("kpis");
+
+      if (!sum || !sum.kpis) { kpiEl.innerHTML = ""; return; }
+
+      var k = sum.kpis;
+
+      if (k.path === "coaching") {
+
+        kpiEl.innerHTML =
+
+          "<div class='pr-metric'><div class='lbl'>Path</div><div class='val'>Coaching</div></div>" +
+
+          "<div class='pr-metric'><div class='lbl'>Scorecard</div><div class='val'>" + (k.scorecard * 100).toFixed(0) + "%</div></div>" +
+
+          "<div class='pr-metric'><div class='lbl'>Modules</div><div class='val'>" + k.modules + "</div></div>" +
+
+          "<div class='pr-metric'><div class='lbl'>NPV chain</div><div class='val'>" + k.npvChain + "</div></div>";
+
+        return;
+
+      }
+
+      kpiEl.innerHTML =
+
+        "<div class='pr-metric'><div class='lbl'>SPI</div><div class='val'>" + (k.spi != null ? k.spi.toFixed(2) : "—") + "</div></div>" +
+
+        "<div class='pr-metric'><div class='lbl'>CPI</div><div class='val'>" + (k.cpi != null ? k.cpi.toFixed(2) : "—") + "</div></div>" +
+
+        "<div class='pr-metric'><div class='lbl'>EAC</div><div class='val'>" + Math.round(k.eac || 0).toLocaleString() + "</div></div>" +
+
+        "<div class='pr-metric'><div class='lbl'>Risk EMV</div><div class='val'>" + Math.round(k.riskEmv || 0).toLocaleString() + "</div></div>" +
+
+        "<div class='pr-metric'><div class='lbl'>Matrix</div><div class='val'>" + (k.matrixBest || "—") + "</div></div>";
+
+    }
+
+
+
+    document.getElementById("runAll").addEventListener("click", function () {
+
+      engine.setInput(readForm());
+
+      paint(engine.recompute());
+
+    });
+
+    document.getElementById("bumpEv").addEventListener("click", function () {
+
+      if (document.getElementById("path").value === "coaching") return;
+
+      var ev = Number(document.getElementById("ev").value) * 1.05;
+
+      document.getElementById("ev").value = Math.round(ev);
+
+      engine.setInput(readForm());
+
+      paint(engine.invalidateFrom("evm-kit"));
+
+    });
+
+  </script>
+
+</body>
+
+</html>
+

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="robots" content="noindex, nofollow">
+
+  <title>Engine 4 — Venture sequence | ISI Internal</title>
+
+  <link rel="stylesheet" href="/internal/css/practice.css">
+
+</head>
+
+<body>
+
+  <main class="pr-wrap">
+
+    <p class="pr-kicker">Proprietary · Engine 4 · trade secret</p>
+
+    <h1>Venture &amp; sequence diagnostic engine</h1>
+
+    <p class="lede">Diligence, unit economics, runway, kill conditions — no growth scoring theater.</p>
+
+    <div class="pr-form-grid">
+
+      <div>
+
+        <label for="cash">Cash on hand ($)</label>
+
+        <input id="cash" type="number" value="850000" step="10000">
+
+      </div>
+
+      <div>
+
+        <label for="burn">Monthly burn ($)</label>
+
+        <input id="burn" type="number" value="72000" step="1000">
+
+      </div>
+
+      <div>
+
+        <label for="rev">Monthly revenue ($)</label>
+
+        <input id="rev" type="number" value="38000" step="1000">
+
+      </div>
+
+      <div>
+
+        <label for="buyers">Named buyers w/ price test</label>
+
+        <input id="buyers" type="number" value="2" step="1" min="0">
+
+      </div>
+
+    </div>
+
+    <div class="pr-actions">
+
+      <button type="button" class="btn btn-gold" id="runAll">Run full engine</button>
+
+      <button type="button" class="btn btn-navy" id="cutBurn">Burn −15% (from runway)</button>
+
+      <a class="btn btn-ghost" href="/internal/index.html">Practice bench</a>
+
+    </div>
+
+    <section style="margin-top:1.5rem">
+
+      <h2>Program run log</h2>
+
+      <div id="log"></div>
+
+    </section>
+
+    <section style="margin-top:1.5rem">
+
+      <h2>Summary KPIs</h2>
+
+      <div class="pr-metrics" id="kpis"></div>
+
+    </section>
+
+  </main>
+
+  <script src="/internal/js/store.js"></script>
+
+  <script src="/internal/js/math.js"></script>
+
+  <script src="/internal/js/diligence.js"></script>
+
+  <script src="/internal/js/engine-bus/core.js"></script>
+
+  <script src="/internal/js/engine-bus/engines/venture-sequence.js"></script>
+
+  <script src="/internal/js/engine-bus/index.js"></script>
+
+  <script>
+
+    ISI.engineBus.init();
+
+    var engine = ISI.engineBus.venture;
+
+
+
+    function readForm() {
+
+      return {
+
+        cashOnHand: Number(document.getElementById("cash").value),
+
+        monthlyBurn: Number(document.getElementById("burn").value),
+
+        monthlyRevenue: Number(document.getElementById("rev").value),
+
+        namedBuyers: Number(document.getElementById("buyers").value)
+
+      };
+
+    }
+
+
+
+    function paint(result) {
+
+      document.getElementById("log").innerHTML = (result.log || []).map(function (row) {
+
+        return "<div class='pr-panel' style='margin-bottom:0.5rem'><strong>" + row.label + "</strong><br>" + row.headline + "</div>";
+
+      }).join("");
+
+      var sum = engine.getNodeOutput("summary");
+
+      var kpiEl = document.getElementById("kpis");
+
+      if (!sum || !sum.kpis) { kpiEl.innerHTML = ""; return; }
+
+      var k = sum.kpis;
+
+      kpiEl.innerHTML =
+
+        "<div class='pr-metric'><div class='lbl'>Diligence</div><div class='val'>" + k.diligence + "</div></div>" +
+
+        "<div class='pr-metric'><div class='lbl'>Runway (mo)</div><div class='val'>" + k.runwayMonths.toFixed(1) + "</div></div>" +
+
+        "<div class='pr-metric'><div class='lbl'>LTV/CAC</div><div class='val'>" + (isFinite(k.ltvCac) ? k.ltvCac.toFixed(1) : "—") + "</div></div>" +
+
+        "<div class='pr-metric'><div class='lbl'>Sequence</div><div class='val'>" + k.sequence + "</div></div>" +
+
+        "<div class='pr-metric'><div class='lbl'>Kill flags</div><div class='val'>" + k.killCount + "</div></div>";
+
+    }
+
+
+
+    document.getElementById("runAll").addEventListener("click", function () {
+
+      engine.setInput(readForm());
+
+      paint(engine.recompute());
+
+    });
+
+    document.getElementById("cutBurn").addEventListener("click", function () {
+
+      var burn = Number(document.getElementById("burn").value) * 0.85;
+
+      document.getElementById("burn").value = Math.round(burn);
+
+      engine.setInput(readForm());
+
+      paint(engine.invalidateFrom("runway"));
+
+    });
+
+  </script>
+
+</body>
+
+</html>
+
