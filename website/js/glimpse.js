@@ -38,6 +38,17 @@
     }
     if (empty) empty.hidden = true;
     if (board) board.hidden = false;
+    if (board && !document.getElementById("glimpseMilestone")) {
+      var teaser = document.createElement("div");
+      teaser.id = "glimpseMilestone";
+      teaser.className = "milestone-teaser";
+      teaser.innerHTML =
+        "<div class='label'>After the tollgate or milestone</div>" +
+        "<p>Your <strong>diagnostic summary dashboard</strong> consolidates gate verdicts, KPIs, probability bands, and named ISI programs — delivered in the engagement room (not a public calculator). Intake and glimpse stay on this site; the full summary is published when your file is run.</p>";
+      var anchor = board.querySelector(".outcome-banner") || board.firstElementChild;
+      if (anchor && anchor.nextSibling) board.insertBefore(teaser, anchor.nextSibling);
+      else board.insertBefore(teaser, board.firstChild);
+    }
     var company = document.getElementById("glimpseCompany");
     if (company) {
       company.textContent =

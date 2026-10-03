@@ -426,6 +426,29 @@ p { margin: 0 0 1rem; color: var(--text-muted); }
   line-height: 1.45;
 }
 
+.milestone-teaser {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.75rem;
+  box-shadow: var(--shadow-sm, 0 4px 14px rgba(15, 31, 61, 0.06));
+}
+.milestone-teaser .label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+.milestone-teaser p {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.98rem;
+  line-height: 1.55;
+}
+
 /* Cards / grids */
 .card-grid {
   display: grid;
