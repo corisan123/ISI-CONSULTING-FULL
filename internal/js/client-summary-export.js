@@ -337,6 +337,129 @@
     return { ok: true, href: "/client/summary.html?group=operations" };
   }
 
+  function buildVentureSnapshot(engine) {
+    var g = engine.read();
+    var sum = engine.getNodeOutput("summary");
+    var mc = engine.getNodeOutput("venture-monte-carlo");
+    var sens = engine.getNodeOutput("venture-sensitivity");
+    var dd = engine.getNodeOutput("venture-diligence");
+    var ue = engine.getNodeOutput("unit-economics");
+    var rw = engine.getNodeOutput("runway");
+    var kill = engine.getNodeOutput("kill-conditions");
+    var seq = engine.getNodeOutput("venture-sequence-integrity");
+    var dm = engine.getNodeOutput("venture-decision-matrix");
+    if (!sum || !sum.kpis) {
+      return { ok: false, error: "Run the full venture engine before publishing." };
+    }
+    var k = sum.kpis;
+    var drivers = (sens && sens.rows ? sens.rows : []).slice(0, 4).map(function (r) {
+      var lo = r.lowAbs != null ? r.lowAbs : r.base + r.low;
+      var hi = r.highAbs != null ? r.highAbs : r.base + r.high;
+      return {
+        label: r.label,
+        lowNpv: isFinite(lo) ? lo.toFixed(1) + " mo" : "—",
+        highNpv: isFinite(hi) ? hi.toFixed(1) + " mo" : "—",
+        swing: isFinite(hi - lo) ? Math.abs(hi - lo).toFixed(1) + " mo" : "—"
+      };
+    });
+    return {
+      ok: true,
+      payload: {
+        schema: 1,
+        publishedAt: new Date().toISOString(),
+        group: "venture",
+        engineId: "venture-sequence",
+        graphVersion: g.version || 0,
+        title: "ISI Venture & Sequence Diagnostic Summary",
+        company: k.company || "Engagement file (unset)",
+        verdict: k.sequence || (kill && kill.verdict) || "—",
+        headline: sum.headline || (dm && dm.headline) || "",
+        narrative:
+          "Unit economics, runway, kill conditions, venture diligence, tornado sensitivity, and seeded Monte Carlo ran as named ISI programs. Republish after burn, revenue, or buyer proof changes.",
+        sections: [
+          {
+            id: "unit-econ",
+            title: "ISI Unit Economics module",
+            metrics: [
+              { label: "LTV/CAC", value: isFinite(k.ltvCac) ? Number(k.ltvCac).toFixed(1) : "—" },
+              { label: "Module headline", value: (ue && ue.headline) || "—" },
+              { label: "Monthly contribution (modeled)", value: money(ue && ue.contributionMonthly) }
+            ]
+          },
+          {
+            id: "runway",
+            title: "ISI Runway & Burn module",
+            metrics: [
+              { label: "Runway (months)", value: isFinite(k.runwayMonths) ? Number(k.runwayMonths).toFixed(1) : "—" },
+              { label: "Net burn (modeled)", value: money(rw && rw.netBurn) },
+              { label: "Cash on hand", value: money(rw && rw.cash) }
+            ]
+          },
+          {
+            id: "kill-gate",
+            title: "ISI Kill Conditions & Sequence Gate",
+            metrics: [
+              { label: "Sequence gate", value: String(k.sequence || "—") },
+              { label: "Kill flags", value: String(k.killCount != null ? k.killCount : "—") },
+              { label: "Gate narrative", value: (kill && kill.headline) || "—" },
+              { label: "Sequence integrity", value: seq && seq.score != null ? (seq.score * 100).toFixed(0) + "%" : "—" }
+            ]
+          },
+          {
+            id: "diligence-gate",
+            title: "ISI Venture Diligence Gate",
+            metrics: [
+              { label: "Gate verdict", value: String(k.diligence || "—") },
+              { label: "Gate narrative", value: (dd && dd.headline) || "—" }
+            ]
+          },
+          {
+            id: "range",
+            title: "ISI Seeded Monte Carlo (runway months)",
+            bands: {
+              p10: mc && mc.p10 != null ? mc.p10.toFixed(1) + " mo" : "—",
+              p50: isFinite(k.mcP50) ? Number(k.mcP50).toFixed(1) + " mo" : "—",
+              p90: mc && mc.p90 != null ? mc.p90.toFixed(1) + " mo" : "—",
+              pPositive: pctProb(k.mcPPositive),
+              mean: mc && mc.mean != null ? mc.mean.toFixed(1) + " mo" : "—"
+            },
+            note: "Probability bands on runway months — for discussion, not a forecast guarantee."
+          },
+          {
+            id: "sensitivity",
+            title: "ISI One-Way Tornado (runway months)",
+            topDriver: k.sensitivityTop || (sens && sens.topSwing) || "—",
+            drivers: drivers
+          },
+          {
+            id: "decision",
+            title: "ISI Venture Sequence Decision Matrix",
+            metrics: [
+              { label: "Recommended path", value: String(k.matrixBest || "—") },
+              { label: "Decision score", value: isFinite(k.decisionScore) ? Number(k.decisionScore).toFixed(2) : "—" }
+            ],
+            text: (dm && dm.headline) || sum.headline || ""
+          }
+        ],
+        programs: programRail(g),
+        disclaimer:
+          "Confidential engagement summary. Unit economics weights and sequence logic remain ISI trade secret."
+      }
+    };
+  }
+
+  function publishVenture() {
+    if (!global.ISI.engineBus || !global.ISI.engineBus.venture) {
+      return { ok: false, error: "Venture engine not loaded." };
+    }
+    var built = buildVentureSnapshot(global.ISI.engineBus.venture);
+    if (!built.ok) return built;
+    if (!saveSnapshot(built.payload)) {
+      return { ok: false, error: "Could not write client summary to session." };
+    }
+    return { ok: true, href: "/client/summary.html?group=venture" };
+  }
+
   function readSnapshot() {
     try {
       var raw = sessionStorage.getItem(STORAGE_KEY);
@@ -352,9 +475,11 @@
     buildFinancialSnapshot: buildFinancialSnapshot,
     buildCommercialSnapshot: buildCommercialSnapshot,
     buildOperationsSnapshot: buildOperationsSnapshot,
+    buildVentureSnapshot: buildVentureSnapshot,
     publishFinancial: publishFinancial,
     publishCommercial: publishCommercial,
     publishOperations: publishOperations,
+    publishVenture: publishVenture,
     readSnapshot: readSnapshot
   };
 })(typeof window !== "undefined" ? window : this);

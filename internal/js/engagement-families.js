@@ -117,14 +117,28 @@
       pipelineSteps: [
         "intake",
         "diligence",
-        "margin-kit",
-        "diagnosis",
-        "interventions",
+        "unit-econ",
+        "runway",
+        "kill-gate",
+        "tornado",
+        "montecarlo",
+        "matrix",
         "packet"
       ],
-      kits: ["margin"],
+      kits: [],
       orchestratorEngines: ["expansion"],
-      summaryKeys: ["diligence", "margin", "rootcause", "interventions"]
+      summaryKeys: [
+        "engine4-intake",
+        "engine4-sequence-integrity",
+        "diligence",
+        "engine4-unit-econ",
+        "engine4-runway",
+        "engine4-kill",
+        "sensitivity-1way",
+        "montecarlo",
+        "matrix",
+        "engine4-summary"
+      ]
     },
     coaching: {
       id: "coaching",

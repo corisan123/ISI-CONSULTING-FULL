@@ -49,6 +49,18 @@
         statedSymptoms: "constraint,flow,quality,handoff"
       });
     }
+    if (group === "venture") {
+      return Object.assign(base, {
+        fileType: d["File type"] || "",
+        offer: d["Offer in one sentence"] || "",
+        namedBuyer: d["Named buyer or concentration"] || "",
+        runwayWeeks: d["Runway weeks"] || "",
+        unitEconKnown: d["Unit economics known"] || "",
+        killCondition: d["Kill condition"] || "",
+        acceptsDiligence: d["Accepts diligence next"] || "",
+        statedSymptoms: "runway,unit_econ,sequence,kill"
+      });
+    }
     return Object.assign(base, d);
   }
 

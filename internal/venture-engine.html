@@ -1,188 +1,222 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8">
-
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <meta name="robots" content="noindex, nofollow">
-
   <title>Engine 4 — Venture sequence | ISI Internal</title>
-
   <link rel="stylesheet" href="/internal/css/practice.css">
-
 </head>
-
 <body>
-
   <main class="pr-wrap">
-
     <p class="pr-kicker">Proprietary · Engine 4 · trade secret</p>
-
     <h1>Venture &amp; sequence diagnostic engine</h1>
-
-    <p class="lede">Diligence, unit economics, runway, kill conditions — no growth scoring theater.</p>
-
+    <p class="lede" id="fileLabel">Unit economics → runway → kill conditions → venture diligence → tornado → seeded Monte Carlo → sequence matrix — dependency bus.</p>
     <div class="pr-form-grid">
-
       <div>
-
         <label for="cash">Cash on hand ($)</label>
-
         <input id="cash" type="number" value="850000" step="10000">
-
       </div>
-
       <div>
-
         <label for="burn">Monthly burn ($)</label>
-
         <input id="burn" type="number" value="72000" step="1000">
-
       </div>
-
       <div>
-
         <label for="rev">Monthly revenue ($)</label>
-
         <input id="rev" type="number" value="38000" step="1000">
-
       </div>
-
       <div>
-
         <label for="buyers">Named buyers w/ price test</label>
-
         <input id="buyers" type="number" value="2" step="1" min="0">
-
       </div>
-
     </div>
-
     <div class="pr-actions">
-
       <button type="button" class="btn btn-gold" id="runAll">Run full engine</button>
-
-      <button type="button" class="btn btn-navy" id="cutBurn">Burn −15% (from runway)</button>
-
+      <button type="button" class="btn btn-navy" id="shockBurn">Monthly burn +$15K (invalidate from intake)</button>
+      <button type="button" class="btn btn-navy" id="shockRev">Monthly revenue −20% (invalidate from intake)</button>
+      <button type="button" class="btn btn-ghost" id="selfTest">Self-test (assert summary)</button>
+      <button type="button" class="btn btn-navy" id="publishClient">Publish client summary</button>
+      <a class="btn btn-ghost" id="openClientSummary" href="/client/summary.html?group=venture" target="_blank" rel="noopener">Open client summary</a>
+      <a class="btn btn-ghost" href="/internal/family-dashboard.html">Family dashboard</a>
       <a class="btn btn-ghost" href="/internal/index.html">Practice bench</a>
-
     </div>
-
+    <p id="selfTestOut" class="lede" style="margin-top:0.75rem" aria-live="polite"></p>
     <section style="margin-top:1.5rem">
-
       <h2>Program run log</h2>
-
       <div id="log"></div>
-
     </section>
-
     <section style="margin-top:1.5rem">
-
       <h2>Summary KPIs</h2>
-
       <div class="pr-metrics" id="kpis"></div>
-
     </section>
-
   </main>
-
   <script src="/internal/js/store.js"></script>
-
   <script src="/internal/js/math.js"></script>
-
   <script src="/internal/js/diligence.js"></script>
-
+  <script src="/internal/js/trees.js"></script>
   <script src="/internal/js/engine-bus/core.js"></script>
-
   <script src="/internal/js/engine-bus/engines/venture-sequence.js"></script>
-
   <script src="/internal/js/engine-bus/index.js"></script>
-
+  <script src="/internal/js/client-summary-export.js"></script>
   <script>
-
     ISI.engineBus.init();
-
     var engine = ISI.engineBus.venture;
-
-
+    var lastRunway = null;
 
     function readForm() {
-
       return {
-
         cashOnHand: Number(document.getElementById("cash").value),
-
         monthlyBurn: Number(document.getElementById("burn").value),
-
         monthlyRevenue: Number(document.getElementById("rev").value),
-
         namedBuyers: Number(document.getElementById("buyers").value)
-
       };
-
     }
 
+    function kpiLabel(key) {
+      var labels = {
+        company: "Engagement file",
+        diligence: "Diligence",
+        runwayMonths: "Runway (mo)",
+        ltvCac: "LTV/CAC",
+        sequence: "Sequence gate",
+        killCount: "Kill flags",
+        sensitivityTop: "Top sensitivity",
+        mcP50: "MC P50 runway (mo)",
+        mcPPositive: "P(runway ≥ kill mo)",
+        matrixBest: "Matrix best",
+        decisionScore: "Decision score"
+      };
+      return labels[key] || key;
+    }
 
+    function formatKpi(key, val) {
+      if (val == null) return "—";
+      if (key === "runwayMonths" || key === "mcP50") {
+        return isFinite(Number(val)) ? Number(val).toFixed(1) : "—";
+      }
+      if (key === "ltvCac") {
+        return isFinite(Number(val)) ? Number(val).toFixed(1) : "—";
+      }
+      if (key === "mcPPositive") {
+        return isFinite(Number(val)) ? (Number(val) * 100).toFixed(0) + "%" : "—";
+      }
+      if (key === "decisionScore") {
+        return isFinite(Number(val)) ? Number(val).toFixed(2) : "—";
+      }
+      if (typeof val === "number" && isFinite(val)) {
+        return Number.isInteger(val) ? String(val) : val.toFixed(2);
+      }
+      return String(val);
+    }
 
     function paint(result) {
-
       document.getElementById("log").innerHTML = (result.log || []).map(function (row) {
-
         return "<div class='pr-panel' style='margin-bottom:0.5rem'><strong>" + row.label + "</strong><br>" + row.headline + "</div>";
-
       }).join("");
-
       var sum = engine.getNodeOutput("summary");
-
       var kpiEl = document.getElementById("kpis");
-
-      if (!sum || !sum.kpis) { kpiEl.innerHTML = ""; return; }
-
+      var fileLabel = document.getElementById("fileLabel");
+      if (!sum || !sum.kpis) {
+        kpiEl.innerHTML = "";
+        return;
+      }
       var k = sum.kpis;
-
-      kpiEl.innerHTML =
-
-        "<div class='pr-metric'><div class='lbl'>Diligence</div><div class='val'>" + k.diligence + "</div></div>" +
-
-        "<div class='pr-metric'><div class='lbl'>Runway (mo)</div><div class='val'>" + k.runwayMonths.toFixed(1) + "</div></div>" +
-
-        "<div class='pr-metric'><div class='lbl'>LTV/CAC</div><div class='val'>" + (isFinite(k.ltvCac) ? k.ltvCac.toFixed(1) : "—") + "</div></div>" +
-
-        "<div class='pr-metric'><div class='lbl'>Sequence</div><div class='val'>" + k.sequence + "</div></div>" +
-
-        "<div class='pr-metric'><div class='lbl'>Kill flags</div><div class='val'>" + k.killCount + "</div></div>";
-
+      if (fileLabel && k.company) {
+        fileLabel.textContent = "Active file: " + k.company + " — ISI venture & sequence bus.";
+      }
+      lastRunway = k.runwayMonths;
+      kpiEl.innerHTML = Object.keys(k).map(function (key) {
+        return "<div class='pr-metric'><div class='lbl'>" + kpiLabel(key) + "</div><div class='val'>" + formatKpi(key, k[k]) + "</div></div>";
+      }).join("");
     }
 
-
+    function runSelfTest() {
+      var out = document.getElementById("selfTestOut");
+      engine.setInput(readForm());
+      var result = engine.recompute();
+      paint(result);
+      var sum = engine.getNodeOutput("summary");
+      var errors = [];
+      if (!sum) errors.push("summary node missing");
+      else if (!sum.kpis) errors.push("summary.kpis missing");
+      else {
+        [
+          "company", "diligence", "runwayMonths", "ltvCac", "sequence", "killCount",
+          "sensitivityTop", "mcP50", "mcPPositive", "matrixBest", "decisionScore"
+        ].forEach(function (req) {
+          if (sum.kpis[req] == null) errors.push("kpi." + req + " missing");
+        });
+      }
+      var logIds = (result.log || []).map(function (r) { return r.id; });
+      [
+        "file-intake", "venture-sequence-integrity", "venture-diligence", "unit-economics",
+        "runway", "kill-conditions", "venture-sensitivity", "venture-monte-carlo", "venture-decision-matrix"
+      ].forEach(function (id) {
+        if (logIds.indexOf(id) === -1) errors.push("log missing " + id);
+      });
+      if (errors.length) {
+        out.textContent = "Self-test FAILED: " + errors.join("; ");
+        out.style.color = "#b91c1c";
+        return false;
+      }
+      out.textContent = "Self-test passed — summary KPIs and full venture program chain present.";
+      out.style.color = "#166534";
+      return true;
+    }
 
     document.getElementById("runAll").addEventListener("click", function () {
-
+      document.getElementById("selfTestOut").textContent = "";
       engine.setInput(readForm());
-
       paint(engine.recompute());
-
     });
 
-    document.getElementById("cutBurn").addEventListener("click", function () {
+    document.getElementById("shockBurn").addEventListener("click", function () {
+      document.getElementById("selfTestOut").textContent = "";
+      var before = lastRunway;
+      var inp = readForm();
+      inp.monthlyBurn = inp.monthlyBurn + 15000;
+      document.getElementById("burn").value = inp.monthlyBurn;
+      engine.setInput(inp);
+      paint(engine.invalidateFrom("file-intake"));
+      var after = engine.getNodeOutput("summary");
+      if (after && after.kpis && before != null && after.kpis.runwayMonths >= before) {
+        document.getElementById("selfTestOut").textContent =
+          "Note: runway did not fall after burn shock — check revenue contribution offset.";
+        document.getElementById("selfTestOut").style.color = "#b45309";
+      }
+    });
 
-      var burn = Number(document.getElementById("burn").value) * 0.85;
+    document.getElementById("shockRev").addEventListener("click", function () {
+      document.getElementById("selfTestOut").textContent = "";
+      var before = lastRunway;
+      var inp = readForm();
+      inp.monthlyRevenue = Math.round(inp.monthlyRevenue * 0.8);
+      document.getElementById("rev").value = inp.monthlyRevenue;
+      engine.setInput(inp);
+      paint(engine.invalidateFrom("file-intake"));
+      var after = engine.getNodeOutput("summary");
+      if (after && after.kpis && before != null && after.kpis.runwayMonths >= before) {
+        document.getElementById("selfTestOut").textContent =
+          "Note: runway unchanged after revenue shock — check contribution margin path.";
+        document.getElementById("selfTestOut").style.color = "#b45309";
+      }
+    });
 
-      document.getElementById("burn").value = Math.round(burn);
+    document.getElementById("selfTest").addEventListener("click", runSelfTest);
 
+    document.getElementById("publishClient").addEventListener("click", function () {
       engine.setInput(readForm());
-
-      paint(engine.invalidateFrom("runway"));
-
+      engine.recompute();
+      var pub = ISI.clientSummaryExport.publishVenture();
+      var out = document.getElementById("selfTestOut");
+      if (!pub.ok) {
+        out.textContent = pub.error || "Publish failed.";
+        out.style.color = "#b91c1c";
+        return;
+      }
+      out.textContent = "Client summary published — open the client summary page (new tab).";
+      out.style.color = "#166534";
     });
-
   </script>
-
 </body>
-
 </html>
-
