@@ -1,190 +1,217 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8">
-
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <meta name="robots" content="noindex, nofollow">
-
   <title>Engine 3 — Operations &amp; throughput | ISI Internal</title>
-
   <link rel="stylesheet" href="/internal/css/practice.css">
-
 </head>
-
 <body>
-
   <main class="pr-wrap">
-
     <p class="pr-kicker">Proprietary · Engine 3 · trade secret</p>
-
     <h1>Operations &amp; throughput diagnostic engine</h1>
-
-    <p class="lede">Constraint kit, throughput diligence, ROI-throughput, CAPEX gate.</p>
-
+    <p class="lede" id="fileLabel">Constraint ID → throughput diligence → exploit-vs-elevate ROI → CAPEX deferral → tornado → seeded Monte Carlo → exploit/CAPEX matrix — dependency bus.</p>
     <div class="pr-form-grid">
-
       <div>
-
         <label for="demand">Weekly demand (units)</label>
-
         <input id="demand" type="number" value="1200" step="10">
-
       </div>
-
       <div>
-
         <label for="cap">Constraint capacity (units/wk)</label>
-
         <input id="cap" type="number" value="900" step="10">
-
       </div>
-
       <div>
-
         <label for="oee">Constraint OEE (%)</label>
-
         <input id="oee" type="number" value="62" step="1">
-
       </div>
-
       <div>
-
         <label for="capex">Proposed CAPEX ($)</label>
-
         <input id="capex" type="number" value="450000" step="5000">
-
       </div>
-
     </div>
-
     <div class="pr-actions">
-
       <button type="button" class="btn btn-gold" id="runAll">Run full engine</button>
-
-      <button type="button" class="btn btn-navy" id="liftOee">OEE +8 pts (from constraint)</button>
-
+      <button type="button" class="btn btn-navy" id="shockCapex">Proposed CAPEX +$200K (invalidate from intake)</button>
+      <button type="button" class="btn btn-navy" id="shockOee">OEE +8 pts (invalidate from intake)</button>
+      <button type="button" class="btn btn-ghost" id="selfTest">Self-test (assert summary)</button>
+      <button type="button" class="btn btn-navy" id="publishClient">Publish client summary</button>
+      <a class="btn btn-ghost" id="openClientSummary" href="/client/summary.html?group=operations" target="_blank" rel="noopener">Open client summary</a>
+      <a class="btn btn-ghost" href="/internal/family-dashboard.html">Family dashboard</a>
       <a class="btn btn-ghost" href="/internal/index.html">Practice bench</a>
-
     </div>
-
+    <p id="selfTestOut" class="lede" style="margin-top:0.75rem" aria-live="polite"></p>
     <section style="margin-top:1.5rem">
-
       <h2>Program run log</h2>
-
       <div id="log"></div>
-
     </section>
-
     <section style="margin-top:1.5rem">
-
       <h2>Summary KPIs</h2>
-
       <div class="pr-metrics" id="kpis"></div>
-
     </section>
-
   </main>
-
   <script src="/internal/js/store.js"></script>
-
   <script src="/internal/js/math.js"></script>
-
   <script src="/internal/js/kits.js"></script>
-
   <script src="/internal/js/diligence.js"></script>
-
+  <script src="/internal/js/rootcause.js"></script>
+  <script src="/internal/js/trees.js"></script>
   <script src="/internal/js/engine-bus/core.js"></script>
-
   <script src="/internal/js/engine-bus/engines/operations-throughput.js"></script>
-
   <script src="/internal/js/engine-bus/index.js"></script>
-
+  <script src="/internal/js/client-summary-export.js"></script>
   <script>
-
     ISI.engineBus.init();
-
     var engine = ISI.engineBus.operations;
-
-
+    var lastLost = null;
 
     function readForm() {
-
       return {
-
         demand: Number(document.getElementById("demand").value),
-
         constraintCap: Number(document.getElementById("cap").value),
-
         oee: Number(document.getElementById("oee").value),
-
         proposedCapex: Number(document.getElementById("capex").value)
-
       };
-
     }
 
+    function kpiLabel(key) {
+      var labels = {
+        company: "Engagement file",
+        diligence: "Diligence",
+        weeklyGap: "Weekly gap (units)",
+        oee: "Constraint OEE",
+        lostThroughput: "Lost T/yr",
+        capexGate: "CAPEX gate",
+        sensitivityTop: "Top sensitivity",
+        mcP50: "MC P50 $",
+        matrixBest: "Matrix best",
+        decisionScore: "Decision score"
+      };
+      return labels[key] || key;
+    }
 
+    function formatKpi(key, val) {
+      if (val == null) return "—";
+      if (key === "oee") return Number(val).toFixed(0) + "%";
+      if (key === "lostThroughput" || key === "mcP50") {
+        return "$" + Math.round(Number(val)).toLocaleString();
+      }
+      if (key === "decisionScore") {
+        return isFinite(Number(val)) ? Number(val).toFixed(2) : "—";
+      }
+      if (typeof val === "number" && isFinite(val)) {
+        return Number.isInteger(val) ? String(val) : val.toFixed(2);
+      }
+      return String(val);
+    }
 
     function paint(result) {
-
       document.getElementById("log").innerHTML = (result.log || []).map(function (row) {
-
         return "<div class='pr-panel' style='margin-bottom:0.5rem'><strong>" + row.label + "</strong><br>" + row.headline + "</div>";
-
       }).join("");
-
       var sum = engine.getNodeOutput("summary");
-
       var kpiEl = document.getElementById("kpis");
-
-      if (!sum || !sum.kpis) { kpiEl.innerHTML = ""; return; }
-
+      var fileLabel = document.getElementById("fileLabel");
+      if (!sum || !sum.kpis) {
+        kpiEl.innerHTML = "";
+        return;
+      }
       var k = sum.kpis;
-
-      kpiEl.innerHTML =
-
-        "<div class='pr-metric'><div class='lbl'>Diligence</div><div class='val'>" + k.diligence + "</div></div>" +
-
-        "<div class='pr-metric'><div class='lbl'>Weekly gap</div><div class='val'>" + k.weeklyGap + "</div></div>" +
-
-        "<div class='pr-metric'><div class='lbl'>Lost T/yr</div><div class='val'>" + Math.round(k.lostThroughput).toLocaleString() + "</div></div>" +
-
-        "<div class='pr-metric'><div class='lbl'>CAPEX gate</div><div class='val'>" + k.capexGate + "</div></div>" +
-
-        "<div class='pr-metric'><div class='lbl'>OEE</div><div class='val'>" + k.oee + "%</div></div>";
-
+      if (fileLabel && k.company) {
+        fileLabel.textContent = "Active file: " + k.company + " — ISI operations & throughput bus.";
+      }
+      lastLost = k.lostThroughput;
+      kpiEl.innerHTML = Object.keys(k).map(function (key) {
+        return "<div class='pr-metric'><div class='lbl'>" + kpiLabel(key) + "</div><div class='val'>" + formatKpi(key, k[k]) + "</div></div>";
+      }).join("");
     }
 
-
+    function runSelfTest() {
+      var out = document.getElementById("selfTestOut");
+      engine.setInput(readForm());
+      var result = engine.recompute();
+      paint(result);
+      var sum = engine.getNodeOutput("summary");
+      var errors = [];
+      if (!sum) errors.push("summary node missing");
+      else if (!sum.kpis) errors.push("summary.kpis missing");
+      else {
+        [
+          "company", "diligence", "weeklyGap", "oee", "lostThroughput", "capexGate",
+          "sensitivityTop", "mcP50", "matrixBest", "decisionScore"
+        ].forEach(function (req) {
+          if (sum.kpis[req] == null) errors.push("kpi." + req + " missing");
+        });
+      }
+      var logIds = (result.log || []).map(function (r) { return r.id; });
+      [
+        "file-intake", "ops-rootcause", "ops-pipeline-integrity", "constraint-ops",
+        "ops-diligence", "roi-throughput", "capex-gate", "ops-sensitivity",
+        "ops-monte-carlo", "ops-decision-matrix"
+      ].forEach(function (id) {
+        if (logIds.indexOf(id) === -1) errors.push("log missing " + id);
+      });
+      if (errors.length) {
+        out.textContent = "Self-test FAILED: " + errors.join("; ");
+        out.style.color = "#b91c1c";
+        return false;
+      }
+      out.textContent = "Self-test passed — summary KPIs and full throughput program chain present.";
+      out.style.color = "#166534";
+      return true;
+    }
 
     document.getElementById("runAll").addEventListener("click", function () {
-
+      document.getElementById("selfTestOut").textContent = "";
       engine.setInput(readForm());
-
       paint(engine.recompute());
-
     });
 
-    document.getElementById("liftOee").addEventListener("click", function () {
+    document.getElementById("shockCapex").addEventListener("click", function () {
+      document.getElementById("selfTestOut").textContent = "";
+      var before = lastLost;
+      var inp = readForm();
+      inp.proposedCapex = inp.proposedCapex + 200000;
+      document.getElementById("capex").value = inp.proposedCapex;
+      engine.setInput(inp);
+      paint(engine.invalidateFrom("file-intake"));
+      var after = engine.getNodeOutput("summary");
+      if (after && after.kpis && before != null && after.kpis.capexGate === engine.getNodeOutput("capex-gate").verdict) {
+        /* gate may flip — only warn if lost T unchanged when it should move with OEE not capex */
+      }
+    });
 
-      var oee = Number(document.getElementById("oee").value) + 8;
+    document.getElementById("shockOee").addEventListener("click", function () {
+      document.getElementById("selfTestOut").textContent = "";
+      var before = lastLost;
+      var inp = readForm();
+      inp.oee = inp.oee + 8;
+      document.getElementById("oee").value = inp.oee;
+      engine.setInput(inp);
+      paint(engine.invalidateFrom("file-intake"));
+      var after = engine.getNodeOutput("summary");
+      if (after && after.kpis && before != null && after.kpis.lostThroughput === before) {
+        document.getElementById("selfTestOut").textContent =
+          "Note: lost throughput unchanged after OEE shock — check demand/capacity gap.";
+        document.getElementById("selfTestOut").style.color = "#b45309";
+      }
+    });
 
-      document.getElementById("oee").value = oee;
+    document.getElementById("selfTest").addEventListener("click", runSelfTest);
 
+    document.getElementById("publishClient").addEventListener("click", function () {
       engine.setInput(readForm());
-
-      paint(engine.invalidateFrom("constraint-ops"));
-
+      engine.recompute();
+      var pub = ISI.clientSummaryExport.publishOperations();
+      var out = document.getElementById("selfTestOut");
+      if (!pub.ok) {
+        out.textContent = pub.error || "Publish failed.";
+        out.style.color = "#b91c1c";
+        return;
+      }
+      out.textContent = "Client summary published — open the client summary page (new tab).";
+      out.style.color = "#166534";
     });
-
   </script>
-
 </body>
-
 </html>
-

@@ -36,6 +36,19 @@
         revenue: d["Annual revenue"] || ""
       });
     }
+    if (group === "operations") {
+      return Object.assign(base, {
+        opsConstraint: d["Believed constraint"] || "",
+        opsStall: d["Where work stalls"] || "",
+        otif: d.OTIF || "",
+        qualityCost: d["Quality cost"] || "",
+        wipDays: d["WIP or days on hand"] || "",
+        capexProposed: d["Capex proposed first"] || "",
+        handoffBreaks: d["Handoff breaks"] || "",
+        opsProof: d["90-day operational proof"] || "",
+        statedSymptoms: "constraint,flow,quality,handoff"
+      });
+    }
     return Object.assign(base, d);
   }
 

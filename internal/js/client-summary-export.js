@@ -224,6 +224,119 @@
     return { ok: true, href: "/client/summary.html?group=commercial" };
   }
 
+  function buildOperationsSnapshot(engine) {
+    var g = engine.read();
+    var sum = engine.getNodeOutput("summary");
+    var mc = engine.getNodeOutput("ops-monte-carlo");
+    var sens = engine.getNodeOutput("ops-sensitivity");
+    var dd = engine.getNodeOutput("ops-diligence");
+    var ops = engine.getNodeOutput("constraint-ops");
+    var gate = engine.getNodeOutput("capex-gate");
+    var dm = engine.getNodeOutput("ops-decision-matrix");
+    var pip = engine.getNodeOutput("ops-pipeline-integrity");
+    if (!sum || !sum.kpis) {
+      return { ok: false, error: "Run the full operations engine before publishing." };
+    }
+    var k = sum.kpis;
+    var drivers = (sens && sens.rows ? sens.rows : []).slice(0, 4).map(function (r) {
+      var lo = r.lowAbs != null ? r.lowAbs : r.base + r.low;
+      var hi = r.highAbs != null ? r.highAbs : r.base + r.high;
+      return {
+        label: r.label,
+        lowNpv: money(lo),
+        highNpv: money(hi),
+        swing: money(Math.abs(hi - lo))
+      };
+    });
+    return {
+      ok: true,
+      payload: {
+        schema: 1,
+        publishedAt: new Date().toISOString(),
+        group: "operations",
+        engineId: "operations-throughput",
+        graphVersion: g.version || 0,
+        title: "ISI Operations & Throughput Diagnostic Summary",
+        company: k.company || "Engagement file (unset)",
+        verdict: k.diligence || (dd && dd.verdict) || "—",
+        headline: sum.headline || (dm && dm.headline) || "",
+        narrative:
+          "Constraint identification, throughput diligence, exploit-vs-elevate ROI, CAPEX deferral, tornado sensitivity, and seeded Monte Carlo ran as named ISI programs. Republish after intake or floor metric changes.",
+        sections: [
+          {
+            id: "constraint",
+            title: "ISI Constraint ID module",
+            metrics: [
+              { label: "Weekly throughput gap", value: String(k.weeklyGap != null ? k.weeklyGap : "—") },
+              { label: "Constraint OEE", value: (k.oee != null ? Number(k.oee).toFixed(0) : "—") + "%" },
+              { label: "Lost throughput (annual $)", value: money(k.lostThroughput) },
+              { label: "Kit headline", value: (ops && ops.headline) || "—" }
+            ]
+          },
+          {
+            id: "diligence-gate",
+            title: "ISI Throughput Diligence Gate",
+            metrics: [
+              { label: "Gate verdict", value: String(k.diligence || "—") },
+              { label: "Gate narrative", value: (dd && dd.headline) || "—" },
+              { label: "Handoff / flow integrity", value: pip && pip.score != null ? (pip.score * 100).toFixed(0) + "%" : "—" }
+            ]
+          },
+          {
+            id: "capex-deferral",
+            title: "ISI CAPEX deferral gate",
+            metrics: [
+              { label: "CAPEX gate", value: String(k.capexGate || "—") },
+              { label: "Exploit recovery (modeled)", value: money(gate && gate.exploitRecovery) },
+              { label: "Proposed CAPEX", value: money(gate && gate.proposedCapex) }
+            ]
+          },
+          {
+            id: "range",
+            title: "ISI Seeded Monte Carlo (throughput $)",
+            bands: {
+              p10: mc && mc.p10 != null ? money(mc.p10) : "—",
+              p50: money(k.mcP50),
+              p90: mc && mc.p90 != null ? money(mc.p90) : "—",
+              mean: mc && mc.mean != null ? money(mc.mean) : "—"
+            },
+            note: "Probability bands on throughput $ at risk / recovery — for discussion, not a forecast guarantee."
+          },
+          {
+            id: "sensitivity",
+            title: "ISI One-Way Tornado (lost throughput $)",
+            topDriver: k.sensitivityTop || (sens && sens.topSwing) || "—",
+            drivers: drivers
+          },
+          {
+            id: "decision",
+            title: "ISI Exploit vs CAPEX Decision Matrix",
+            metrics: [
+              { label: "Recommended path", value: String(k.matrixBest || "—") },
+              { label: "Decision score", value: isFinite(k.decisionScore) ? Number(k.decisionScore).toFixed(2) : "—" }
+            ],
+            text: (dm && dm.headline) || sum.headline || ""
+          }
+        ],
+        programs: programRail(g),
+        disclaimer:
+          "Confidential engagement summary. Throughput weights and kit math remain ISI trade secret."
+      }
+    };
+  }
+
+  function publishOperations() {
+    if (!global.ISI.engineBus || !global.ISI.engineBus.operations) {
+      return { ok: false, error: "Operations engine not loaded." };
+    }
+    var built = buildOperationsSnapshot(global.ISI.engineBus.operations);
+    if (!built.ok) return built;
+    if (!saveSnapshot(built.payload)) {
+      return { ok: false, error: "Could not write client summary to session." };
+    }
+    return { ok: true, href: "/client/summary.html?group=operations" };
+  }
+
   function readSnapshot() {
     try {
       var raw = sessionStorage.getItem(STORAGE_KEY);
@@ -238,8 +351,10 @@
     STORAGE_KEY: STORAGE_KEY,
     buildFinancialSnapshot: buildFinancialSnapshot,
     buildCommercialSnapshot: buildCommercialSnapshot,
+    buildOperationsSnapshot: buildOperationsSnapshot,
     publishFinancial: publishFinancial,
     publishCommercial: publishCommercial,
+    publishOperations: publishOperations,
     readSnapshot: readSnapshot
   };
 })(typeof window !== "undefined" ? window : this);

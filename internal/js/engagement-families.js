@@ -93,7 +93,19 @@
       ],
       kits: ["operations"],
       orchestratorEngines: ["alignment"],
-      summaryKeys: ["rootcause", "operations", "roi-throughput", "diligence"]
+      summaryKeys: [
+        "engine3-intake",
+        "rootcause",
+        "engine3-pipeline",
+        "operations",
+        "diligence",
+        "roi-throughput",
+        "engine3-capex-gate",
+        "sensitivity-1way",
+        "montecarlo",
+        "matrix",
+        "engine3-summary"
+      ]
     },
     venture: {
       id: "venture",
