@@ -35,6 +35,10 @@ alwaysApply: true
 - Client site fixes: links, styling, intake routing — **Composer** may edit `/website/` without engine code.
 - Do not point public Schedule/Contact at `/internal/`.
 
+## Reference material from Daniel
+
+- Vendor tool lists, gap matrices, and consulting buzzwords are **optional reference** — not a mandatory feature list. Use judgment; skip what does not fit ISI’s engines, visibility tiers, or scope. See `intelligence/COMMERCIAL-TOOL-GAP-SCAN.md` (consider, do not copy).
+
 ## After each engine
 
 - Document test URL and steps in `HANDOFF.md` engine checklist.

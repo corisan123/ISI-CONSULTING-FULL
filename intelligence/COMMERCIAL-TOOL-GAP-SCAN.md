@@ -1,6 +1,8 @@
 # Commercial tool landscape — gap scan for ISI engines (reference only)
 
-**Do not copy** vendor code, UI, or formulas from R, Python stacks, @Risk, Crystal Ball, Gurobi, Anaplan, DataRobot, Power BI, etc. Use this file to decide what **capabilities** ISI should add as **proprietary** `ISI.*` modules and **engine-bus nodes** with **named programs** (copyright traceability).
+**Daniel’s rule (Oct 2026):** Lists of vendor tools, strategies, and checklists he sends are **reference points only** — **not mandatory**. Composer and Task **may ignore** any item that is a poor fit for ISI’s five engines, tiers, and trade-secret model. No requirement to implement backlog rows below.
+
+**Do not copy** vendor code, UI, or formulas from R, Python stacks, @Risk, Crystal Ball, Gurobi, Anaplan, DataRobot, Power BI, etc. When something *is* worth adding, implement it as **proprietary** `ISI.*` modules and **engine-bus nodes** with **named programs** (copyright traceability).
 
 Last updated: 3 Oct 2026.
 
