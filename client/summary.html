@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Diagnostic summary | ISI Consulting</title>
+  <link rel="stylesheet" href="/internal/css/engagement.css">
+</head>
+<body class="eng client-view">
+  <header class="eng-top">
+    <a class="eng-brand" href="/website/index.html">
+      <div class="eng-mark">ISI</div>
+      <div>
+        <h1>Diagnostic <span>summary</span></h1>
+        <p class="eng-sub">Engagement findings — metrics, ranges, and named programs</p>
+      </div>
+    </a>
+    <div class="eng-top-links">
+      <button type="button" class="btn btn-gold" id="print">Print / PDF</button>
+      <a class="practitioner-only" href="/client/resolution.html">Resolution view</a>
+      <a class="practitioner-only" href="/internal/family-dashboard.html">Practice bench</a>
+    </div>
+  </header>
+
+  <main class="eng-main">
+    <div id="summaryEmpty" class="eng-card" hidden>
+      <h2>No summary published yet</h2>
+      <p class="eng-desc">Your consultant publishes this page after running the proprietary engine for your engagement family. It updates when inputs or risk levels change — you see results, not the underlying models.</p>
+      <p class="eng-desc">Practice flow: run the engine on the internal bench → <strong>Publish client summary</strong> → open this page.</p>
+    </div>
+
+    <div id="summaryBoard" hidden>
+      <section class="eng-card">
+        <p class="eng-desc" id="sumMeta"></p>
+        <div class="verdict" id="verdictBox">
+          <div class="val" id="sumVerdict">—</div>
+          <div class="lbl" id="sumHeadline"></div>
+        </div>
+        <p class="eng-desc" id="sumNarrative"></p>
+      </section>
+
+      <h2 class="eng-section-title" id="sumTitle">Diagnostic summary</h2>
+      <div id="sumSections"></div>
+
+      <section class="eng-card">
+        <h2>Programs applied (ISI proprietary)</h2>
+        <p class="eng-desc">Named modules executed in order for this file. Copyright and trade secret protection apply to program design and implementation.</p>
+        <div class="tree-path" id="sumPrograms"></div>
+      </section>
+
+      <section class="eng-card">
+        <p class="formula" id="sumDisclaimer"></p>
+      </section>
+    </div>
+  </main>
+
+  <script src="/client/js/summary-view.js"></script>
+  <script>
+    ISI.clientSummaryView.paint();
+    document.getElementById("print").addEventListener("click", function () { window.print(); });
+  </script>
+</body>
+</html>

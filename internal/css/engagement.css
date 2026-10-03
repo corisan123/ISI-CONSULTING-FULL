@@ -299,6 +299,43 @@ body.client-view .formula { background: #f7f8fb; border-color: #dce3ed; color: #
 body.client-view .formula { color: #5a6577; }
 body.client-view .kpi .val { color: var(--navy); }
 body.client-view .verdict { color: #fff; }
+body.client-view .verdict.go { background: linear-gradient(135deg, #1a4d3a, #6abf69); }
+body.client-view .verdict.caution { background: linear-gradient(135deg, #5c4a12, #e0b44a); }
+body.client-view .verdict.stop { background: linear-gradient(135deg, #5c1a28, #e85d75); }
+
+.eng-section-title {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 1.05rem;
+  color: var(--gold-soft);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.eng-tornado { margin-top: 0.75rem; }
+.eng-tornado-row {
+  display: grid;
+  grid-template-columns: minmax(120px, 28%) 1fr minmax(100px, 22%);
+  gap: 0.65rem;
+  align-items: center;
+  margin-bottom: 0.55rem;
+  font-size: 0.85rem;
+}
+.eng-tornado-label { color: var(--muted); }
+.eng-tornado-track {
+  height: 10px;
+  background: var(--surface-2);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.eng-tornado-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--steel), var(--gold));
+  border-radius: 999px;
+}
+.eng-tornado-meta { color: var(--muted); font-size: 0.78rem; text-align: right; }
+body.client-view .eng-tornado-track { background: #e8ecf0; border-color: #dce3ed; }
+body.client-view .eng-tornado-label,
+body.client-view .eng-tornado-meta { color: #5a6577; }
 
 @media print {
   .eng-top-links, .eng-tabs, .btn-row, .practitioner-only { display: none !important; }

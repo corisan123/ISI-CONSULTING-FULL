@@ -35,6 +35,8 @@
       <button type="button" class="btn btn-gold" id="runAll">Run full engine</button>
       <button type="button" class="btn btn-navy" id="shockWin">Win rate +10 pts (invalidate from intake)</button>
       <button type="button" class="btn btn-ghost" id="selfTest">Self-test (assert summary)</button>
+      <button type="button" class="btn btn-navy" id="publishClient">Publish client summary</button>
+      <a class="btn btn-ghost" href="/client/summary.html?group=commercial" target="_blank" rel="noopener">Open client summary</a>
       <a class="btn btn-ghost" href="/internal/family-dashboard.html">Family dashboard</a>
       <a class="btn btn-ghost" href="/internal/index.html">Practice bench</a>
     </div>
@@ -58,6 +60,7 @@
   <script src="/internal/js/engine-bus/core.js"></script>
   <script src="/internal/js/engine-bus/engines/commercial-tollgate.js"></script>
   <script src="/internal/js/engine-bus/index.js"></script>
+  <script src="/internal/js/client-summary-export.js"></script>
   <script>
     ISI.engineBus.init();
     var engine = ISI.engineBus.commercial;
@@ -169,6 +172,20 @@
     });
 
     document.getElementById("selfTest").addEventListener("click", runSelfTest);
+
+    document.getElementById("publishClient").addEventListener("click", function () {
+      engine.setInput(readForm());
+      engine.recompute();
+      var pub = ISI.clientSummaryExport.publishCommercial();
+      var out = document.getElementById("selfTestOut");
+      if (!pub.ok) {
+        out.textContent = pub.error || "Publish failed.";
+        out.style.color = "#b91c1c";
+        return;
+      }
+      out.textContent = "Client summary published — open client summary in new tab.";
+      out.style.color = "#166534";
+    });
   </script>
 </body>
 </html>
