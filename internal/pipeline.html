@@ -13,7 +13,7 @@
       <div class="eng-mark">ISI</div>
       <div>
         <h1>Wired <span>engagement chain</span></h1>
-        <p class="eng-sub">Ten programs. One bus. A run here populates diagnosis, diligence, the tree, sensitivity, Monte Carlo, the matrix, and the packet.</p>
+        <p class="eng-sub">Six client intake families — each runs its own wired chain (not one generic ten-step path).</p>
       </div>
     </a>
     <div class="eng-top-links">
@@ -25,11 +25,14 @@
 
   <main class="eng-main">
     <section class="eng-card">
-      <h2>Not siloed tools</h2>
-      <p class="eng-desc">Set the study type first if this is manufacturing, quality, finance, or CAPEX — the chain uses that type for diligence, scenarios, and the packet. Then run. Intake writes diagnosis; diagnosis and diligence write the tree; the tree writes sensitivity and Monte Carlo; those write the matrix and packet.</p>
+      <h2>Engagement family (matches client intake)</h2>
+      <p class="eng-desc">Pick the same family the prospect used on the website — commercial, financial, operations, venture, coaching, or project. The chain length and tools change; coaching does not run Monte Carlo; venture skips the growth theater.</p>
+      <div class="sit-grid" id="families"></div>
+      <p class="eng-desc" id="familyDetail"></p>
       <div class="btn-row">
-        <button type="button" class="btn btn-gold" id="run">Run the ten-program chain</button>
-        <a class="btn btn-ghost" href="/internal/results.html">Open dashboard after a run</a>
+        <button type="button" class="btn btn-gold" id="run">Run family chain</button>
+        <a class="btn btn-ghost" id="openEntry" href="/internal/study.html">Open first tool</a>
+        <a class="btn btn-ghost" href="/internal/family-dashboard.html">Family KPI dashboard</a>
       </div>
     </section>
     <section class="eng-card" id="out">
@@ -39,11 +42,37 @@
 
   <script src="/internal/js/store.js"></script>
   <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/kits.js"></script>
+  <script src="/internal/js/studies.js"></script>
+  <script src="/internal/js/engagement-families.js"></script>
   <script src="/internal/js/diligence.js"></script>
   <script src="/internal/js/rootcause.js"></script>
   <script src="/internal/js/trees.js"></script>
   <script src="/internal/js/pipeline.js"></script>
   <script>
+    var familyId = ISI.engagementFamilies.resolveId();
+    function paintFamilies() {
+      var g = document.getElementById("families");
+      g.innerHTML = "";
+      ISI.engagementFamilies.list().forEach(function (fam) {
+        var b = document.createElement("button");
+        b.type = "button";
+        b.className = "sit" + (fam.id === familyId ? " is-on" : "");
+        b.innerHTML = "<strong>" + fam.label + "</strong><span>" + fam.pipelineSteps.length + " programs</span>";
+        b.addEventListener("click", function () {
+          familyId = fam.id;
+          ISI.engagementFamilies.setActive(fam.id);
+          paintFamilies();
+        });
+        g.appendChild(b);
+      });
+      var fam = ISI.engagementFamilies.get(familyId);
+      document.getElementById("familyDetail").textContent =
+        fam.label + " → " + fam.pipelineSteps.join(" → ") + ". Start: " + fam.entryLabel + ".";
+      document.getElementById("openEntry").href = fam.entryHref;
+    }
+    paintFamilies();
+
     function paint(log) {
       if (!log || !log.length) return;
       var html = '<div class="tree-path">';
@@ -55,7 +84,7 @@
       document.getElementById("out").innerHTML = html;
     }
     document.getElementById("run").addEventListener("click", function () {
-      var out = ISI.pipeline.runAll();
+      var out = ISI.pipeline.runForFamily(familyId);
       paint(out.log);
     });
     var bus = ISI.store.getBus();

@@ -180,9 +180,9 @@ Code pass on 23 Sep 2026 (Desktop, this repo) finished the list below. Do not in
 
 ### Internal (practice — `/internal/`, `/src/`, `/intelligence/`)
 
-**Today:** Many standalone tools (NPV/IRR/WACC, Monte Carlo, trees, matrix, MECE, diligence, margin, ops, capital) listed in `internal/js/engines.js` and `intelligence/INVENTORY.md`, but the **classic diagnostic spine** (`/src/engine/isiDiagnosticEngine.js` + `/internal/diagnostic/*.html`) is still **one growth-input → scoring → tree → summary** path.
+**Today:** Many standalone tools (NPV/IRR/WACC, Monte Carlo, trees, matrix, MECE, diligence, margin, ops, capital) listed in `internal/js/engines.js`. **3 Oct 2026:** `internal/js/engagement-families.js` + `ISI.pipeline.runForFamily()` wire **six client intake families** to distinct program chains on `/internal/pipeline.html`; `internal/family-dashboard.html` shows family KPI tiles from session runs. The **classic growth spine** (`/src/engine/isiDiagnosticEngine.js` + scoring → tree → summary) still serves **commercial** only; other families are routed to diligence/kits/EVM paths instead of one generic ten-step chain.
 
-**Required (multi-week, Desktop only):**
+**Still required (multi-week, Desktop only):**
 
 1. **Family router** on `internal/index.html` / `internal/study.html`: pick family → load preset workstream + which tools are in the chain.
 2. **Per-family bundles** (examples):

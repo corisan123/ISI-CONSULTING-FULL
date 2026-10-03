@@ -45,9 +45,14 @@
   </main>
 
   <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/engagement-families.js"></script>
   <script src="/internal/js/studies.js"></script>
   <script>
-    var typeId = (ISI.store.getBus().study && ISI.store.getBus().study.type) || "commercial";
+    var fam = ISI.engagementFamilies.get();
+    var typeId =
+      (ISI.store.getBus().study && ISI.store.getBus().study.type) ||
+      (fam && fam.studyType) ||
+      "commercial";
     function paint() {
       var g = document.getElementById("types");
       g.innerHTML = "";

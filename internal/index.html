@@ -43,16 +43,14 @@
           </select>
         </div>
         <div>
-          <label for="constraint">Primary constraint family</label>
+          <label for="constraint">Client engagement family (matches website intake)</label>
           <select id="constraint" name="constraint">
-            <option value="diligence">Financial due diligence (start here)</option>
-            <option value="growth">Growth / commercial engine</option>
-            <option value="margin">Margin / capital allocation</option>
-            <option value="operations">Operations / throughput</option>
-            <option value="capital">Capital project / schedule</option>
-            <option value="supply">Supply chain / inventory</option>
-            <option value="coaching">Coaching / cadence</option>
-            <option value="startup">Startup / venture</option>
+            <option value="commercial">Commercial / Fractional BD</option>
+            <option value="financial">Financial / turnaround</option>
+            <option value="operations">Operations / manufacturing</option>
+            <option value="venture">Startup / venture</option>
+            <option value="coaching">Leadership / coaching</option>
+            <option value="project">Project / EVM recovery</option>
           </select>
         </div>
       </form>
@@ -99,8 +97,13 @@
         </a>
         <a class="pr-card" href="/internal/pipeline.html">
           <h3>Wired engagement chain</h3>
-          <p>Ten programs in order. Intake → diagnosis → diligence → quantified tree → tornado → two-way sensitivity → Monte Carlo → matrix → interventions → packet.</p>
+          <p>Six families — each runs its own program order (venture ≠ commercial ≠ project).</p>
           <div class="go">Run the chain →</div>
+        </a>
+        <a class="pr-card" href="/internal/family-dashboard.html">
+          <h3>Family KPI dashboard</h3>
+          <p>Tiles refresh from the active family’s tool runs in this browser session.</p>
+          <div class="go">Open dashboard →</div>
         </a>
         <a class="pr-card" href="/internal/diagnostics/rootcause.html">
           <h3>Structured diagnosis</h3>
@@ -183,30 +186,26 @@
   </main>
   <script src="/internal/js/store.js"></script>
   <script src="/internal/js/math.js"></script>
+  <script src="/internal/js/engagement-families.js"></script>
   <script src="/internal/js/shell.js"></script>
   <script>
     ISI.shell.render("home");
-    var ROUTES = {
-      diligence: "/internal/diagnostics/diligence.html",
-      growth: "/internal/diagnostic/input.html",
-      margin: "/internal/diagnostics/margin.html",
-      operations: "/internal/diagnostics/operations.html",
-      capital: "/internal/diagnostics/capital.html",
-      supply: "/internal/diagnostics/supply.html",
-      coaching: "/internal/study.html",
-      startup: "/internal/study.html"
-    };
+    function entryForFamily(id) {
+      var fam = ISI.engagementFamilies.get(id);
+      return fam ? fam.entryHref : "/internal/pipeline.html";
+    }
     function fillSession(data) {
       var e = data.engagement;
+      var famId = ISI.engagementFamilies.resolveId(e.family || e.constraint);
       document.getElementById("company").value = e.company || "";
       document.getElementById("contact").value = e.contact || "";
       document.getElementById("email").value = e.email || "";
       document.getElementById("industry").value = e.industry || "Manufacturing";
-      document.getElementById("constraint").value = e.constraint || "growth";
-      document.getElementById("openKit").href = ROUTES[e.constraint] || ROUTES.growth;
+      document.getElementById("constraint").value = famId;
+      document.getElementById("openKit").href = entryForFamily(famId);
       document.getElementById("sessionBanner").innerHTML =
         "Active file: <strong>" + (e.company || "—") + "</strong> · constraint <strong>" +
-        (e.constraint || "—") + "</strong> · hover the navy bar for the full table of contents.";
+        famId + "</strong> · hover the navy bar for the full table of contents.";
     }
     function paintDash(data) {
       var keys = Object.keys(data.results || {});
@@ -241,15 +240,19 @@
     fillSession(state);
     paintDash(state);
     document.getElementById("constraint").addEventListener("change", function () {
-      document.getElementById("openKit").href = ROUTES[this.value] || ROUTES.growth;
+      ISI.engagementFamilies.setActive(this.value);
+      document.getElementById("openKit").href = entryForFamily(this.value);
     });
     document.getElementById("saveSession").addEventListener("click", function () {
+      var fam = document.getElementById("constraint").value;
+      ISI.engagementFamilies.setActive(fam);
       var next = ISI.store.setEngagement({
         company: document.getElementById("company").value,
         contact: document.getElementById("contact").value,
         email: document.getElementById("email").value,
         industry: document.getElementById("industry").value,
-        constraint: document.getElementById("constraint").value
+        family: fam,
+        constraint: fam
       });
       fillSession(next);
     });

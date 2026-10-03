@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Family KPI dashboard | ISI Practice Bench</title>
+  <link rel="stylesheet" href="/internal/css/practice.css">
+</head>
+<body>
+  <main class="pr-wrap">
+    <p class="pr-kicker">Internal · engagement family dashboard</p>
+    <h1 id="famTitle">Engagement family</h1>
+    <p class="lede" id="famSub"></p>
+    <div class="pr-actions">
+      <a class="btn btn-gold" id="entryLink" href="/internal/pipeline.html">Open first tool</a>
+      <a class="btn btn-navy" href="/internal/pipeline.html">Run family chain</a>
+      <a class="btn btn-ghost" href="/internal/index.html">Practice bench</a>
+    </div>
+    <section style="margin-top:1.5rem">
+      <h2>KPI tiles (from last browser runs)</h2>
+      <div class="pr-grid" id="kpiGrid"></div>
+    </section>
+  </main>
+  <script src="/internal/js/store.js"></script>
+  <script src="/internal/js/engagement-families.js"></script>
+  <script src="/internal/js/family-dashboard.js"></script>
+  <script>
+    ISI.familyDashboard.paint();
+  </script>
+</body>
+</html>

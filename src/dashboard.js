@@ -49,8 +49,21 @@ function displayDashboard() {
   var container = document.getElementById("dashboardOutput");
   if (!container) return;
   if (!dashboard) {
-    container.innerHTML =
-      "<p>Complete scoring, decision tree, prioritization, and roadmap first.</p>";
+    var fam = "commercial";
+    try {
+      fam = sessionStorage.getItem("isi_engagement_family") || sessionStorage.getItem("isi_active_engagement_group") || "commercial";
+    } catch (e) { /* ignore */ }
+    var alt =
+      fam === "venture" || fam === "financial"
+        ? "<p>This family starts with <strong>due diligence</strong> and capital kits — not the growth scoring spine. Run <a href=\"/internal/pipeline.html\">the family chain</a> on the practice bench.</p>"
+        : fam === "coaching"
+          ? "<p>Coaching files use cadence and interventions only — no NPV engine. Run <a href=\"/internal/pipeline.html\">the coaching chain</a>.</p>"
+          : fam === "project"
+            ? "<p>Project files use the EVM kit first. Run <a href=\"/internal/pipeline.html\">the project chain</a>.</p>"
+            : fam === "operations"
+              ? "<p>Operations files use throughput kits first. Run <a href=\"/internal/pipeline.html\">the operations chain</a>.</p>"
+              : "<p>Complete scoring, decision tree, prioritization, and roadmap first — or run the <a href=\"/internal/pipeline.html\">family chain</a> for this intake type.</p>";
+    container.innerHTML = alt;
     paintDashboardNarrative();
     return;
   }

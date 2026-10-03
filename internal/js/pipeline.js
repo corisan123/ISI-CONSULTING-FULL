@@ -50,6 +50,16 @@
     return isFinite(x) ? x : d;
   }
 
+  function runKit(kitId, storeId) {
+    var kit = global.ISI.kits && global.ISI.kits[kitId];
+    if (!kit || !kit.run) return { headline: kitId + " kit unavailable", detail: "" };
+    var fields = {};
+    (kit.fields || []).forEach(function (f) {
+      fields[f.id] = f.value;
+    });
+    return kit.run(fields, global.ISI.math);
+  }
+
   var STEPS = [
     {
       id: "intake",
@@ -91,7 +101,10 @@
       run: function (bus) {
         var fields = {};
         global.ISI.diligence.FIELDS.forEach(function (f) { fields[f.id] = f.value; });
-        var sit = (bus.study && bus.study.diligenceSit) || "turnaround";
+        var sit =
+          (bus.study && bus.study.diligenceSit) ||
+          (bus.engagementFamily && bus.engagementFamily.studyType === "commercial" ? "commercial" : null) ||
+          "turnaround";
         var res = global.ISI.diligence.run(sit, fields, global.ISI.math);
         bus.diligence = res;
         global.ISI.store.saveResult("diligence", res);
@@ -218,6 +231,102 @@
       }
     },
     {
+      id: "margin-kit",
+      n: 31,
+      label: "Margin & capital kit",
+      href: "/internal/diagnostics/margin.html",
+      purpose: "NPV, IRR, payback, EBITDA margin — venture and financial files.",
+      run: function (bus) {
+        var res = runKit("margin");
+        bus.marginKit = res;
+        global.ISI.store.saveResult("margin", res);
+        return { headline: res.headline, detail: "NPV " + Math.round(res.metrics.NPV || 0).toLocaleString() };
+      }
+    },
+    {
+      id: "operations-kit",
+      n: 32,
+      label: "Operations & throughput kit",
+      href: "/internal/diagnostics/operations.html",
+      purpose: "Constraint gap, OEE, scrap, WIP — manufacturing files.",
+      run: function (bus) {
+        var res = runKit("operations");
+        bus.operationsKit = res;
+        global.ISI.store.saveResult("operations", res);
+        return {
+          headline: res.headline,
+          detail: "At-risk contribution $" + Math.round(res.metrics.annualContributionAtRisk || 0).toLocaleString()
+        };
+      }
+    },
+    {
+      id: "capital-kit",
+      n: 33,
+      label: "Capital project / EVM kit",
+      href: "/internal/diagnostics/capital.html",
+      purpose: "CPI, SPI, EAC, VAC — PM recovery files.",
+      run: function (bus) {
+        var res = runKit("capital");
+        bus.capitalKit = res;
+        global.ISI.store.saveResult("capital", res);
+        return { headline: res.headline, detail: "EAC " + Math.round(res.metrics.eac || 0).toLocaleString() };
+      }
+    },
+    {
+      id: "finance-tool",
+      n: 34,
+      label: "NPV / IRR / WACC bench",
+      href: "/internal/tools/finance.html",
+      purpose: "Finance expansion chain — explicit WACC vs IRR proof.",
+      run: function (bus) {
+        var m = bus.marginKit || runKit("margin");
+        var rate = n(m.rate, 0.1) || 0.1;
+        var irr = m.metrics && m.metrics.IRR;
+        var headline =
+          irr != null && isFinite(irr)
+            ? "IRR " + (irr * 100).toFixed(1) + "% vs WACC " + (rate * 100).toFixed(1) + "%"
+            : "Finance bench linked to margin kit.";
+        var payload = { headline: headline, metrics: m.metrics, rate: rate };
+        bus.finance = payload;
+        global.ISI.store.saveResult("finance", payload);
+        return { headline: headline, detail: "Opens full bench for sensitivity." };
+      }
+    },
+    {
+      id: "roi-throughput",
+      n: 35,
+      label: "Throughput ROI (TOC)",
+      href: "/internal/tools/roi-throughput.html",
+      purpose: "Exploit the constraint before buying capacity.",
+      run: function (bus) {
+        var ops = bus.operationsKit || runKit("operations");
+        var t = n(ops.metrics && ops.metrics.annualContributionAtRisk, 120000);
+        var payload = {
+          headline: "Exploit path vs elevate capex — lost T about $" + Math.round(t).toLocaleString(),
+          metrics: { lostThroughput: t, exploitFirst: true }
+        };
+        bus.roiThroughput = payload;
+        global.ISI.store.saveResult("roi-throughput", payload);
+        return { headline: payload.headline, detail: "Throughput accounting before capex." };
+      }
+    },
+    {
+      id: "risk-tool",
+      n: 36,
+      label: "Risk register / EMV",
+      href: "/internal/tools/risk.html",
+      purpose: "Project and turnaround risk — probability × impact.",
+      run: function (bus) {
+        var payload = {
+          headline: "Risk EMV bench ready for open register items.",
+          metrics: { emv: 0, openHigh: 0 }
+        };
+        bus.risk = payload;
+        global.ISI.store.saveResult("risk", payload);
+        return { headline: payload.headline, detail: "Populate register on the risk tool page." };
+      }
+    },
+    {
       id: "interventions",
       n: 9,
       label: "Intervention activation",
@@ -254,23 +363,75 @@
     }
   ];
 
-  function runAll() {
+  var STEPS_BY_ID = {};
+  STEPS.forEach(function (s) {
+    STEPS_BY_ID[s.id] = s;
+  });
+
+  function prepareBus(familyId) {
     var bus = global.ISI.store.getBus() || {};
+    var fam =
+      global.ISI.engagementFamilies && global.ISI.engagementFamilies.get(familyId);
+    if (fam) {
+      global.ISI.engagementFamilies.setActive(fam.id);
+      bus.engagementFamily = fam;
+      if (global.ISI.studies && global.ISI.studies.spawn) {
+        var company = (global.ISI.store.read().engagement || {}).company;
+        bus.study = global.ISI.studies.spawn(fam.studyType, company);
+      }
+    }
+    return bus;
+  }
+
+  function runSteps(stepIds, bus) {
+    bus = bus || global.ISI.store.getBus() || {};
     var log = [];
-    STEPS.forEach(function (step) {
+    (stepIds || []).forEach(function (id, i) {
+      var step = STEPS_BY_ID[id];
+      if (!step) return;
       var out = step.run(bus);
-      log.push({ id: step.id, n: step.n, label: step.label, href: step.href, purpose: step.purpose, headline: out.headline, detail: out.detail });
+      log.push({
+        id: step.id,
+        n: i + 1,
+        label: step.label,
+        href: step.href,
+        purpose: step.purpose,
+        headline: out.headline,
+        detail: out.detail
+      });
     });
     bus.chain = log;
     global.ISI.store.setBus(bus);
-    global.ISI.store.saveResult("pipeline", { steps: log.length, last: log[log.length - 1] });
+    global.ISI.store.saveResult("pipeline", {
+      family: bus.engagementFamily && bus.engagementFamily.id,
+      steps: log.length,
+      last: log[log.length - 1]
+    });
     return { bus: bus, log: log };
+  }
+
+  function runAll() {
+    return runSteps(STEPS.map(function (s) {
+      return s.id;
+    }), prepareBus());
+  }
+
+  function runForFamily(familyId) {
+    var fam =
+      global.ISI.engagementFamilies && global.ISI.engagementFamilies.get(familyId);
+    var ids = fam && fam.pipelineSteps ? fam.pipelineSteps : STEPS.map(function (s) {
+      return s.id;
+    });
+    return runSteps(ids, prepareBus(familyId));
   }
 
   global.ISI = global.ISI || {};
   global.ISI.pipeline = {
     STEPS: STEPS,
+    STEPS_BY_ID: STEPS_BY_ID,
     runAll: runAll,
+    runForFamily: runForFamily,
+    runSteps: runSteps,
     demoIntake: demoIntake
   };
 })(typeof window !== "undefined" ? window : this);
