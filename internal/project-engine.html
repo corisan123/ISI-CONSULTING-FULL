@@ -1,230 +1,289 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8">
-
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <meta name="robots" content="noindex, nofollow">
-
   <title>Engine 5 — Project / program | ISI Internal</title>
-
   <link rel="stylesheet" href="/internal/css/practice.css">
-
 </head>
-
 <body>
-
   <main class="pr-wrap">
-
     <p class="pr-kicker">Proprietary · Engine 5 · trade secret</p>
-
     <h1>Project / program &amp; coaching engine</h1>
-
-    <p class="lede">EVM capital kit + risk for projects; coaching scorecard path without NPV.</p>
-
+    <p class="lede" id="fileLabel">Project: EVM kit → diligence → risk EMV → tornado → Monte Carlo → recovery matrix. Coaching: readiness → root cause → scorecard → interventions → priority matrix (no NPV).</p>
     <div class="pr-form-grid">
-
       <div>
-
         <label for="path">Study path</label>
-
         <select id="path">
-
           <option value="project">Project / EVM recovery</option>
-
           <option value="coaching">Leadership coaching (no NPV)</option>
-
         </select>
-
       </div>
-
-      <div>
-
+      <div class="pr-project-only">
         <label for="ev">Earned value EV ($)</label>
-
         <input id="ev" type="number" value="1680000" step="10000">
-
       </div>
-
-      <div>
-
+      <div class="pr-project-only">
         <label for="ac">Actual cost AC ($)</label>
-
         <input id="ac" type="number" value="2150000" step="10000">
-
       </div>
-
-      <div>
-
+      <div class="pr-project-only">
         <label for="pv">Planned value PV ($)</label>
-
         <input id="pv" type="number" value="2100000" step="10000">
-
       </div>
-
+      <div class="pr-project-only">
+        <label for="riskEmv">Risk EMV ($)</label>
+        <input id="riskEmv" type="number" value="185000" step="5000">
+      </div>
+      <div class="pr-project-only">
+        <label for="openHigh">Open high risks (count)</label>
+        <input id="openHigh" type="number" value="6" step="1" min="0">
+      </div>
     </div>
-
     <div class="pr-actions">
-
       <button type="button" class="btn btn-gold" id="runAll">Run full engine</button>
-
-      <button type="button" class="btn btn-navy" id="bumpEv">EV +5% (from EVM kit)</button>
-
+      <button type="button" class="btn btn-navy pr-project-only" id="shockEv">EV +5% (invalidate from intake)</button>
+      <button type="button" class="btn btn-navy pr-project-only" id="shockRisk">Risk EMV +$50K (invalidate from intake)</button>
+      <button type="button" class="btn btn-ghost" id="selfTest">Self-test (assert summary)</button>
+      <button type="button" class="btn btn-navy" id="publishClient">Publish client summary</button>
+      <a class="btn btn-ghost" id="openClientSummary" href="/client/summary.html?group=project" target="_blank" rel="noopener">Open client summary</a>
+      <a class="btn btn-ghost" href="/internal/family-dashboard.html">Family dashboard</a>
       <a class="btn btn-ghost" href="/internal/index.html">Practice bench</a>
-
     </div>
-
+    <p id="selfTestOut" class="lede" style="margin-top:0.75rem" aria-live="polite"></p>
     <section style="margin-top:1.5rem">
-
       <h2>Program run log</h2>
-
       <div id="log"></div>
-
     </section>
-
     <section style="margin-top:1.5rem">
-
       <h2>Summary KPIs</h2>
-
       <div class="pr-metrics" id="kpis"></div>
-
     </section>
-
   </main>
-
   <script src="/internal/js/store.js"></script>
-
   <script src="/internal/js/math.js"></script>
-
+  <script src="/internal/js/diligence.js"></script>
   <script src="/internal/js/kits.js"></script>
-
   <script src="/internal/js/trees.js"></script>
-
   <script src="/internal/js/rootcause.js"></script>
-
   <script src="/internal/js/engine-bus/core.js"></script>
-
   <script src="/internal/js/engine-bus/engines/project-program.js"></script>
-
   <script src="/internal/js/engine-bus/index.js"></script>
-
+  <script src="/internal/js/client-summary-export.js"></script>
   <script>
-
     (function applyQueryPath() {
-
       var m = /[?&]path=([^&]+)/.exec(location.search);
-
       if (m && (m[1] === "coaching" || m[1] === "project")) {
-
         document.getElementById("path").value = m[1];
-
       }
-
     })();
 
-
-
     ISI.engineBus.init();
-
     var engine = ISI.engineBus.project;
+    var lastSpi = null;
 
+    function isCoaching() {
+      return document.getElementById("path").value === "coaching";
+    }
 
+    function toggleProjectFields() {
+      var show = !isCoaching();
+      document.querySelectorAll(".pr-project-only").forEach(function (el) {
+        el.style.display = show ? "" : "none";
+      });
+      var link = document.getElementById("openClientSummary");
+      link.href = isCoaching() ? "/client/summary.html?group=coaching" : "/client/summary.html?group=project";
+    }
+
+    document.getElementById("path").addEventListener("change", toggleProjectFields);
+    toggleProjectFields();
 
     function readForm() {
-
-      return {
-
-        studyPath: document.getElementById("path").value,
-
+      var base = { studyPath: document.getElementById("path").value };
+      if (isCoaching()) return base;
+      return Object.assign(base, {
         ev: Number(document.getElementById("ev").value),
-
         ac: Number(document.getElementById("ac").value),
-
-        pv: Number(document.getElementById("pv").value)
-
-      };
-
+        pv: Number(document.getElementById("pv").value),
+        riskEmv: Number(document.getElementById("riskEmv").value),
+        openHighRisks: Number(document.getElementById("openHigh").value)
+      });
     }
 
+    function kpiLabel(key) {
+      var project = {
+        company: "Engagement file",
+        diligence: "Diligence",
+        spi: "SPI",
+        cpi: "CPI",
+        eac: "EAC",
+        vac: "VAC",
+        riskEmv: "Risk EMV",
+        rootcauseKeep: "Root cause KEEP",
+        sensitivityTop: "Top sensitivity",
+        mcP50: "MC P50 EAC",
+        mcPPositive: "P(EAC ≤ BAC)",
+        matrixBest: "Matrix best",
+        decisionScore: "Decision score"
+      };
+      var coaching = {
+        company: "Engagement file",
+        readiness: "Readiness gate",
+        scorecard: "Scorecard",
+        modules: "Active modules",
+        rootcauseKeep: "Root cause KEEP",
+        matrixBest: "Matrix best",
+        decisionScore: "Decision score",
+        npvChain: "NPV chain"
+      };
+      var map = isCoaching() ? coaching : project;
+      return map[key] || key;
+    }
 
+    function formatKpi(key, val) {
+      if (val == null) return "—";
+      if (key === "scorecard" && isFinite(Number(val))) return (Number(val) * 100).toFixed(0) + "%";
+      if (key === "mcPPositive" && isFinite(Number(val))) return (Number(val) * 100).toFixed(0) + "%";
+      if (key === "spi" || key === "cpi" || key === "decisionScore") {
+        return isFinite(Number(val)) ? Number(val).toFixed(2) : "—";
+      }
+      if (key === "mcP50" || key === "eac" || key === "vac" || key === "riskEmv") {
+        return isFinite(Number(val)) ? Math.round(Number(val)).toLocaleString() : "—";
+      }
+      if (typeof val === "number" && isFinite(val)) {
+        return Number.isInteger(val) ? String(val) : val.toFixed(2);
+      }
+      return String(val);
+    }
 
     function paint(result) {
-
       document.getElementById("log").innerHTML = (result.log || []).map(function (row) {
-
         return "<div class='pr-panel' style='margin-bottom:0.5rem'><strong>" + row.label + "</strong><br>" + row.headline + "</div>";
-
       }).join("");
-
       var sum = engine.getNodeOutput("summary");
-
       var kpiEl = document.getElementById("kpis");
-
-      if (!sum || !sum.kpis) { kpiEl.innerHTML = ""; return; }
-
-      var k = sum.kpis;
-
-      if (k.path === "coaching") {
-
-        kpiEl.innerHTML =
-
-          "<div class='pr-metric'><div class='lbl'>Path</div><div class='val'>Coaching</div></div>" +
-
-          "<div class='pr-metric'><div class='lbl'>Scorecard</div><div class='val'>" + (k.scorecard * 100).toFixed(0) + "%</div></div>" +
-
-          "<div class='pr-metric'><div class='lbl'>Modules</div><div class='val'>" + k.modules + "</div></div>" +
-
-          "<div class='pr-metric'><div class='lbl'>NPV chain</div><div class='val'>" + k.npvChain + "</div></div>";
-
+      var fileLabel = document.getElementById("fileLabel");
+      if (!sum || !sum.kpis) {
+        kpiEl.innerHTML = "";
         return;
-
       }
-
-      kpiEl.innerHTML =
-
-        "<div class='pr-metric'><div class='lbl'>SPI</div><div class='val'>" + (k.spi != null ? k.spi.toFixed(2) : "—") + "</div></div>" +
-
-        "<div class='pr-metric'><div class='lbl'>CPI</div><div class='val'>" + (k.cpi != null ? k.cpi.toFixed(2) : "—") + "</div></div>" +
-
-        "<div class='pr-metric'><div class='lbl'>EAC</div><div class='val'>" + Math.round(k.eac || 0).toLocaleString() + "</div></div>" +
-
-        "<div class='pr-metric'><div class='lbl'>Risk EMV</div><div class='val'>" + Math.round(k.riskEmv || 0).toLocaleString() + "</div></div>" +
-
-        "<div class='pr-metric'><div class='lbl'>Matrix</div><div class='val'>" + (k.matrixBest || "—") + "</div></div>";
-
+      var k = sum.kpis;
+      if (fileLabel && k.company) {
+        fileLabel.textContent =
+          "Active file: " + k.company + " — ISI " + (k.path === "coaching" ? "coaching" : "project / EVM") + " bus.";
+      }
+      if (k.spi != null) lastSpi = k.spi;
+      var keys = Object.keys(k).filter(function (key) { return key !== "path"; });
+      kpiEl.innerHTML = keys.map(function (key) {
+        return "<div class='pr-metric'><div class='lbl'>" + kpiLabel(key) + "</div><div class='val'>" + formatKpi(key, k[key]) + "</div></div>";
+      }).join("");
     }
 
-
+    function runSelfTest() {
+      var out = document.getElementById("selfTestOut");
+      engine.setInput(readForm());
+      var result = engine.recompute();
+      paint(result);
+      var sum = engine.getNodeOutput("summary");
+      var errors = [];
+      if (!sum) errors.push("summary node missing");
+      else if (!sum.kpis) errors.push("summary.kpis missing");
+      else if (sum.kpis.path === "coaching") {
+        ["company", "readiness", "scorecard", "modules", "matrixBest", "decisionScore"].forEach(function (req) {
+          if (sum.kpis[req] == null) errors.push("kpi." + req + " missing");
+        });
+      } else {
+        [
+          "company", "diligence", "spi", "cpi", "eac", "riskEmv",
+          "sensitivityTop", "mcP50", "mcPPositive", "matrixBest", "decisionScore"
+        ].forEach(function (req) {
+          if (sum.kpis[req] == null) errors.push("kpi." + req + " missing");
+        });
+      }
+      var logIds = (result.log || []).map(function (r) { return r.id; });
+      if (sum && sum.kpis && sum.kpis.path === "coaching") {
+        [
+          "file-intake", "coaching-readiness", "coaching-diagnosis", "coaching-scorecard",
+          "coaching-interventions", "coaching-matrix"
+        ].forEach(function (id) {
+          if (logIds.indexOf(id) === -1) errors.push("log missing " + id);
+        });
+      } else {
+        [
+          "file-intake", "project-change-integrity", "project-rootcause", "project-diligence",
+          "evm-kit", "project-risk", "project-sensitivity", "project-monte-carlo", "project-matrix"
+        ].forEach(function (id) {
+          if (logIds.indexOf(id) === -1) errors.push("log missing " + id);
+        });
+      }
+      if (errors.length) {
+        out.textContent = "Self-test FAILED: " + errors.join("; ");
+        out.style.color = "#b91c1c";
+        return false;
+      }
+      out.textContent = "Self-test passed — summary KPIs and full program chain present.";
+      out.style.color = "#166534";
+      return true;
+    }
 
     document.getElementById("runAll").addEventListener("click", function () {
-
+      document.getElementById("selfTestOut").textContent = "";
       engine.setInput(readForm());
-
       paint(engine.recompute());
-
     });
 
-    document.getElementById("bumpEv").addEventListener("click", function () {
+    document.getElementById("shockEv").addEventListener("click", function () {
+      if (isCoaching()) return;
+      document.getElementById("selfTestOut").textContent = "";
+      var before = lastSpi;
+      var inp = readForm();
+      inp.ev = Math.round(inp.ev * 1.05);
+      document.getElementById("ev").value = inp.ev;
+      engine.setInput(inp);
+      paint(engine.invalidateFrom("file-intake"));
+      var after = engine.getNodeOutput("summary");
+      if (after && after.kpis && before != null && after.kpis.spi <= before) {
+        document.getElementById("selfTestOut").textContent =
+          "Note: SPI did not rise after EV shock — check PV denominator.";
+        document.getElementById("selfTestOut").style.color = "#b45309";
+      }
+    });
 
-      if (document.getElementById("path").value === "coaching") return;
+    document.getElementById("shockRisk").addEventListener("click", function () {
+      if (isCoaching()) return;
+      document.getElementById("selfTestOut").textContent = "";
+      var before = engine.getNodeOutput("summary");
+      var beforeEmv = before && before.kpis ? before.kpis.riskEmv : null;
+      var inp = readForm();
+      inp.riskEmv = inp.riskEmv + 50000;
+      document.getElementById("riskEmv").value = inp.riskEmv;
+      engine.setInput(inp);
+      paint(engine.invalidateFrom("file-intake"));
+      var after = engine.getNodeOutput("summary");
+      if (after && after.kpis && beforeEmv != null && after.kpis.riskEmv <= beforeEmv) {
+        document.getElementById("selfTestOut").textContent = "Note: risk EMV did not rise after shock.";
+        document.getElementById("selfTestOut").style.color = "#b45309";
+      }
+    });
 
-      var ev = Number(document.getElementById("ev").value) * 1.05;
+    document.getElementById("selfTest").addEventListener("click", runSelfTest);
 
-      document.getElementById("ev").value = Math.round(ev);
-
+    document.getElementById("publishClient").addEventListener("click", function () {
       engine.setInput(readForm());
-
-      paint(engine.invalidateFrom("evm-kit"));
-
+      engine.recompute();
+      var pub = isCoaching()
+        ? ISI.clientSummaryExport.publishCoaching()
+        : ISI.clientSummaryExport.publishProject();
+      var out = document.getElementById("selfTestOut");
+      if (!pub.ok) {
+        out.textContent = pub.error || "Publish failed.";
+        out.style.color = "#b91c1c";
+        return;
+      }
+      out.textContent = "Client summary published — open the client summary page (new tab).";
+      out.style.color = "#166534";
     });
-
   </script>
-
 </body>
-
 </html>
-

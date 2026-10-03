@@ -61,6 +61,34 @@
         statedSymptoms: "runway,unit_econ,sequence,kill"
       });
     }
+    if (group === "project") {
+      return Object.assign(base, {
+        namedJob: d["Named job or portfolio"] || "",
+        scheduleSlip: d["Schedule slip"] || "",
+        costFade: d["Cost or margin fade"] || "",
+        changeControl: d["Change control pain"] || "",
+        evmTrusted: d["EVM trusted"] || "",
+        recoveryAuthority: d["Recovery authority"] || "",
+        projectProof: d["90-day project proof"] || "",
+        statedSymptoms: "schedule,cost,change,evm,recovery"
+      });
+    }
+    if (group === "coaching") {
+      return Object.assign(base, {
+        seatOccupied: d["Seat occupied"] || "",
+        rolesCoached: d["Roles being coached"] || "",
+        weeklyCadence: d["Weekly cadence"] || "",
+        qualification30: d["Qualification used in 30 days"] || "",
+        behaviorChange: d["Behavior that must change"] || "",
+        coachingProof: d["90-day coaching proof"] || "",
+        leadershipConfidence: /yes/i.test(d["Weekly cadence"] || "") ? "8" : /status/i.test(d["Weekly cadence"] || "") ? "5" : "3",
+        bdProcess: /yes/i.test(d["Qualification used in 30 days"] || "") ? "used on live bid" : /talked/i.test(d["Qualification used in 30 days"] || "") ? "ad hoc" : "no",
+        leadershipGaps: /vacant|no/i.test(d["Seat occupied"] || "") ? "no bench — vacant seat" : /partly|founder/i.test(d["Seat occupied"] || "") ? "founder covering" : "named owners",
+        deptConflict: d["Behavior that must change"] || "",
+        handoffs: d["90-day coaching proof"] || "",
+        statedSymptoms: "leadership_drag,handoff,qualification"
+      });
+    }
     return Object.assign(base, d);
   }
 

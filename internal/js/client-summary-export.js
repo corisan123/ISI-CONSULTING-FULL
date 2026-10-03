@@ -460,6 +460,198 @@
     return { ok: true, href: "/client/summary.html?group=venture" };
   }
 
+  function buildProjectSnapshot(engine) {
+    var g = engine.read();
+    var sum = engine.getNodeOutput("summary");
+    var mc = engine.getNodeOutput("project-monte-carlo");
+    var sens = engine.getNodeOutput("project-sensitivity");
+    var dd = engine.getNodeOutput("project-diligence");
+    var evm = engine.getNodeOutput("evm-kit");
+    var risk = engine.getNodeOutput("project-risk");
+    var pip = engine.getNodeOutput("project-change-integrity");
+    var dm = engine.getNodeOutput("project-matrix");
+    if (!sum || !sum.kpis || sum.kpis.path !== "project") {
+      return { ok: false, error: "Run the full project / EVM engine path before publishing." };
+    }
+    var k = sum.kpis;
+    var drivers = (sens && sens.rows ? sens.rows : []).slice(0, 4).map(function (r) {
+      var lo = r.lowAbs != null ? r.lowAbs : r.base + r.low;
+      var hi = r.highAbs != null ? r.highAbs : r.base + r.high;
+      return {
+        label: r.label,
+        lowNpv: money(lo),
+        highNpv: money(hi),
+        swing: money(Math.abs(hi - lo))
+      };
+    });
+    return {
+      ok: true,
+      payload: {
+        schema: 1,
+        publishedAt: new Date().toISOString(),
+        group: "project",
+        engineId: "project-program",
+        graphVersion: g.version || 0,
+        title: "ISI Project & EVM Recovery Diagnostic Summary",
+        company: k.company || "Engagement file (unset)",
+        verdict: k.diligence || (dd && dd.verdict) || "—",
+        headline: sum.headline || (dm && dm.headline) || "",
+        narrative:
+          "Earned value, capital project diligence, risk EMV, change-control integrity, tornado sensitivity, and seeded Monte Carlo on EAC ran as named ISI programs. Republish after EV, cost, or risk register changes.",
+        sections: [
+          {
+            id: "evm",
+            title: "ISI EVM & Capital Project kit",
+            metrics: [
+              { label: "SPI", value: isFinite(k.spi) ? Number(k.spi).toFixed(2) : "—" },
+              { label: "CPI", value: isFinite(k.cpi) ? Number(k.cpi).toFixed(2) : "—" },
+              { label: "EAC", value: money(k.eac) },
+              { label: "VAC", value: money(k.vac) },
+              { label: "Kit headline", value: (evm && evm.headline) || "—" }
+            ]
+          },
+          {
+            id: "integrity",
+            title: "ISI Change Control & Recovery Integrity",
+            metrics: [
+              { label: "Integrity score", value: pip && pip.score != null ? (pip.score * 100).toFixed(0) + "%" : "—" },
+              { label: "Risk EMV", value: money(k.riskEmv) },
+              { label: "Open high risks", value: risk && risk.metrics ? String(risk.metrics.openHigh) : "—" }
+            ]
+          },
+          {
+            id: "diligence-gate",
+            title: "ISI Capital Project Diligence Gate",
+            metrics: [
+              { label: "Gate verdict", value: String(k.diligence || "—") },
+              { label: "Gate narrative", value: (dd && dd.headline) || "—" }
+            ]
+          },
+          {
+            id: "range",
+            title: "ISI Seeded Monte Carlo (EAC $)",
+            bands: {
+              p10: mc && mc.p10 != null ? money(mc.p10) : "—",
+              p50: money(k.mcP50),
+              p90: mc && mc.p90 != null ? money(mc.p90) : "—",
+              pPositive: pctProb(k.mcPPositive),
+              mean: mc && mc.mean != null ? money(mc.mean) : "—"
+            },
+            note: "Probability bands on estimate at completion — for discussion, not a forecast guarantee."
+          },
+          {
+            id: "sensitivity",
+            title: "ISI One-Way Tornado (EAC $)",
+            topDriver: k.sensitivityTop || (sens && sens.topSwing) || "—",
+            drivers: drivers
+          },
+          {
+            id: "decision",
+            title: "ISI Project Recovery Decision Matrix",
+            metrics: [
+              { label: "Recommended path", value: String(k.matrixBest || "—") },
+              { label: "Decision score", value: isFinite(k.decisionScore) ? Number(k.decisionScore).toFixed(2) : "—" },
+              { label: "Root cause KEEP", value: String(k.rootcauseKeep != null ? k.rootcauseKeep : "—") }
+            ],
+            text: (dm && dm.headline) || sum.headline || ""
+          }
+        ],
+        programs: programRail(g),
+        disclaimer:
+          "Confidential engagement summary. EVM weights and recovery logic remain ISI trade secret."
+      }
+    };
+  }
+
+  function buildCoachingSnapshot(engine) {
+    var g = engine.read();
+    var sum = engine.getNodeOutput("summary");
+    var ready = engine.getNodeOutput("coaching-readiness");
+    var card = engine.getNodeOutput("coaching-scorecard");
+    var intr = engine.getNodeOutput("coaching-interventions");
+    var dm = engine.getNodeOutput("coaching-matrix");
+    var rc = engine.getNodeOutput("coaching-diagnosis");
+    if (!sum || !sum.kpis || sum.kpis.path !== "coaching") {
+      return { ok: false, error: "Run the full coaching scorecard path before publishing." };
+    }
+    var k = sum.kpis;
+    return {
+      ok: true,
+      payload: {
+        schema: 1,
+        publishedAt: new Date().toISOString(),
+        group: "coaching",
+        engineId: "project-program",
+        graphVersion: g.version || 0,
+        title: "ISI Leadership Coaching Diagnostic Summary",
+        company: k.company || "Engagement file (unset)",
+        verdict: k.readiness || (ready && ready.verdict) || "—",
+        headline: sum.headline || (dm && dm.headline) || "",
+        narrative:
+          "Coaching readiness, root-cause diagnosis, behavioral scorecard, and priority matrix ran as named ISI programs — no NPV or capital chain. Republish after cadence or qualification facts change.",
+        sections: [
+          {
+            id: "readiness",
+            title: "ISI Coaching Readiness Gate",
+            metrics: [
+              { label: "Readiness", value: String(k.readiness || "—") },
+              { label: "Gate headline", value: (ready && ready.headline) || "—" },
+              { label: "Readiness score", value: ready && ready.score != null ? (ready.score * 100).toFixed(0) + "%" : "—" }
+            ]
+          },
+          {
+            id: "scorecard",
+            title: "ISI Coaching Scorecard module",
+            metrics: [
+              { label: "Scorecard", value: isFinite(k.scorecard) ? (k.scorecard * 100).toFixed(0) + "%" : "—" },
+              { label: "Active modules", value: String(k.modules != null ? k.modules : "—") },
+              { label: "Module names", value: (intr && intr.names ? intr.names.join("; ") : "—") },
+              { label: "Root cause KEEP", value: String(k.rootcauseKeep != null ? k.rootcauseKeep : "—") }
+            ],
+            text: (rc && rc.headline) || (card && card.headline) || ""
+          },
+          {
+            id: "decision",
+            title: "ISI Coaching Priority Decision Matrix",
+            metrics: [
+              { label: "Recommended focus", value: String(k.matrixBest || "—") },
+              { label: "Decision score", value: isFinite(k.decisionScore) ? Number(k.decisionScore).toFixed(2) : "—" },
+              { label: "NPV / capital chain", value: "Not applied (coaching path)" }
+            ],
+            text: (dm && dm.headline) || sum.headline || ""
+          }
+        ],
+        programs: programRail(g),
+        disclaimer:
+          "Confidential engagement summary. Scorecard weights and coaching logic remain ISI trade secret."
+      }
+    };
+  }
+
+  function publishProject() {
+    if (!global.ISI.engineBus || !global.ISI.engineBus.project) {
+      return { ok: false, error: "Project engine not loaded." };
+    }
+    var built = buildProjectSnapshot(global.ISI.engineBus.project);
+    if (!built.ok) return built;
+    if (!saveSnapshot(built.payload)) {
+      return { ok: false, error: "Could not write client summary to session." };
+    }
+    return { ok: true, href: "/client/summary.html?group=project" };
+  }
+
+  function publishCoaching() {
+    if (!global.ISI.engineBus || !global.ISI.engineBus.project) {
+      return { ok: false, error: "Project engine not loaded." };
+    }
+    var built = buildCoachingSnapshot(global.ISI.engineBus.project);
+    if (!built.ok) return built;
+    if (!saveSnapshot(built.payload)) {
+      return { ok: false, error: "Could not write client summary to session." };
+    }
+    return { ok: true, href: "/client/summary.html?group=coaching" };
+  }
+
   function readSnapshot() {
     try {
       var raw = sessionStorage.getItem(STORAGE_KEY);
@@ -476,10 +668,14 @@
     buildCommercialSnapshot: buildCommercialSnapshot,
     buildOperationsSnapshot: buildOperationsSnapshot,
     buildVentureSnapshot: buildVentureSnapshot,
+    buildProjectSnapshot: buildProjectSnapshot,
+    buildCoachingSnapshot: buildCoachingSnapshot,
     publishFinancial: publishFinancial,
     publishCommercial: publishCommercial,
     publishOperations: publishOperations,
     publishVenture: publishVenture,
+    publishProject: publishProject,
+    publishCoaching: publishCoaching,
     readSnapshot: readSnapshot
   };
 })(typeof window !== "undefined" ? window : this);

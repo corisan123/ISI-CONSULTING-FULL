@@ -150,7 +150,15 @@
       pipelineSteps: ["intake", "diagnosis", "interventions", "packet"],
       kits: [],
       orchestratorEngines: ["alignment"],
-      summaryKeys: ["rootcause", "interventions"]
+      summaryKeys: [
+        "engine5-intake",
+        "engine5-coaching-readiness",
+        "rootcause",
+        "engine5-coaching-score",
+        "interventions",
+        "engine5-coaching-matrix",
+        "engine5-summary"
+      ]
     },
     project: {
       id: "project",
@@ -169,7 +177,18 @@
       ],
       kits: ["capital"],
       orchestratorEngines: [],
-      summaryKeys: ["capital", "risk", "matrix"]
+      summaryKeys: [
+        "engine5-intake",
+        "engine5-change-integrity",
+        "rootcause",
+        "diligence",
+        "engine5-evm-kit",
+        "engine5-risk",
+        "sensitivity-1way",
+        "montecarlo",
+        "matrix",
+        "engine5-summary"
+      ]
     }
   };
 
