@@ -4,9 +4,24 @@
 (function (global) {
   "use strict";
 
+  function formatEngineKpi(key, val) {
+    if (val == null) return "—";
+    if (key === "mcPPositive" && typeof val === "number") return (val * 100).toFixed(0) + "%";
+    if (key === "pipelineScore" && typeof val === "number" && val <= 1) return (val * 100).toFixed(0) + "%";
+    if (typeof val === "number" && isFinite(val)) {
+      if (key === "ev" || key === "mcP50" || key === "npv") return "$" + Math.round(val).toLocaleString();
+      if (Math.abs(val) > 0 && Math.abs(val) < 1) return val.toFixed(3);
+      return Number.isInteger(val) ? String(val) : val.toLocaleString(undefined, { maximumFractionDigits: 2 });
+    }
+    return String(val);
+  }
+
   function headlineForResult(id, row) {
     if (!row || !row.payload) return { status: "Not run", detail: "" };
     var p = row.payload;
+    if (id === "matrix" && p.best && p.best.label) {
+      return { status: "Run", detail: "Best: " + p.best.label };
+    }
     if (p.headline) return { status: "Run", detail: p.headline };
     if (p.result && p.result.headline) return { status: "Run", detail: p.result.headline };
     if (p.tree && p.tree.verdict) return { status: p.tree.verdict, detail: p.headline || "" };
@@ -62,7 +77,7 @@
           "<div class='tb-tag'>engine</div><h3>" +
           key +
           "</h3><p>" +
-          (typeof val === "number" ? (isFinite(val) ? val.toLocaleString() : "—") : String(val)) +
+          formatEngineKpi(key, val) +
           "</p>";
         grid.appendChild(card);
       });
