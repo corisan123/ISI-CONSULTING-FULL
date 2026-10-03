@@ -1,29 +1,32 @@
 # Protection model
 
-## Public (`/website/`, `/`, pretty URLs)
+Three tiers. Everything Cursor builds is classified into one.
 
-Client-first marketing. Capability in, reproducibility out.
+## Public (`/website/`, pretty URLs)
 
-- Images of programs and a demonstration desk (three live toys). Remaining tools grey.
-- Diagnostic at `/diagnostic/input.html` is a **glimpse**, labeled as such.
-- No links to `/internal/`.
-- No employer or client names.
+Marketing. Capability in, reproducibility out.
+
+- Method description, program **screens** (stylized sample output), photography, and the high-level diagnostic Q&A already on public pages.
+- These describe what ISI does and show what output looks like. They do not calculate.
+- No links to `/internal/`, `/src/`, `/client/`, or working diagnostic engines.
 - Copy from `website/content.json` (`data-copy` on the homepage).
+- No employer or client names.
 
-## Staff bench (`/internal/`)
+## Gated (engagement sequence)
 
-Fully coded, accepts input, sessionStorage only.
+- Client intake and diagnostic questionnaires (`/website/forms/`, `/intake`). Not a public toolkit.
+- Client results dashboard (`/client/resolution.html`): that project's KPIs, probability band, constraints, 90-day load. Configured at intake. Delivered at a milestone, tollgate, or close.
+- Client sees findings and a high-level synopsis. Not weights, formulas, or model architecture.
 
-- Constraint catalogs, a-la-carte toolbox, diagnostics, finance, MECE, stats, regression, ROI, matrix, Monte Carlo, Excel XML, NDA/SOW skeletons.
-- Hover table of contents. `noindex`.
+## Internal (`/internal/`, `/src/`, `/intelligence/`)
 
-## Client room (`/client/`)
+The engines. Scoring weights, distributions, decision logic, formula architecture, initiative library, models.
 
-What leadership sees in the meeting.
+- Fully coded on the practice bench. `noindex`. Not in the public footer or ads.
+- Never copied into public JS. View Source on a marketing page must not yield the method.
+- Until a server exists, engines may run in `/internal/` only. Public and gated client pages must not execute them.
 
-- `/client/index.html` — diligence path in plain language.
-- `/client/resolution.html` — KPIs, unique constraints, probability band, 90-day load. No source paths, no developer console.
+## Code and crawl
 
-## Code (`/src/`, `/internal/js/`)
-
-Not linked from marketing. `robots.txt` disallows `/internal/`, `/client/`, `/src/`, `/intelligence/`.
+`robots.txt` disallows `/internal/`, `/client/`, `/src/`, `/intelligence/`, `/diagnostic/`.
+Working engines stay under `/internal/` and are never linked from marketing.

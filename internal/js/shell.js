@@ -62,7 +62,7 @@
       items: [
         { href: "/internal/diagnostics/rootcause.html", label: "Structured diagnosis", hint: "Stated symptoms vs competing causes — keep or kill" },
         { href: "/internal/diagnostics/diligence.html", label: "0. Financial due diligence", hint: "First when money is involved — live ratios, QoE, NPV" },
-        { href: "/diagnostic/input.html", label: "1. Growth & Turnaround", hint: "Live engine — revenue, margin, BD" },
+        { href: "/internal/diagnostic/input.html", label: "1. Growth & Turnaround", hint: "Live engine — revenue, margin, BD" },
         { href: "/internal/diagnostics/margin.html", label: "2. Margin & Capital", hint: "NPV, IRR, CAPEX, EBITDA" },
         { href: "/internal/diagnostics/operations.html", label: "3. Operations & Throughput", hint: "Constraint, SPC, OEE" },
         { href: "/internal/diagnostics/capital.html", label: "4. Capital Projects", hint: "Schedule, WBS, cost, risk" },
@@ -107,7 +107,7 @@
         { href: "/internal/pipeline.html", label: "Wired chain", hint: "Ten programs, one bus" },
         { href: "/internal/tools/trees.html", label: "Decision tree studio", hint: "Five types with live analytics" },
         { href: "/internal/tools/interventions.html", label: "Intervention activation", hint: "Modules fire from intake" },
-        { href: "/diagnostic/decisionTree.html", label: "Growth decision tree", hint: "Existing live tree" }
+        { href: "/internal/diagnostic/decisionTree.html", label: "Growth decision tree", hint: "Existing live tree" }
       ]
     },
     {
@@ -115,10 +115,14 @@
       label: "Documents",
       href: "/internal/documents/nda.html",
       items: [
-        { href: "/website/forms/client-intake.html", label: "Client intake", hint: "Public form — stored locally" },
-        { href: "/website/forms/discovery.html", label: "Discovery questionnaire", hint: "Metrics into diagnostic" },
-        { href: "/internal/documents/nda.html", label: "NDA generator", hint: "Fill names, print template" },
-        { href: "/internal/documents/exclusivity.html", label: "Exclusivity letter", hint: "Placeholder terms" },
+        { href: "/website/forms/intake.html", label: "Client intake", hint: "Gated questionnaires, stored locally" },
+        { href: "/website/forms/discovery-needs.html", label: "Needs and expectations", hint: "Client types why they are here" },
+        { href: "/website/forms/discovery.html", label: "Discovery by constraint", hint: "Metrics into diagnostic" },
+        { href: "/internal/documents/index.html", label: "Fillable document pack", hint: "NDA, exclusivity, onboarding, benefit" },
+        { href: "/internal/documents/nda.html", label: "Mutual NDA", hint: "Type names on the page, print PDF" },
+        { href: "/internal/documents/exclusivity.html", label: "Exclusivity agreement", hint: "Defined services, term, territory" },
+        { href: "/internal/documents/onboarding.html", label: "Onboarding checklist", hint: "Four phases, checkboxes, initials" },
+        { href: "/internal/documents/benefit.html", label: "Benefit statement", hint: "Typed value, no live calculator" },
         { href: "/internal/documents/sow.html", label: "Statement of Work", hint: "Scope skeleton" }
       ]
     },
@@ -130,8 +134,8 @@
         { href: "/internal/index.html#dashboard", label: "Practice dashboard", hint: "Last tool outputs" },
         { href: "/internal/engines.html", label: "Engine tracking", hint: "Last run of each tool + session log" },
         { href: "/internal/results.html", label: "Engagement results", hint: "Board-ready: stated vs proven vs killed" },
-        { href: "/diagnostic/summary.html", label: "Growth diagnostic summary", hint: "Existing last tab" },
-        { href: "/diagnostic/dashboard.html", label: "Growth diagnostic dashboard", hint: "Existing engine dashboard" }
+        { href: "/internal/diagnostic/summary.html", label: "Growth diagnostic summary", hint: "Existing last tab" },
+        { href: "/internal/diagnostic/dashboard.html", label: "Growth diagnostic dashboard", hint: "Existing engine dashboard" }
       ]
     }
   ];

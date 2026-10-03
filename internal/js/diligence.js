@@ -459,11 +459,11 @@
   function nextTools(situation) {
     var map = {
       acquisition: ["/internal/tools/finance.html", "/internal/tools/montecarlo.html", "/internal/diagnostics/margin.html"],
-      turnaround: ["/diagnostic/input.html", "/internal/tools/roi-throughput.html", "/internal/tools/risk.html"],
+      turnaround: ["/internal/diagnostic/input.html", "/internal/tools/roi-throughput.html", "/internal/tools/risk.html"],
       capital: ["/internal/diagnostics/capital.html", "/internal/diagnostics/margin.html", "/internal/tools/ppm.html"],
       throughput: ["/internal/diagnostics/operations.html", "/internal/tools/roi-throughput.html"],
       supply: ["/internal/diagnostics/supply.html", "/internal/tools/supply-chain.html"],
-      commercial: ["/diagnostic/input.html", "/internal/tools/trees.html"]
+      commercial: ["/internal/diagnostic/input.html", "/internal/tools/trees.html"]
     };
     return map[situation] || map.acquisition;
   }

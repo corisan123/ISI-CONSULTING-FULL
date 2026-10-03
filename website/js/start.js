@@ -1,11 +1,11 @@
-﻿/**
- * ISI Consulting — start/gate page
+/**
+ * ISI Consulting � start/gate page
  * Consult vs Engage toggle, then scenario chips. Not a public engine.
  */
 (function () {
   "use strict";
 
-  var CAL = "https://calendly.com/contact-isi-consults";
+  var CAL = "https://calendly.com/contact-isi-consulting";
 
   var SCENARIOS = [
     {
@@ -26,7 +26,7 @@
         rightKicker: "Request time",
         rightTitle: "Schedule a consultation",
         right: [
-          "Daniel Reid takes the call — boutique capacity, not a rotating bench",
+          "Daniel Reid takes the call  - boutique capacity, not a rotating bench",
           "You leave with a named next step: Business Development seat, intake, or not yet",
           "No public calculator. Numbers stay in the engagement"
         ]
@@ -36,7 +36,7 @@
         leftTitle: "Confidentiality, then the file",
         left: [
           "Confidentiality notice before detailed commercial facts",
-          "Nine-section intake: company, leadership , Business Development, operations, margin",
+          "Intake by group: commercial, financial, operations, venture, or coaching",
           "Drafts stay on this device so Back does not wipe them"
         ],
         leftCta: "Forms in order",
@@ -48,7 +48,7 @@
           "Fractional Business Development is the default path unless intake proves otherwise",
           "Discovery follows intake when the file is ready"
         ],
-        rightHref: "forms/client-intake.html"
+        rightHref: "forms/intake.html"
       }
     },
     {
@@ -91,7 +91,7 @@
           "If the real gap is the Business Development seat, we say so",
           "Discovery follows when the numbers are in"
         ],
-        rightHref: "forms/client-intake.html"
+        rightHref: "forms/intake.html"
       }
     },
     {
@@ -134,7 +134,7 @@
           "If commercial leadership is the real gap, Business Development remains the gate",
           "Discovery after intake"
         ],
-        rightHref: "forms/client-intake.html"
+        rightHref: "forms/intake.html"
       }
     },
     {
@@ -147,7 +147,7 @@
         leftKicker: "What the conversation covers",
         leftTitle: "A throughput conversation",
         left: [
-          "Whether the shop or yard is the constraint — not “busy”",
+          "Whether the shop or yard is the constraint  - not �busy�",
           "Bid board vs. capacity, overtime, and cost-to-serve",
           "What a manufacturing study would actually change this quarter"
         ],
@@ -157,7 +157,7 @@
         right: [
           "Operator language from fabrication and automation seats",
           "No six-figure tool pitch before the bottleneck is named",
-          "Honest next step, including “not yet”"
+          "Honest next step, including �not yet�"
         ]
       },
       engage: {
@@ -177,7 +177,7 @@
           "Manufacturing practice follows the Business Development tollgate",
           "Discovery after intake"
         ],
-        rightHref: "forms/client-intake.html"
+        rightHref: "forms/intake.html"
       }
     },
     {
@@ -192,7 +192,7 @@
         left: [
           "Whether the venture has a commercial engine or only a trade",
           "What a customized plan must prove before capital or a lease",
-          "Construction / AEC context — not a generic template pack"
+          "Construction / AEC context  - not a generic template pack"
         ],
         leftCta: "Start a conversation",
         rightKicker: "Request time",
@@ -220,7 +220,7 @@
           "If the missing piece is a Business Development operator, that is the gate",
           "Discovery after intake"
         ],
-        rightHref: "forms/client-intake.html"
+        rightHref: "forms/intake.html"
       }
     },
     {
@@ -228,7 +228,7 @@
       chip: "Coaching",
       title: "Coaching &amp; training",
       href: "services/leadership-alignment.html",
-      blurb: "PMs, estimators, and business development staff — weekly behavior.",
+      blurb: "PMs, estimators, and business development staff  - weekly behavior.",
       consult: {
         leftKicker: "What the conversation covers",
         leftTitle: "A capability conversation",
@@ -241,7 +241,7 @@
         rightKicker: "Request time",
         rightTitle: "Schedule a consultation",
         right: [
-          "CEU-certified industry trainer — still boutique, still Daniel",
+          "CEU-certified industry trainer  - still boutique, still Daniel",
           "Training follows the constraint, not a catalog of courses",
           "Named next step after one conversation"
         ]
@@ -263,7 +263,7 @@
           "Same person who diagnoses stays on the workstream",
           "Discovery after intake"
         ],
-        rightHref: "forms/client-intake.html"
+        rightHref: "forms/intake.html"
       }
     }
   ];
@@ -301,7 +301,7 @@
     tiles.innerHTML = SCENARIOS.map(function (s) {
       return (
         '<a class="card" href="' + s.href + '"><h3>' + s.title + "</h3><p>" + s.blurb +
-        '</p><span class="card-link">Open →</span></a>'
+        '</p><span class="card-link">Open ?</span></a>'
       );
     }).join("");
 

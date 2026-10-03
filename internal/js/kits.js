@@ -20,7 +20,7 @@
     growth: {
       id: "growth",
       title: "Growth & Turnaround Diagnostic",
-      live: "/diagnostic/input.html",
+      live: "/internal/diagnostic/input.html",
       purpose: "Commercial engine, margin compression, leadership cadence.",
       fields: []
     },

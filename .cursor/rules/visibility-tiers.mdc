@@ -1,0 +1,47 @@
+---
+description: Three-tier visibility. Public shows screens, not engines. Internal IP never ships client-side.
+alwaysApply: true
+---
+
+# Visibility tiers
+
+Classify every page, script, and asset as Public, Gated, or Internal before building it.
+
+## Public (`/website/`)
+
+Marketing, method copy, **screenshots or stylized renderings** of program output, and the high-level diagnostic Q&A already on the public problems/guide pages.
+
+- Describe what ISI does. Show what output looks like.
+- Do **not** reveal how anything is calculated.
+- No live Monte Carlo, trees, matrices, NPV, scoring, or other engines.
+- No links to `/internal/`, `/src/`, `/client/`, or `/diagnostic/` engines.
+- Intake CTAs may point at gated forms. Schedule may point at Calendly.
+
+## Gated (engagement sequence)
+
+Client intake / diagnostic questionnaires, and the **client results dashboard**.
+
+- Dashboard is configured from that project's intake. Delivered at a milestone, tollgate, or close.
+- Client sees their findings: KPIs used, probability bands, a high-level synopsis.
+- Client does **not** see weights, formulas, distributions used to compute, initiative libraries, or model architecture.
+
+## Internal (`/internal/`, `/src/`, `/intelligence/`)
+
+The engines: scoring weights, probability distributions, decision logic, formula architecture, initiative library, models.
+
+- Never linked from public pages.
+- Never copied into `/website/` JS, HTML, or SVG that computes.
+- Never render as a public calculator.
+
+## Technical requirement
+
+If scoring or engine logic is written in JavaScript that runs in the browser on a **public or gated client page**, anyone can View Source and duplicate it.
+
+- Public and gated client files receive **results**, not methods.
+- Do not put weights, RNG/Monte Carlo, IRR/NPV engines, tree math, or matrix scoring in `/website/`.
+- Practice engines may live under `/internal/` until a server exists. They stay unpublished and unlinked from marketing.
+- When a backend exists, engines execute server-side. The client gets output only.
+
+## Protection
+
+Trade secret: keep undisclosed, mark confidential, NDA in engagement agreements. Casual copy-blocking on public pages is not a substitute for keeping engines off those pages.

@@ -43,7 +43,7 @@
       company.textContent =
         (data.Company || data.companyName || "This company") +
         (data.Contact || data.contactName ? " · " + (data.Contact || data.contactName) : "") +
-        " · framed for the room — not the internal engine";
+        " · framed for the room  - not the internal engine";
     }
     var facts = document.getElementById("glimpseFacts");
     if (facts) {

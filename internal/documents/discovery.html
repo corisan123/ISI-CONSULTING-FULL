@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Client Discovery Form | ISI Consulting</title>
+  <link rel="stylesheet" href="../css/docs.css">
+</head>
+<body data-doc="discovery">
+  <div class="toolbar">
+    <p>Type in every field. Draft saves on this computer. There are no right answers. This is not a public calculator.</p>
+    <div>
+      <a class="ghost" href="index.html">All documents</a>
+      <button type="button" data-doc-print>Print / Save as PDF</button>
+    </div>
+  </div>
+  <form class="paper" id="docForm">
+    <div class="brand">
+      <div>
+        <h1>ISI CONSULTING, LLC</h1>
+        <p class="sub">Client Discovery Form  - Needs and Expectations</p>
+      </div>
+      <div class="meta">Confidential client intake<br>Page 1 of 1</div>
+    </div>
+    <p class="lede">This form records, in the client's own words, why they are considering ISI Consulting, LLC and what they hope to achieve. Honest input shapes the engagement. Estimates are fine.</p>
+
+    <div class="band">Section 1  - Client information</div>
+    <table class="grid">
+      <tr><td class="label">Client / Organization</td><td><input name="org" type="text" autocomplete="organization"></td></tr>
+      <tr><td class="label">Primary contact name</td><td><input name="contact" type="text" autocomplete="name"></td></tr>
+      <tr><td class="label">Title / role</td><td><input name="title" type="text"></td></tr>
+      <tr><td class="label">Email</td><td><input name="email" type="email" autocomplete="email"></td></tr>
+      <tr><td class="label">Phone</td><td><input name="phone" type="tel" autocomplete="tel"></td></tr>
+      <tr><td class="label">Industry / sector</td><td><input name="industry" type="text" placeholder="Construction, AEC, fabrication, manufacturing…"></td></tr>
+      <tr><td class="label">Date</td><td><input name="date" type="date"></td></tr>
+    </table>
+
+    <div class="band">Section 2  - Why ISI Consulting, LLC?</div>
+    <p class="prompt">In your own words, why are you considering hiring ISI Consulting, LLC?</p>
+    <div class="lines"><textarea name="why" rows="5"></textarea></div>
+
+    <div class="band">Section 3  - Current problem(s) and issues</div>
+    <p class="prompt">Primary problem or challenge:</p>
+    <div class="lines"><textarea name="primary" rows="4"></textarea></div>
+    <p class="prompt">Secondary problems or issues:</p>
+    <div class="lines"><textarea name="secondary" rows="3"></textarea></div>
+    <p class="prompt">How long has this been an issue?</p>
+    <div class="lines"><textarea name="howLong" rows="2"></textarea></div>
+    <p class="prompt">What have you tried so far?</p>
+    <div class="lines"><textarea name="tried" rows="3"></textarea></div>
+
+    <div class="band">Section 4  - Impact</div>
+    <p class="prompt">What does this cost the company if nothing changes this quarter (cash, margin, awards, throughput, people)?</p>
+    <div class="lines"><textarea name="impact" rows="4"></textarea></div>
+
+    <div class="band">Section 5  - Short-term expectations (30-90 days)</div>
+    <p class="prompt">What must be true in 90 days for this engagement to have been worth starting?</p>
+    <div class="lines"><textarea name="shortTerm" rows="4"></textarea></div>
+
+    <div class="band">Section 6  - Longer-term expectations (6-12 months)</div>
+    <p class="prompt">What should be different in the commercial seat, the books, or delivery a year from now?</p>
+    <div class="lines"><textarea name="longTerm" rows="4"></textarea></div>
+
+    <div class="band">Section 7  - How you define success</div>
+    <p class="prompt">Name the number, behavior, or kill condition that will tell leadership the work succeeded  - or that it should stop.</p>
+    <div class="lines"><textarea name="success" rows="4"></textarea></div>
+
+    <div class="band">Section 8  - Additional context</div>
+    <table class="grid">
+      <tr><td class="label">Is the Business Development seat staffed, part-time, or vacant?</td><td><input name="bdSeat" type="text"></td></tr>
+      <tr><td class="label">Budget range or “not named yet”</td><td><input name="budget" type="text"></td></tr>
+      <tr><td class="label">Decision timing</td><td><input name="timing" type="text" placeholder="e.g., this month, this quarter"></td></tr>
+      <tr><td class="label">Who else must agree for this to proceed?</td><td><input name="approvers" type="text"></td></tr>
+    </table>
+    <p class="prompt">Anything else ISI should know before a consultation:</p>
+    <div class="lines"><textarea name="other" rows="3"></textarea></div>
+
+    <div class="sign">
+      <div>
+        <h3>Client acknowledgement</h3>
+        <table class="grid">
+          <tr><td class="label">Typed name</td><td><input name="signName" type="text"></td></tr>
+          <tr><td class="label">Title</td><td><input name="signTitle" type="text"></td></tr>
+          <tr><td class="label">Date</td><td><input name="signDate" type="date"></td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>ISI received</h3>
+        <table class="grid">
+          <tr><td class="label">Received by</td><td><input name="isiName" type="text" value="Daniel Reid"></td></tr>
+          <tr><td class="label">Date</td><td><input name="isiDate" type="date"></td></tr>
+        </table>
+      </div>
+    </div>
+    <p class="foot">ISI Consulting, LLC  ·  Mount Gilead, NC  ·  484.750.7338  ·  contact@isiconsults.com  ·  Confidential  ·  Not legal advice</p>
+    <p class="note" id="saveStatus"></p>
+  </form>
+  <script src="../js/docs.js"></script>
+</body>
+</html>

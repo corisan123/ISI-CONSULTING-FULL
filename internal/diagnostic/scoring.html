@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Diagnostic Scoring Results | ISI Consulting</title>
+  <meta name="description" content="Run the ISI Consulting Growth &amp; Turnaround Diagnostic scoring engine. Weighted Revenue, Margin, Operations, and Leadership scores with Red/Yellow/Green ratings.">
+  <link rel="stylesheet" href="/src/styles/isi.css">
+  <link rel="stylesheet" href="/src/ui/theme.css">
+  <script type="module" src="/src/ui/designSystem.js"></script>
+</head>
+<body>
+  <script src="/src/components/isiHeader.js"></script>
+  <script>injectIsiHeader();</script>
+  <script src="/src/components/isiNav.js"></script>
+  <script>injectIsiNav("scoring");</script>
+  <script src="/src/engine/isiConfig.js"></script>
+  <script src="/src/engine/isiDiagnosticEngine.js"></script>
+
+
+  <div class="isi-page">
+    <h2>Diagnostic Scoring Results</h2>
+    <div class="isi-section">
+      <p>Weighted scores across Revenue Engine, Margin Health, Operational Throughput, and Leadership Alignment—fed from your diagnostic input. Scoring runs only when you click <strong>Run Scoring</strong>. If you already scored in this browser session, prior results appear below on load.</p>
+      <p id="scoringNoInput" class="scoring-hint" hidden>
+        No diagnostic input found.
+        <a href="/internal/diagnostic/input.html">Complete the Business Diagnostic Input</a> first, then return here.
+      </p>
+      <div class="isi-priority-actions">
+        <button type="button" class="isi-button" id="runScoringBtn" onclick="runAndDisplay()">Run Scoring</button>
+      </div>
+    </div>
+
+    <h3>Category Scores</h3>
+    <div id="scoringResults" class="isi-card scoring-results" aria-live="polite"></div>
+
+    <div class="isi-priority-actions">
+      <a href="/internal/diagnostic/finance.html" class="isi-button">Continue</a>
+      <a href="/internal/diagnostic/input.html" class="isi-button-secondary">Back to Input</a>
+    </div>
+  </div>
+
+  <footer class="isi-footer">
+    © 2026 ISI Consulting<br>
+    Contact: contact@isiconsults.com
+  </footer>
+
+  <script src="/src/scoring.js"></script>
+  <script>
+    (function () {
+      function checkInputHint() {
+        var hint = document.getElementById("scoringNoInput");
+        if (!hint) return;
+        var hasInput = false;
+        try {
+          hasInput = !!(sessionStorage.getItem("isi_input") || sessionStorage.getItem("isi_diagnosticInput"));
+        } catch (err) { /* ignore */ }
+        hint.hidden = hasInput;
+      }
+
+      window.addEventListener("load", function () {
+        checkInputHint();
+        if (typeof displayResults === "function") displayResults();
+      });
+    })();
+  </script>
+  <script type="module" src="/src/pages/scoring.js"></script>
+</body>
+</html>

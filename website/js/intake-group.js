@@ -10,7 +10,8 @@
     operations: "../glimpse/operations.html",
     venture: "../glimpse/venture.html",
     commercial: "../glimpse/commercial.html",
-    coaching: "../glimpse/coaching.html"
+    coaching: "../glimpse/coaching.html",
+    project: "../glimpse/project.html"
   };
 
   function submitGroupIntake() {
@@ -54,6 +55,7 @@
     try {
       sessionStorage.setItem("isi_groupIntake", JSON.stringify(data));
       sessionStorage.setItem("isi_groupIntake_" + group, JSON.stringify(data));
+      sessionStorage.setItem("isi_active_engagement_group", group);
     } catch (err) {}
 
     form.setAttribute("data-next", NEXT[group] || "../schedule.html");

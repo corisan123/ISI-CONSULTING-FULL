@@ -378,7 +378,7 @@
     var next = [];
     keep.concat(weak).forEach(function (x) {
       if (x.layer === "finance" && next.indexOf("/internal/diagnostics/diligence.html") < 0) next.push("/internal/diagnostics/diligence.html");
-      if (x.layer === "commercial" && next.indexOf("/diagnostic/input.html") < 0) next.push("/diagnostic/input.html");
+      if (x.layer === "commercial" && next.indexOf("/internal/diagnostic/input.html") < 0) next.push("/internal/diagnostic/input.html");
       if (x.layer === "operations" && next.indexOf("/internal/diagnostics/operations.html") < 0) next.push("/internal/diagnostics/operations.html");
       if (x.layer === "margin" && next.indexOf("/internal/diagnostics/margin.html") < 0) next.push("/internal/diagnostics/margin.html");
       if (x.layer === "leadership" && next.indexOf("/internal/tools/interventions.html") < 0) next.push("/internal/tools/interventions.html");

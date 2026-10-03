@@ -4,42 +4,87 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title>Exclusivity Letter | ISI Practice Bench</title>
-  <link rel="stylesheet" href="/internal/css/practice.css">
+  <title>Client Exclusivity Agreement | ISI Consulting</title>
+  <link rel="stylesheet" href="../css/docs.css">
 </head>
-<body>
-  <main class="pr-wrap">
-    <p class="pr-kicker">Template · not legal advice</p>
-    <h1>Limited exclusivity letter</h1>
-    <form id="f" class="pr-panel pr-form-grid">
-      <div><label for="client">Client</label><input id="client" value="Client company (placeholder)"></div>
-      <div><label for="scope">Scope of services</label><input id="scope" value="Growth & turnaround diagnostic and 90-day implementation support in the United States manufacturing operations of Client."></div>
-      <div><label for="days">Exclusivity period (days)</label><input id="days" type="number" value="60"></div>
-      <div><label for="geo">Territory</label><input id="geo" value="United States"></div>
-    </form>
-    <div class="pr-actions">
-      <button type="button" class="btn btn-gold" id="gen">Generate</button>
-      <button type="button" class="btn btn-ghost" onclick="window.print()">Print / PDF</button>
+<body data-doc="exclusivity">
+  <div class="toolbar">
+    <p>Fill the defined services, term, and territory. Counsel reviews before a client signs. This does not replace a Statement of Work.</p>
+    <div>
+      <a class="ghost" href="index.html">All documents</a>
+      <button type="button" data-doc-print>Print / Save as PDF</button>
     </div>
-    <article class="doc" id="doc"></article>
-  </main>
-  <script src="/internal/js/store.js"></script>
-  <script src="/internal/js/shell.js"></script>
-  <script>
-    ISI.shell.render("docs");
-    function gen() {
-      document.getElementById("doc").innerHTML =
-        "<h2>LIMITED EXCLUSIVITY LETTER</h2>" +
-        "<p>ISI Consulting, LLC and <strong>" + document.getElementById("client").value + "</strong> agree that, for <strong>" + document.getElementById("days").value + " days</strong> from the date of last signature, ISI will not provide the same Scope to a direct competitor of Client in the Territory without Client’s written consent.</p>" +
-        "<p><strong>Scope:</strong> " + document.getElementById("scope").value + "</p>" +
-        "<p><strong>Territory:</strong> " + document.getElementById("geo").value + "</p>" +
-        "<p>This letter does not restrict ISI’s work for non-competing clients, nor Client’s right to engage other advisors. Confidentiality remains governed by the NDA. Either party may terminate this exclusivity on ten (10) days’ written notice if a paid engagement has not been executed.</p>" +
-        "<p style='margin-top:2rem'>ISI Consulting, LLC ________________ Date ________</p>" +
-        "<p>Client ________________ Date ________</p>";
-      ISI.store.saveResult("exclusivity", { client: document.getElementById("client").value });
-    }
-    document.getElementById("gen").addEventListener("click", gen);
-    gen();
-  </script>
+  </div>
+  <form class="paper" id="docForm">
+    <div class="brand">
+      <div>
+        <h1>ISI CONSULTING, LLC</h1>
+        <p class="sub">Client Exclusivity Agreement</p>
+      </div>
+      <div class="meta">Template  ·  not legal advice<br>Use only when the file requires it</div>
+    </div>
+    <p class="lede">This Client Exclusivity Agreement (“Agreement”) is entered into as of
+      <input name="effective" type="date" style="min-width:9rem">
+      by and between <strong>ISI Consulting, LLC</strong> (“ISI”) and the Client named below.</p>
+
+    <div class="band">1. Parties and scope</div>
+    <table class="grid">
+      <tr><td class="label">Client legal name</td><td><input name="client" type="text"></td></tr>
+      <tr><td class="label">Defined exclusive services</td><td><input name="scope" type="text" placeholder="e.g., Fractional Business Development leadership for Client’s US construction operations"></td></tr>
+      <tr><td class="label">Territory</td><td><input name="geo" type="text" value="United States"></td></tr>
+      <tr><td class="label">Exclusivity term</td><td><input name="term" type="text" placeholder="e.g., 60 days, or 6 months from last signature"></td></tr>
+      <tr><td class="label">Named competitors (optional)</td><td><input name="competitors" type="text" placeholder="Leave blank if “direct competitor in the Territory” is enough"></td></tr>
+    </table>
+
+    <div class="band">2. ISI commitments</div>
+    <p class="clause">During the Term, ISI will not provide the Defined Exclusive Services to a direct competitor of Client in the Territory without Client’s prior written consent. If Named Competitors are listed above, those names control. This does not restrict ISI’s work for non-competing clients, or work outside the Defined Exclusive Services.</p>
+
+    <div class="band">3. Client commitments</div>
+    <p class="clause">During the Term, Client will use ISI as its sole outside provider of the Defined Exclusive Services in the Territory, unless ISI consents in writing. Client remains free to use internal staff, legal counsel, accountants, and other advisors outside that scope.</p>
+
+    <div class="band">4. Fees and SOW</div>
+    <p class="clause">Fees, if any, are set in a Statement of Work. This Agreement does not by itself create a paid engagement. Professional fee referenced (optional):
+      <input name="fee" type="text" style="min-width:10rem">.
+      Payment terms, if any:
+      <input name="pay" type="text" value="As in the SOW; otherwise net 15" style="min-width:14rem">.</p>
+
+    <div class="band">5. Confidentiality</div>
+    <p class="clause">Confidentiality remains governed by the Mutual NDA dated
+      <input name="ndaDate" type="date" style="min-width:9rem">
+      (or the NDA executed with this file). Models and engines remain ISI intellectual property.</p>
+
+    <div class="band">6. Termination</div>
+    <p class="clause">Either party may terminate this exclusivity on
+      <input name="notice" type="number" value="10" style="min-width:3.5rem">
+      days’ written notice if a paid engagement has not been executed. After a SOW is signed, termination follows that SOW. Material breach that is not cured within ten (10) days of written notice is grounds for immediate termination of exclusivity.</p>
+
+    <div class="band">7. Remedies</div>
+    <p class="clause">The exclusive remedy for a breach of this Agreement is termination of exclusivity and, where a SOW exists, the remedies in that SOW. No lost-profit damages are due solely from this letter unless a SOW says otherwise.</p>
+
+    <div class="band">8. Governing law</div>
+    <p class="clause">The laws of the State of North Carolina, excluding conflict-of-law rules. This is the entire agreement on exclusivity and may be signed in counterparts, including typed signature for a working copy.</p>
+
+    <div class="sign">
+      <div>
+        <h3>ISI Consulting, LLC</h3>
+        <table class="grid">
+          <tr><td class="label">Typed name</td><td><input name="isiName" type="text" value="Daniel Reid"></td></tr>
+          <tr><td class="label">Title</td><td><input name="isiTitle" type="text" value="Founder"></td></tr>
+          <tr><td class="label">Date</td><td><input name="isiDate" type="date"></td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>Client</h3>
+        <table class="grid">
+          <tr><td class="label">Typed name</td><td><input name="cName" type="text"></td></tr>
+          <tr><td class="label">Title</td><td><input name="cTitle" type="text"></td></tr>
+          <tr><td class="label">Date</td><td><input name="cDate" type="date"></td></tr>
+        </table>
+      </div>
+    </div>
+    <p class="foot">ISI Consulting, LLC  ·  Mount Gilead, NC  ·  484.750.7338  ·  contact@isiconsults.com  ·  Template. Not a substitute for legal counsel. © 2026 ISI Consulting, LLC.</p>
+    <p class="note" id="saveStatus"></p>
+  </form>
+  <script src="../js/docs.js"></script>
 </body>
 </html>

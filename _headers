@@ -10,6 +10,9 @@
 https://*.pages.dev/*
   X-Robots-Tag: noindex, nofollow, noarchive
 
+/website/images/*.svg
+  Content-Type: image/svg+xml
+
 /internal/*
   X-Robots-Tag: noindex, nofollow, noarchive
 /client/*

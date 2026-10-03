@@ -15,7 +15,7 @@ Rules: spell out Business Development. Do not name employers or clients. Do not 
 - Email: contact@isiconsults.com
 - Direct: dreid@isiconsults.com
 - Hours: Monday–Friday, 9:00 AM – 5:00 PM ET
-- Calendly: https://calendly.com/contact-isi-consults
+- Calendly: https://calendly.com/contact-isi-consulting
 
 ## Homepage
 

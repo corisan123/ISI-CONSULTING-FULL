@@ -2,69 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title>Diagnostic Dashboard | ISI Consulting</title>
-  <meta name="description" content="Executive snapshot of archetype, ratings, top priority, and next roadmap phase.">
-  <link rel="stylesheet" href="/src/styles/isi.css">
-  <link rel="stylesheet" href="/src/ui/theme.css">
-  <script type="module" src="/src/ui/designSystem.js"></script>
+  <meta http-equiv="refresh" content="0; url=/intake">
+  <link rel="canonical" href="/intake">
+  <title>ISI Consulting</title>
+  <script>location.replace("/intake");</script>
 </head>
 <body>
-  <script src="/src/components/isiHeader.js"></script>
-  <script>injectIsiHeader();</script>
-  <script src="/src/components/isiNav.js"></script>
-  <script>injectIsiNav("dashboard");</script>
-  <script src="/src/engine/isiConfig.js"></script>
-  <script src="/src/engine/isiDiagnosticEngine.js"></script>
-
-
-  <div class="isi-page">
-    <h2>Diagnostic Dashboard</h2>
-    <div class="isi-section">
-      <p>Executive snapshot across scoring, archetype, priorities, and roadmap. Public glimpse — not the full engagement dashboard.</p>
-    </div>
-
-    <h3>Executive Snapshot</h3>
-    <div id="dashboardOutput" class="isi-section" aria-live="polite"></div>
-
-    <div class="isi-priority-actions">
-      <a href="/diagnostic/summary.html" class="isi-button">Continue</a>
-      <a href="/diagnostic/roadmap.html" class="isi-button-secondary">Back to Roadmap</a>
-    </div>
-
-    <div class="isi-section">
-      <h3>Export Options</h3>
-      <div class="isi-priority-actions">
-        <button type="button" class="isi-button-secondary" onclick="downloadSummary()">Download Summary</button>
-        <button type="button" class="isi-button-secondary" onclick="printDiagnostic()">Print Diagnostic</button>
-        <button type="button" class="isi-button-accent" onclick="emailSummary()">Email Summary to Myself</button>
-      </div>
-    </div>
-
-    <div class="isi-section">
-      <h3>Save &amp; Share</h3>
-      <div class="isi-priority-actions">
-        <button type="button" class="isi-button-secondary" onclick="saveDiagnostic()">Save Diagnostic</button>
-        <button type="button" class="isi-button-accent" onclick="shareDiagnostic()">Share Diagnostic</button>
-      </div>
-    </div>
-  
-  </div>
-
-  <footer class="isi-footer">
-    © 2026 ISI Consulting<br>
-    Contact: contact@isiconsults.com
-  </footer>
-
-  <script src="/src/engines/isiEngineKit.js"></script>
-  <script src="/src/engines/growthEngine.js"></script>
-  <script src="/src/engines/expansionEngine.js"></script>
-  <script src="/src/engines/alignmentEngine.js"></script>
-  <script src="/src/engines/engineOrchestrator.js"></script>
-  <script type="module" src="/src/dashboard.js"></script>
-  <script src="/src/export.js"></script>
-  <script src="/src/saveShare.js"></script>
-  <script type="module" src="/src/pages/dashboard.js"></script>
+  <p><a href="/intake">Continue to intake</a></p>
 </body>
 </html>

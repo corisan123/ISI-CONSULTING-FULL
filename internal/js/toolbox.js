@@ -439,7 +439,7 @@
       title: "Growth diagnostic",
       excel: "Live engine — not a cell formula",
       formula: "Commercial fact-base, scoring, tree, roadmap",
-      href: "/diagnostic/input.html"
+      href: "/internal/diagnostic/input.html"
     },
     {
       id: "winrate",
@@ -447,7 +447,7 @@
       title: "Win rate",
       excel: "=awards/bids",
       formula: "Awards / qualified bids",
-      href: "/diagnostic/input.html",
+      href: "/internal/diagnostic/input.html",
       fields: [
         { id: "awards", label: "Awards", value: 18 },
         { id: "bids", label: "Qualified bids", value: 72 }

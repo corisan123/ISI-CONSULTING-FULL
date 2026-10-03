@@ -48,6 +48,8 @@
 /intake/venture       /website/forms/intake-venture.html   301
 /intake/commercial    /website/forms/intake-commercial.html   301
 /intake/coaching      /website/forms/intake-coaching.html   301
+/intake/project       /website/forms/intake-project.html   301
+/intake/project/      /website/forms/intake-project.html   301
 /discovery        /website/forms/intake.html   301
 /discovery/       /website/forms/intake.html   301
 /glimpse/financial    /website/glimpse/financial.html   301
@@ -55,6 +57,8 @@
 /glimpse/venture      /website/glimpse/venture.html   301
 /glimpse/commercial   /website/glimpse/commercial.html   301
 /glimpse/coaching     /website/glimpse/coaching.html   301
+/glimpse/project      /website/glimpse/project.html   301
+/glimpse/project/     /website/glimpse/project.html   301
 /guide            /website/guides/growth-diagnostic-guide.html   301
 /guide/           /website/guides/growth-diagnostic-guide.html   301
 /forms            /website/forms/index.html   301
@@ -71,12 +75,55 @@
 /services/operations/ /website/services/operational-alignment.html   301
 /services/coaching   /website/services/leadership-alignment.html   301
 /services/coaching/  /website/services/leadership-alignment.html   301
+/services/decision-support   /website/services/decision-support.html   301
+/services/decision-support/  /website/services/decision-support.html   301
+/services/project-management   /website/services/project-management.html   301
+/services/project-management/  /website/services/project-management.html   301
+/services/startup-business-plan   /website/services/startup-business-plan.html   301
+/services/startup-business-plan/  /website/services/startup-business-plan.html   301
+/services/revenue-operations   /website/services/revenue-operations.html   301
+/services/revenue-operations/  /website/services/revenue-operations.html   301
+/services/sales-process-maturity   /website/services/sales-process-maturity.html   301
+/services/sales-process-maturity/  /website/services/sales-process-maturity.html   301
+/legal            /website/legal/index.html   301
+/legal/           /website/legal/index.html   301
+/legal/nda        /website/legal/nda.html   301
+/legal/nda/       /website/legal/nda.html   301
+/legal/nda-agreement    /website/legal/nda-agreement.html   301
+/legal/nda-agreement/   /website/legal/nda-agreement.html   301
+/legal/exclusivity      /website/legal/exclusivity.html   301
+/legal/exclusivity/     /website/legal/exclusivity.html   301
+/legal/terms      /website/legal/terms.html   301
+/legal/terms/     /website/legal/terms.html   301
+/legal/privacy    /website/legal/privacy.html   301
+/legal/privacy/   /website/legal/privacy.html   301
+/legal/disclaimer /website/legal/disclaimer.html   301
+/legal/disclaimer/ /website/legal/disclaimer.html   301
+/forms/lead-magnet    /website/forms/lead-magnet.html   301
+/forms/lead-magnet/   /website/forms/lead-magnet.html   301
+/forms/discovery      /website/forms/discovery.html   301
+/forms/discovery/     /website/forms/discovery.html   301
+/forms/discovery-needs    /website/forms/discovery-needs.html   301
+/forms/discovery-needs/   /website/forms/discovery-needs.html   301
+/forms/onboarding         /website/forms/onboarding.html   301
+/forms/onboarding/        /website/forms/onboarding.html   301
+/forms/benefit-statement  /website/forms/benefit-statement.html   301
+/forms/benefit-statement/ /website/forms/benefit-statement.html   301
 
-# Diagnostic entry. Public visitors get the intake families, not the internal engine.
+# Diagnostic entry. Public visitors get intake, not the engine.
 /diagnostic       /website/forms/intake.html   302
 /diagnostic/      /website/forms/intake.html   302
+/diagnostic/*     /website/forms/intake.html   302
 
-# Practitioner tools exist as files under /internal/. Do not advertise. No /practice alias.
+# Practice bench, engines, and client room are not a public product.
+# Local http-server ignores this file. Cloudflare may still serve a file if it exists.
+/src/*            /404.html   404
+/internal/*       /404.html   404
+/intelligence/*   /404.html   404
+/client/*         /404.html   404
+
+# Static assets when the URL is still on the domain root.
+/images/*         /website/images/:splat   200
 
 # Unmatched paths → real 404, not the diagnostic form.
 /*                /404.html   404

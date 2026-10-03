@@ -11,7 +11,7 @@ Open `website/COPY-FOR-CLAUDE.md` with Claude. Change sentences only. Spell out 
 - Email: contact@isiconsults.com
 - Direct: dreid@isiconsults.com
 - Hours: Monday–Friday, 9:00 AM – 5:00 PM ET
-- Calendly: https://calendly.com/contact-isi-consults
+- Calendly: https://calendly.com/contact-isi-consulting
 
 ## Homepage
 

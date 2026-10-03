@@ -46,7 +46,7 @@
     if (!g || !GROUPS[g]) {
       if (hub) hub.hidden = false;
       form.hidden = true;
-      if (title) title.textContent = "Discovery — choose the constraint family";
+      if (title) title.textContent = "Discovery  - choose the constraint family";
       if (lede) {
         lede.textContent =
           "Not one generic questionnaire. Pick the group that matches the file. Similar studies share a page. Engines stay off this site.";
@@ -67,7 +67,7 @@
     if (title) title.textContent = labels[g] || "Discovery";
     if (lede) {
       lede.textContent =
-        "Step 3 of 4. These questions match this study type. Go back to intake anytime — those answers stay on this device.";
+        "Step 3 of 4. These questions match this study type. Go back to intake anytime  - those answers stay on this device.";
     }
   }
 

@@ -138,20 +138,38 @@
   }
 
   /**
-   * After local save, POST the real HTML form to FormSubmit so contact@ receives it.
-   * First use: FormSubmit emails contact@ a confirmation link — click it once.
+   * After local save, POST the HTML form to FormSubmit (Yahoo inbox, cc contact@).
+   * First use: FormSubmit emails dreid1253@yahoo.com a confirmation link. Click it once.
    */
   function deliverToInbox(form) {
     if (!form) return;
-    if (!form.getAttribute("action") || form.getAttribute("action").indexOf("formsubmit.co") === -1) {
+    var action = form.getAttribute("action") || "";
+    var localNext = form.getAttribute("data-local-next");
+    function goLocal() {
+      if (localNext) {
+        window.location.href = localNext;
+        return;
+      }
       maybeNavigate(form);
+    }
+    if (action.indexOf("formsubmit.co") === -1) {
+      goLocal();
       return;
     }
-    form.submit();
+    var fd = new FormData(form);
+    fetch("https://formsubmit.co/ajax/dreid1253@yahoo.com", {
+      method: "POST",
+      body: fd,
+      headers: { Accept: "application/json" }
+    })
+      .then(function () { goLocal(); })
+      .catch(function () {
+        form.submit();
+      });
   }
 
   function triggerGuideDownload() {
-    window.location.href = "/website/guides/growth-diagnostic-guide.html";
+    window.location.href = new URL("../growth-diagnostic-guide.html", window.location.href).href;
   }
 
   /**
@@ -333,9 +351,16 @@
 
     console.log("Lead Magnet Request:", email);
     store("isi_leadMagnet", data);
-    showSuccess(form, "Opening the Growth Diagnostic Guide.");
-    triggerGuideDownload();
-    return false;
+    showSuccess(form, "Sending a copy to you and opening the guide.");
+    if (form.getAttribute("action") && form.getAttribute("action").indexOf("formsubmit.co") !== -1) {
+      if (!form.getAttribute("data-local-next")) {
+        form.setAttribute("data-local-next", "../growth-diagnostic-guide.html");
+      }
+      deliverToInbox(form);
+    } else {
+      triggerGuideDownload();
+    }
+    return true;
   }
 
   function bindFormSubmit(formId, handler) {

@@ -1,4 +1,3 @@
-The placeholder download has been retired.
-
-Open the real guide:
-https://isiconsults.com/guide
+The placeholder file is retired. The real guide is website/growth-diagnostic-guide.html
+Open: /growth-diagnostic-guide
+Print / save as PDF from that page.

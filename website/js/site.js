@@ -89,52 +89,52 @@
     system: {
       title: "The Unified Growth System",
       html:
-        "<p>Fractional Business Development leadership is the tollgate. Diagnostic intelligence and targeted interventions open only when that seat proves they are needed — sequenced so you do not buy a catalog of tools before the commercial constraint is named.</p>" +
+        "<p>Fractional Business Development leadership is the tollgate. Diagnostic intelligence and targeted interventions open only when that seat proves they are needed  - sequenced so you do not buy a catalog of tools before the commercial constraint is named.</p>" +
         "<p>Study type reconfigures the work: a manufacturing throughput study does not run like a cash turnaround or a CAPEX case. The engines stay with the firm.</p>" +
         '<div class="overlay-actions"><a class="btn btn-primary" href="services/fractional-business-development.html">Fractional Business Development</a><a class="btn btn-outline" href="system.html">See the system</a></div>'
     },
     fractional: {
       title: "Fractional Business Development leadership",
       html:
-        "<p>The engagement this practice is built on. A senior commercial operator inside the company — pipeline architecture, qualification standards, CRM discipline, proposal cadence — without a full-time VP of Business Development.</p>" +
-        "<p>That seat has produced $48 million in automation transactions over 24 months, profit centers from inception to $6.2 million at 67%+ gross margin, and $1.8 million in awards in 12 months after a stalled commercial rebuild — across construction products, mechanical contracting, and industrial automation. Strategy, finance, project management, and manufacturing practice follow only if the constraint is not the Business Development seat.</p>" +
-        '<div class="overlay-actions"><a class="btn btn-primary" href="services/fractional-business-development.html">The offering</a><a class="btn btn-outline" href="forms/client-intake.html">Start intake</a></div>'
+        "<p>The engagement this practice is built on. A senior commercial operator inside the company  - pipeline architecture, qualification standards, CRM discipline, proposal cadence  - without a full-time VP of Business Development.</p>" +
+        "<p>That seat has produced $48 million in automation transactions over 24 months, profit centers from inception to $6.2 million at 67%+ gross margin, and $1.8 million in awards in 12 months after a stalled commercial rebuild  - across construction products, mechanical contracting, and industrial automation. Strategy, finance, project management, and manufacturing practice follow only if the constraint is not the Business Development seat.</p>" +
+        '<div class="overlay-actions"><a class="btn btn-primary" href="services/fractional-business-development.html">The offering</a><a class="btn btn-outline" href="forms/intake.html">Start intake</a></div>'
     },
     strategy: {
       title: "Strategy &amp; diagnosis",
       html:
         "<p>Find the constraint before you spend on the symptom. Intake captures what leadership believes. Diligence and structured diagnosis keep or kill competing causes before a workstream is sold.</p>" +
-        '<div class="overlay-actions"><a class="btn btn-primary" href="system.html">How the system works</a><a class="btn btn-outline" href="https://calendly.com/contact-isi-consults" target="_blank" rel="noopener noreferrer">Schedule</a></div>'
+        '<div class="overlay-actions"><a class="btn btn-primary" href="system.html">How the system works</a><a class="btn btn-outline" href="https://calendly.com/contact-isi-consulting" target="_blank" rel="noopener noreferrer">Schedule</a></div>'
     },
     finance: {
       title: "Financial solutions",
       html:
-        "<p>Profitability, margin leakage, declining share, and turnaround due diligence — named in numbers. Fractional finance when a full-time seat is not the answer yet.</p>" +
-        '<div class="overlay-actions"><a class="btn btn-primary" href="services/index.html">Business solutions</a><a class="btn btn-outline" href="forms/client-intake.html">Start intake</a></div>'
+        "<p>Profitability, margin leakage, declining share, and turnaround due diligence  - named in numbers. Fractional finance when a full-time seat is not the answer yet.</p>" +
+        '<div class="overlay-actions"><a class="btn btn-primary" href="services/index.html">Business solutions</a><a class="btn btn-outline" href="forms/intake.html">Start intake</a></div>'
     },
     pm: {
       title: "Project management",
       html:
         "<p>Estimate, field, and closeout on one set of decision rights. Promises and capacity stay synchronized so claims do not become the operating system.</p>" +
-        '<div class="overlay-actions"><a class="btn btn-primary" href="services/index.html">PM consulting</a><a class="btn btn-outline" href="https://calendly.com/contact-isi-consults" target="_blank" rel="noopener noreferrer">Schedule</a></div>'
+        '<div class="overlay-actions"><a class="btn btn-primary" href="services/project-management.html">PM consulting</a><a class="btn btn-outline" href="https://calendly.com/contact-isi-consulting" target="_blank" rel="noopener noreferrer">Schedule</a></div>'
     },
     ops: {
       title: "Manufacturing &amp; process",
       html:
         "<p>Shop, yard, and fabrication practice for construction-serving manufacturers: bottlenecks, waste, throughput, and a rhythm the crew can actually run.</p>" +
-        '<div class="overlay-actions"><a class="btn btn-primary" href="services/operational-alignment.html">Process work</a><a class="btn btn-outline" href="forms/client-intake.html">Start intake</a></div>'
+        '<div class="overlay-actions"><a class="btn btn-primary" href="services/operational-alignment.html">Process work</a><a class="btn btn-outline" href="forms/intake.html">Start intake</a></div>'
     },
     coaching: {
       title: "Coaching &amp; training",
       html:
-        "<p>PMs, estimators, and business development staff: cadence, qualification, and margin discipline installed as weekly behavior — not a workshop that expires on Monday.</p>" +
-        '<div class="overlay-actions"><a class="btn btn-primary" href="services/leadership-alignment.html">Coaching</a><a class="btn btn-outline" href="https://calendly.com/contact-isi-consults" target="_blank" rel="noopener noreferrer">Schedule</a></div>'
+        "<p>PMs, estimators, and business development staff: cadence, qualification, and margin discipline installed as weekly behavior  - not a workshop that expires on Monday.</p>" +
+        '<div class="overlay-actions"><a class="btn btn-primary" href="services/leadership-alignment.html">Coaching</a><a class="btn btn-outline" href="https://calendly.com/contact-isi-consulting" target="_blank" rel="noopener noreferrer">Schedule</a></div>'
     },
     startup: {
       title: "Startup &amp; business plan",
       html:
         "<p>Customized business-plan development for new or spinning-out construction and AEC ventures. Built from numbers, not a template pack.</p>" +
-        '<div class="overlay-actions"><a class="btn btn-primary" href="programs.html">Programs</a><a class="btn btn-outline" href="forms/client-intake.html">Start intake</a></div>'
+        '<div class="overlay-actions"><a class="btn btn-primary" href="services/startup-business-plan.html">Startup plans</a><a class="btn btn-outline" href="forms/intake.html">Start intake</a></div>'
     }
   };
 
@@ -349,14 +349,27 @@
     icon.type = "image/png";
     icon.href = root + content.favicon;
     document.head.appendChild(icon);
+    var apple = document.querySelector('link[rel="apple-touch-icon"]') || document.createElement("link");
+    apple.rel = "apple-touch-icon";
+    apple.href = root + (content.logoMark || content.favicon);
+    document.head.appendChild(apple);
 
     document.querySelectorAll("a.logo").forEach(function (a) {
-      if (a.querySelector("img.logo-mark")) return;
+      if (a.querySelector("img.logo-wordmark, img.logo-mark")) return;
       var img = document.createElement("img");
-      img.className = "logo-mark keep-color";
-      img.src = root + content.logo;
+      img.className = "logo-wordmark keep-color";
+      img.src = root + (content.logo || "images/logo-header.jpg");
       img.alt = content.firm || "ISI Consulting";
       a.insertBefore(img, a.firstChild);
+      a.classList.add("has-brand-img");
+      var textWrap = document.createElement("span");
+      textWrap.className = "logo-sr";
+      while (a.childNodes.length > 1) {
+        var node = a.childNodes[1];
+        if (node === img) continue;
+        textWrap.appendChild(node);
+      }
+      if (textWrap.childNodes.length) a.appendChild(textWrap);
     });
 
     document.querySelectorAll("a[href^='mailto:']").forEach(function (a) {
@@ -399,8 +412,12 @@
     var root = siteRoot();
     fetch(root + "content.json", { cache: "no-store" })
       .then(function (res) { return res.ok ? res.json() : null; })
-      .then(function (content) { applyBrand(content, root); })
-      .catch(function () {});
+      .then(function (content) {
+        applyBrand(content, root);
+      })
+      .catch(function () {
+        applyBrand({ favicon: "images/favicon.png", logo: "images/logo-header.jpg", email: "contact@isiconsults.com", phone: "484.750.7338", phoneHref: "tel:+14847507338" }, root);
+      });
   }
 
   document.addEventListener("DOMContentLoaded", function () {

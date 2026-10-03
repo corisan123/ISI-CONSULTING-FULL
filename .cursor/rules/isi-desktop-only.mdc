@@ -1,0 +1,17 @@
+---
+description: ISI Desktop only. Never Truth Collective. Never Cursor Cloud for this repo.
+alwaysApply: true
+---
+
+# ISI Desktop lane lock
+
+This workspace is **ISI Consulting only** (`isiconsults.com`, GitHub `corisan123/ISI-CONSULTING-FULL`).
+
+- Work **only** in Cursor **Desktop**, in this repo.
+- **Never** open, edit, search, fetch, or mention Truth Collective / TC / TC staging / evaluation binder / TC canvases as work to do here.
+- **Never** send this project to Cursor **Cloud**, Cloud Agents, or a Cloud Task. Cloud is a different business lane. If asked to “use Cloud” for ISI, refuse and stay on Desktop.
+- If a canvas named **TC evaluation layer map** (or any TC canvas) is pinned, close it. Do not Open it. Do not mix palettes (ISI navy `#0F1F3D` / gold `#C9A235` vs any TC palette).
+- Do not read `D:\TC Engineering docs` or other TC paths from this chat.
+- Start coding in **Composer** (or Auto). Do not keep this project on Grok because a long Grok thread already stalled.
+
+Read `HANDOFF.md` at the repo root before making changes.

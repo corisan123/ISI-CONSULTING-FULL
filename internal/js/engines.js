@@ -7,7 +7,7 @@
   var ENGINES = [
     { id: "diligence", label: "Financial due diligence", href: "/internal/diagnostics/diligence.html", family: "Cash / gate" },
     { id: "rootcause", label: "Structured diagnosis", href: "/internal/diagnostics/rootcause.html", family: "Cause" },
-    { id: "growth", label: "Growth diagnostic (glimpse)", href: "/diagnostic/input.html", family: "Commercial", fromInput: true },
+    { id: "growth", label: "Growth diagnostic (glimpse)", href: "/internal/diagnostic/input.html", family: "Commercial", fromInput: true },
     { id: "margin", label: "Margin & capital", href: "/internal/diagnostics/margin.html", family: "Capital" },
     { id: "operations", label: "Operations & throughput", href: "/internal/diagnostics/operations.html", family: "Constraint" },
     { id: "capital", label: "Capital projects", href: "/internal/diagnostics/capital.html", family: "Project" },

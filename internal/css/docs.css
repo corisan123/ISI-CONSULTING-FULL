@@ -1,0 +1,189 @@
+/* Fillable engagement documents. Open from disk. Print / Save as PDF. */
+:root {
+  --navy: #0F1F3D;
+  --gold: #C9A235;
+  --text: #1a2332;
+  --muted: #5a6577;
+  --border: #c5ced9;
+  --band: #0F1F3D;
+  --row: #eef2f7;
+  --font: "Segoe UI", Calibri, system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  background: #e8edf3;
+  color: var(--text);
+  font-family: var(--font);
+}
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.7rem 1.1rem;
+  background: var(--navy);
+  color: #fff;
+  border-bottom: 2px solid var(--gold);
+}
+.toolbar p { margin: 0; font-size: 0.85rem; max-width: 46rem; line-height: 1.4; color: rgba(255,255,255,0.88); }
+.toolbar a, .toolbar button {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--gold);
+  background: var(--gold);
+  color: var(--navy);
+  text-decoration: none;
+}
+.toolbar button.ghost, .toolbar a.ghost {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255,255,255,0.35);
+}
+.paper {
+  width: min(820px, calc(100% - 2rem));
+  margin: 1.25rem auto 2.5rem;
+  background: #fff;
+  padding: 1.6rem 1.7rem 2rem;
+  box-shadow: 0 1px 8px rgba(15,31,61,0.08);
+}
+.brand {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  border-bottom: 3px solid var(--navy);
+  padding-bottom: 0.7rem;
+  margin-bottom: 0.85rem;
+}
+.brand h1 {
+  margin: 0;
+  font-size: 1.35rem;
+  letter-spacing: 0.04em;
+  color: var(--navy);
+}
+.brand .sub {
+  margin: 0.15rem 0 0;
+  font-style: italic;
+  color: #2f5f9a;
+  font-size: 0.95rem;
+}
+.brand .meta { font-size: 0.78rem; color: var(--muted); text-align: right; }
+.lede { font-size: 0.92rem; line-height: 1.55; margin: 0 0 1rem; }
+.note {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 0 0 1rem;
+}
+.band {
+  background: var(--band);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 0.38rem 0.65rem;
+  margin: 1.15rem 0 0.55rem;
+}
+table.grid {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+}
+table.grid th, table.grid td {
+  border: 1px solid var(--border);
+  padding: 0.28rem 0.4rem;
+  vertical-align: middle;
+}
+table.grid th {
+  background: var(--navy);
+  color: #fff;
+  font-weight: 600;
+  text-align: left;
+  font-size: 0.78rem;
+}
+table.grid td.label {
+  width: 38%;
+  background: var(--row);
+  font-weight: 600;
+  color: var(--navy);
+}
+table.grid input, table.grid textarea, table.grid select {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: var(--text);
+  padding: 0.2rem 0.15rem;
+}
+table.grid textarea { min-height: 2.6rem; resize: vertical; }
+p.prompt { margin: 0.35rem 0 0.25rem; font-size: 0.9rem; }
+.lines { margin: 0 0 0.7rem; }
+.lines textarea {
+  width: 100%;
+  min-height: 5.2rem;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  font: inherit;
+  line-height: 1.7;
+  resize: vertical;
+  padding: 0.2rem 0;
+}
+.check {
+  display: flex;
+  gap: 0.45rem;
+  align-items: flex-start;
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+}
+.check input { margin-top: 0.25rem; }
+.clause { font-size: 0.9rem; line-height: 1.55; margin: 0 0 0.7rem; }
+.clause input[type="text"], .clause input[type="date"], .clause input[type="number"] {
+  border: 0;
+  border-bottom: 1px solid var(--navy);
+  font: inherit;
+  min-width: 8rem;
+  padding: 0.05rem 0.25rem;
+  background: #f7f9fc;
+}
+.sign {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-top: 1.4rem;
+}
+.sign h3 { margin: 0 0 0.5rem; font-size: 0.85rem; color: var(--navy); }
+.foot {
+  margin-top: 1.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-align: center;
+}
+.status { font-size: 0.8rem; color: #c9e6c9; }
+@media print {
+  body { background: #fff; }
+  .toolbar, .site-header, .site-footer, .page-header, .doc-actions, .nav-toggle { display: none !important; }
+  .paper { width: 100%; margin: 0; box-shadow: none; padding: 0; }
+  input, textarea, select {
+    border: 0 !important;
+    background: transparent !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .band { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}
+@media (max-width: 700px) {
+  .sign { grid-template-columns: 1fr; }
+  .brand { flex-direction: column; align-items: flex-start; }
+}

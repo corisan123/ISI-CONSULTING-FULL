@@ -15,7 +15,7 @@ export var firm = {
   confidentiality:
     "CONFIDENTIAL — Prepared solely for the named client. Unauthorized copy, distribution, or reverse-engineering of this packet is prohibited.",
   website: "isiconsults.com",
-  calendly: "https://calendly.com/contact-isi-consults"
+  calendly: "https://calendly.com/contact-isi-consulting"
 };
 
 export default firm;

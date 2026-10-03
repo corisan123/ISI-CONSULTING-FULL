@@ -33,13 +33,13 @@
 
     <section class="eng-card">
       <h2>The questions we asked, in order</h2>
-      <p class="eng-desc">Each step is a financial test. You can see the formula, the number, and why the branch was taken. Nothing here is a black box.</p>
+      <p class="eng-desc">Each step is a financial test. Leadership sees the question, the result, and the branch taken. The model stays with ISI.</p>
       <div class="tree-path" id="tree"></div>
     </section>
 
     <section class="eng-card">
       <h2>Proof behind the path</h2>
-      <p class="formula">Liquidity, coverage, cash cycle, quality of earnings, and NPV are computed — not estimated from a checklist.</p>
+      <p class="formula">Liquidity, coverage, cash cycle, quality of earnings, and NPV are reported as results. The engines that produced them are not on this page.</p>
       <div class="kpi-row" id="kpis"></div>
       <div id="tests" style="margin-top:1rem"></div>
     </section>
@@ -98,7 +98,7 @@
         var d = document.createElement("div");
         d.className = "test";
         d.innerHTML = "<div class='q'>" + t.label + " <span class='badge " + t.rating + "'>" + t.rating + "</span></div>" +
-          "<div class='meta'><span>" + t.formula + "</span><strong>" + t.display + "</strong></div>" +
+          "<div class='meta'><strong>" + t.display + "</strong></div>" +
           "<p class='because'>" + t.because + "</p>";
         tests.appendChild(d);
       });
@@ -117,7 +117,7 @@
         var extra = document.createElement("div");
         extra.className = "test";
         extra.innerHTML = "<div class='q'>Quantified path: " + bus.tree.best.label +
-          "</div><p class='because'>EV(bid) uses win probability, gross profit, bid cost, and develop cost. Sensitivity and the decision matrix sit on this same tree.</p>";
+          "</div><p class='because'>The recommended path is named here. The scoring that produced it stays with ISI.</p>";
         document.getElementById("tests").appendChild(extra);
       }
     })();
