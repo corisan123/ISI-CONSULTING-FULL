@@ -43,6 +43,7 @@
     var wacc = engine.getNodeOutput("cost-of-capital");
     var capex = engine.getNodeOutput("capex-schedule");
     var dep = engine.getNodeOutput("depreciation-gaap");
+    var marginKit = engine.getNodeOutput("margin-capital-kit");
     var fin = engine.getNodeOutput("npv-irr-pv");
     var dm = engine.getNodeOutput("decision-matrix");
     if (!sum || !sum.kpis) {
@@ -86,7 +87,8 @@
             metrics: [
               { label: "ISI WACC module", value: pctRate(k.wacc) },
               { label: "Investment / CAPEX", value: (capex && capex.headline) || money(Math.abs((fin.cashflows || [0])[0])) },
-              { label: "ISI GAAP depreciation", value: (dep && dep.headline) || "—" }
+              { label: "ISI GAAP depreciation", value: (dep && dep.headline) || "—" },
+              { label: "ISI Margin & Capital kit", value: (marginKit && marginKit.headline) || "—" }
             ]
           },
           {
