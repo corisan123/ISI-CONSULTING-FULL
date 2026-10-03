@@ -1,9 +1,9 @@
-# Cloudflare Pages redirects. Publish directory = repository root.
+﻿# Cloudflare Pages redirects. Publish directory = repository root.
 # Do not add an SPA fallback. Those two rules send unknown URLs to the diagnostic.
 # NEVER:  /*    /index.html   200
 # NEVER:  /*    /diagnostic/input.html   200
 #
-# Cloudflare already 308s foo.html → /foo (pretty URLs). Do not reverse that
+# Cloudflare already 308s foo.html â†’ /foo (pretty URLs). Do not reverse that
 # or the two redirects loop. Destinations below are real files; CF may then
 # strip .html.
 
@@ -14,106 +14,106 @@
 /home             /website/index.html   302
 /home/            /website/index.html   302
 
-# URLs visitors type at the domain root → files that actually exist under /website/.
-/about            /website/about.html   301
-/about/           /website/about.html   301
-/philosophy       /website/philosophy.html   301
-/philosophy/      /website/philosophy.html   301
-/services         /website/services/index.html   301
-/services/        /website/services/index.html   301
-/contact          /website/contact.html   301
-/contact/         /website/contact.html   301
-/schedule         /website/schedule.html   301
-/schedule/        /website/schedule.html   301
-/growth-diagnostic-guide   /website/growth-diagnostic-guide.html   301
-/growth-diagnostic-guide/  /website/growth-diagnostic-guide.html   301
-/problems         /website/problems.html   301
-/problems/        /website/problems.html   301
-/faq              /website/faq.html   301
-/faq/             /website/faq.html   301
-/start            /website/start.html   301
-/start/           /website/start.html   301
-/system           /website/system.html   301
-/system/          /website/system.html   301
-/programs         /website/programs.html   301
-/programs/        /website/programs.html   301
-/peek             /website/peek.html   301
-/peek/            /website/peek.html   301
-/timeline         /website/timeline.html   301
-/timeline/        /website/timeline.html   301
-/intake           /website/forms/intake.html   301
-/intake/          /website/forms/intake.html   301
-/intake/financial     /website/forms/intake-financial.html   301
-/intake/operations    /website/forms/intake-operations.html   301
-/intake/venture       /website/forms/intake-venture.html   301
-/intake/commercial    /website/forms/intake-commercial.html   301
-/intake/coaching      /website/forms/intake-coaching.html   301
-/intake/project       /website/forms/intake-project.html   301
-/intake/project/      /website/forms/intake-project.html   301
-/discovery        /website/forms/intake.html   301
-/discovery/       /website/forms/intake.html   301
-/glimpse/financial    /website/glimpse/financial.html   301
-/glimpse/operations   /website/glimpse/operations.html   301
-/glimpse/venture      /website/glimpse/venture.html   301
-/glimpse/commercial   /website/glimpse/commercial.html   301
-/glimpse/coaching     /website/glimpse/coaching.html   301
-/glimpse/project      /website/glimpse/project.html   301
-/glimpse/project/     /website/glimpse/project.html   301
-/guide            /website/guides/growth-diagnostic-guide.html   301
-/guide/           /website/guides/growth-diagnostic-guide.html   301
-/forms            /website/forms/index.html   301
-/forms/           /website/forms/index.html   301
-/forms/thanks     /website/forms/thanks.html   301
-/forms/thanks/    /website/forms/thanks.html   301
-/services/fractional-business-development   /website/services/fractional-business-development.html   301
-/services/fractional-business-development/  /website/services/fractional-business-development.html   301
-/services/strategy   /website/services/growth-turnaround-diagnostic.html   301
-/services/strategy/  /website/services/growth-turnaround-diagnostic.html   301
-/services/financial  /website/services/corporate-turnaround.html   301
-/services/financial/ /website/services/corporate-turnaround.html   301
-/services/operations /website/services/operational-alignment.html   301
-/services/operations/ /website/services/operational-alignment.html   301
-/services/coaching   /website/services/leadership-alignment.html   301
-/services/coaching/  /website/services/leadership-alignment.html   301
-/services/decision-support   /website/services/decision-support.html   301
-/services/decision-support/  /website/services/decision-support.html   301
-/services/project-management   /website/services/project-management.html   301
-/services/project-management/  /website/services/project-management.html   301
-/services/startup-business-plan   /website/services/startup-business-plan.html   301
-/services/startup-business-plan/  /website/services/startup-business-plan.html   301
-/services/revenue-operations   /website/services/revenue-operations.html   301
-/services/revenue-operations/  /website/services/revenue-operations.html   301
-/services/sales-process-maturity   /website/services/sales-process-maturity.html   301
-/services/sales-process-maturity/  /website/services/sales-process-maturity.html   301
-/legal            /website/legal/index.html   301
-/legal/           /website/legal/index.html   301
-/legal/nda        /website/legal/nda.html   301
-/legal/nda/       /website/legal/nda.html   301
-/legal/nda-agreement    /website/legal/nda-agreement.html   301
-/legal/nda-agreement/   /website/legal/nda-agreement.html   301
-/legal/exclusivity      /website/legal/exclusivity.html   301
-/legal/exclusivity/     /website/legal/exclusivity.html   301
-/legal/terms      /website/legal/terms.html   301
-/legal/terms/     /website/legal/terms.html   301
-/legal/privacy    /website/legal/privacy.html   301
-/legal/privacy/   /website/legal/privacy.html   301
-/legal/disclaimer /website/legal/disclaimer.html   301
-/legal/disclaimer/ /website/legal/disclaimer.html   301
-/forms/lead-magnet    /website/forms/lead-magnet.html   301
-/forms/lead-magnet/   /website/forms/lead-magnet.html   301
-/forms/discovery      /website/forms/intake.html   301
-/forms/discovery/     /website/forms/intake.html   301
-/forms/discovery-needs    /website/forms/discovery-needs.html   301
-/forms/discovery-needs/   /website/forms/discovery-needs.html   301
-/forms/onboarding         /website/forms/onboarding.html   301
-/forms/onboarding/        /website/forms/onboarding.html   301
-/forms/benefit-statement  /website/forms/benefit-statement.html   301
-/forms/benefit-statement/ /website/forms/benefit-statement.html   301
+# HOLDING MODE â€” public marketing URLs â†’ under-construction homepage (restore from website/index.launch.html + revert destinations to launch files).
+/about            /website/index.html   302
+/about/           /website/index.html   302
+/philosophy       /website/index.html   302
+/philosophy/      /website/index.html   302
+/services         /website/index.html   302
+/services/        /website/index.html   302
+/contact          /website/index.html   302
+/contact/         /website/index.html   302
+/schedule         /website/index.html   302
+/schedule/        /website/index.html   302
+/growth-diagnostic-guide   /website/index.html   302
+/growth-diagnostic-guide/  /website/index.html   302
+/problems         /website/index.html   302
+/problems/        /website/index.html   302
+/faq              /website/index.html   302
+/faq/             /website/index.html   302
+/start            /website/index.html   302
+/start/           /website/index.html   302
+/system           /website/index.html   302
+/system/          /website/index.html   302
+/programs         /website/index.html   302
+/programs/        /website/index.html   302
+/peek             /website/index.html   302
+/peek/            /website/index.html   302
+/timeline         /website/index.html   302
+/timeline/        /website/index.html   302
+/intake           /website/index.html   302
+/intake/          /website/index.html   302
+/intake/financial     /website/index.html   302
+/intake/operations    /website/index.html   302
+/intake/venture       /website/index.html   302
+/intake/commercial    /website/index.html   302
+/intake/coaching      /website/index.html   302
+/intake/project       /website/index.html   302
+/intake/project/      /website/index.html   302
+/discovery        /website/index.html   302
+/discovery/       /website/index.html   302
+/glimpse/financial    /website/index.html   302
+/glimpse/operations   /website/index.html   302
+/glimpse/venture      /website/index.html   302
+/glimpse/commercial   /website/index.html   302
+/glimpse/coaching     /website/index.html   302
+/glimpse/project      /website/index.html   302
+/glimpse/project/     /website/index.html   302
+/guide            /website/index.html   302
+/guide/           /website/index.html   302
+/forms            /website/index.html   302
+/forms/           /website/index.html   302
+/forms/thanks     /website/index.html   302
+/forms/thanks/    /website/index.html   302
+/services/fractional-business-development   /website/index.html   302
+/services/fractional-business-development/  /website/index.html   302
+/services/strategy   /website/index.html   302
+/services/strategy/  /website/index.html   302
+/services/financial  /website/index.html   302
+/services/financial/ /website/index.html   302
+/services/operations /website/index.html   302
+/services/operations/ /website/index.html   302
+/services/coaching   /website/index.html   302
+/services/coaching/  /website/index.html   302
+/services/decision-support   /website/index.html   302
+/services/decision-support/  /website/index.html   302
+/services/project-management   /website/index.html   302
+/services/project-management/  /website/index.html   302
+/services/startup-business-plan   /website/index.html   302
+/services/startup-business-plan/  /website/index.html   302
+/services/revenue-operations   /website/index.html   302
+/services/revenue-operations/  /website/index.html   302
+/services/sales-process-maturity   /website/index.html   302
+/services/sales-process-maturity/  /website/index.html   302
+/legal            /website/index.html   302
+/legal/           /website/index.html   302
+/legal/nda        /website/index.html   302
+/legal/nda/       /website/index.html   302
+/legal/nda-agreement    /website/index.html   302
+/legal/nda-agreement/   /website/index.html   302
+/legal/exclusivity      /website/index.html   302
+/legal/exclusivity/     /website/index.html   302
+/legal/terms      /website/index.html   302
+/legal/terms/     /website/index.html   302
+/legal/privacy    /website/index.html   302
+/legal/privacy/   /website/index.html   302
+/legal/disclaimer /website/index.html   302
+/legal/disclaimer/ /website/index.html   302
+/forms/lead-magnet    /website/index.html   302
+/forms/lead-magnet/   /website/index.html   302
+/forms/discovery      /website/index.html   302
+/forms/discovery/     /website/index.html   302
+/forms/discovery-needs    /website/index.html   302
+/forms/discovery-needs/   /website/index.html   302
+/forms/onboarding         /website/index.html   302
+/forms/onboarding/        /website/index.html   302
+/forms/benefit-statement  /website/index.html   302
+/forms/benefit-statement/ /website/index.html   302
 
 # Diagnostic entry. Public visitors get intake, not the engine.
-/diagnostic       /website/forms/intake.html   302
-/diagnostic/      /website/forms/intake.html   302
-/diagnostic/*     /website/forms/intake.html   302
+/diagnostic       /website/index.html   302
+/diagnostic/      /website/index.html   302
+/diagnostic/*     /website/index.html   302
 
 # Practice bench, engines, and client room are not a public product.
 # Local http-server ignores this file. Cloudflare may still serve a file if it exists.
@@ -123,7 +123,7 @@
 /client/*         /404.html   404
 
 # Static assets when the URL is still on the domain root.
-/images/*         /website/images/:splat   200
+/images/*         /website/index.html   200
 
-# Unmatched paths → real 404, not the diagnostic form.
+# Unmatched paths â†’ real 404, not the diagnostic form.
 /*                /404.html   404
