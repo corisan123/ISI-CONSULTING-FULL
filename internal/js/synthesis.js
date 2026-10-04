@@ -118,6 +118,26 @@
     if (tree && tree.best) {
       kpis.push({ label: "Quantified path EV", value: money(tree.best.ev) });
     }
+    var engineSummary =
+      payload(results, "engine1-summary") ||
+      payload(results, "engine2-summary") ||
+      payload(results, "engine3-summary") ||
+      payload(results, "engine4-summary") ||
+      payload(results, "engine5-summary");
+    if (engineSummary && engineSummary.kpis) {
+      var ek = engineSummary.kpis;
+      if (ek.ev != null) kpis.push({ label: "Engine EV", value: money(ek.ev) });
+      if (ek.npv != null) kpis.push({ label: "Engine NPV", value: money(ek.npv) });
+      if (ek.mcP50 != null) kpis.push({ label: "Monte Carlo P50", value: money(ek.mcP50) });
+      if (ek.diligence != null) kpis.push({ label: "Diligence gate", value: String(ek.diligence) });
+      if (ek.tollgate != null) kpis.push({ label: "Tollgate", value: String(ek.tollgate) });
+      if (ek.pipelineScore != null) {
+        kpis.push({
+          label: "Pipeline integrity",
+          value: ek.pipelineScore <= 1 ? pct(ek.pipelineScore) : String(ek.pipelineScore)
+        });
+      }
+    }
     kpis = unique(kpis, function (k) { return k.label; });
 
     var probabilities = null;

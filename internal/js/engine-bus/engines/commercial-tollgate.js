@@ -106,10 +106,13 @@
         run: function (ctx) {
           var intake = loadIntake(ctx);
           var base = defaultInputs();
-          var merged = Object.assign(base, ctx.inputs || {}, {
-            company: intake.companyName || intake.company || UNSET_COMPANY,
-            pWin: n(intake.winRate, base.pWin * 100) / 100
+          var patch = ctx.inputs || {};
+          var merged = Object.assign(base, patch, {
+            company: intake.companyName || intake.company || UNSET_COMPANY
           });
+          if (patch.pWin == null && intake.winRate != null && intake.winRate !== "") {
+            merged.pWin = n(intake.winRate, base.pWin * 100) / 100;
+          }
           merged._intake = intake;
           if (global.ISI.store) {
             global.ISI.store.setEngagement({
@@ -201,11 +204,7 @@
         storeAs: "tree-bid",
         run: function (ctx) {
           var ti = treeInputsFromCtx(ctx);
-          var dd = ctx.get("commercial-diligence").payload;
-          var gp = ti.gp;
-          if (dd && dd.metrics && dd.metrics.qoe) {
-            gp = Math.max(80000, dd.metrics.qoe * 0.12);
-          }
+          var gp = n(ti.gp, defaultInputs().gp);
           var tree = global.ISI.trees.bidTree(ti.pWin, gp, ti.bidCost, ti.developCost);
           return {
             headline: "Best path: " + tree.best.label + " · EV $" + Math.round(tree.best.ev).toLocaleString(),

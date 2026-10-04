@@ -40,6 +40,10 @@
       <a class="btn btn-ghost" href="/internal/family-dashboard.html">Family dashboard</a>
       <a class="btn btn-ghost" href="/internal/index.html">Practice bench</a>
     </div>
+    <p id="runStatus" class="lede" style="margin-top:0.5rem;font-size:0.9rem;color:#5a6577" aria-live="polite">
+      Change inputs, then click <strong>Run full engine</strong> (KPIs do not live-update while typing).
+      Use one host only — e.g. <code>http://localhost:8080</code> — not <code>127.0.0.1</code> mixed with <code>localhost</code>.
+    </p>
     <p id="selfTestOut" class="lede" style="margin-top:0.75rem" aria-live="polite"></p>
 
     <section style="margin-top:1.5rem">
@@ -108,15 +112,22 @@
 
     function paint(result) {
       var logEl = document.getElementById("log");
-      logEl.innerHTML = (result.log || []).map(function (row) {
-        return "<div class='pr-panel' style='margin-bottom:0.5rem'><strong>" + row.label + "</strong><br>" + row.headline +
-          (row.detail ? "<br><span class='lede'>" + row.detail + "</span>" : "") + "</div>";
-      }).join("");
+      var log = (result && result.log) || [];
+      logEl.innerHTML = log.length
+        ? log.map(function (row) {
+            return "<div class='pr-panel' style='margin-bottom:0.5rem'><strong>" + row.label + "</strong><br>" + row.headline +
+              (row.detail ? "<br><span class='lede'>" + row.detail + "</span>" : "") + "</div>";
+          }).join("")
+        : "<p class='lede'>No program log yet — click <strong>Run full engine</strong>.</p>";
+      var statusEl = document.getElementById("runStatus");
+      if (statusEl && log.length) {
+        statusEl.textContent = "Last run: " + log.length + " programs · bus v" + (engine.read().version || 0) + ".";
+      }
       var sum = engine.getNodeOutput("summary");
       var kpiEl = document.getElementById("kpis");
       var fileLabel = document.getElementById("fileLabel");
       if (!sum || !sum.kpis) {
-        kpiEl.innerHTML = "";
+        kpiEl.innerHTML = "<p class='lede'>Summary KPIs appear after a successful full run.</p>";
         return;
       }
       var k = sum.kpis;
@@ -156,11 +167,35 @@
       return true;
     }
 
-    document.getElementById("runAll").addEventListener("click", function () {
-      document.getElementById("selfTestOut").textContent = "";
-      engine.setInput(readForm());
-      paint(engine.recompute());
-    });
+    function runFullEngine() {
+      var out = document.getElementById("selfTestOut");
+      out.textContent = "";
+      out.style.color = "";
+      try {
+        var inp = readForm();
+        if (!isFinite(inp.gp) || inp.gp <= 0) {
+          throw new Error("GP if won must be a positive number (no commas).");
+        }
+        if (!isFinite(inp.pWin) || inp.pWin <= 0 || inp.pWin > 1) {
+          throw new Error("Win rate must be between 1 and 100%.");
+        }
+        var result = engine.setInput(inp);
+        paint(result);
+        if (!result.log || !result.log.length) {
+          throw new Error("Engine returned an empty log — check the browser console (F12).");
+        }
+        var errRow = result.log.filter(function (r) { return r.headline === "Error"; });
+        if (errRow.length) {
+          throw new Error(errRow[0].detail || "A program node failed during the run.");
+        }
+      } catch (err) {
+        out.textContent = "Run failed: " + (err && err.message ? err.message : String(err));
+        out.style.color = "#b91c1c";
+        console.error(err);
+      }
+    }
+
+    document.getElementById("runAll").addEventListener("click", runFullEngine);
 
     document.getElementById("shockWin").addEventListener("click", function () {
       document.getElementById("selfTestOut").textContent = "";
@@ -174,8 +209,7 @@
     document.getElementById("selfTest").addEventListener("click", runSelfTest);
 
     document.getElementById("publishClient").addEventListener("click", function () {
-      engine.setInput(readForm());
-      engine.recompute();
+      runFullEngine();
       var pub = ISI.clientSummaryExport.publishCommercial();
       var out = document.getElementById("selfTestOut");
       if (!pub.ok) {
@@ -183,9 +217,23 @@
         out.style.color = "#b91c1c";
         return;
       }
-      out.textContent = "Client summary published — open client summary in new tab.";
+      var verify = null;
+      try {
+        verify = sessionStorage.getItem("isi_client_summary") || localStorage.getItem("isi_client_summary");
+      } catch (e) {
+        verify = null;
+      }
+      if (!verify) {
+        out.textContent = "Publish failed: summary was not stored in this browser (storage blocked or full).";
+        out.style.color = "#b91c1c";
+        return;
+      }
+      out.textContent = "Client summary published on " + location.host + " — opening summary tab.";
       out.style.color = "#166534";
+      window.open(pub.href, "_blank", "noopener");
     });
+
+    runFullEngine();
   </script>
 </body>
 </html>

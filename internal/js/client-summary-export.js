@@ -191,12 +191,25 @@
   }
 
   function saveSnapshot(payload) {
+    var raw = JSON.stringify(payload);
     try {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+      sessionStorage.setItem(STORAGE_KEY, raw);
       sessionStorage.setItem("isi_active_engagement_group", payload.group);
+      try {
+        localStorage.setItem(STORAGE_KEY, raw);
+        localStorage.setItem("isi_active_engagement_group", payload.group);
+      } catch (e2) {
+        /* sessionStorage is enough when available */
+      }
       return true;
     } catch (e) {
-      return false;
+      try {
+        localStorage.setItem(STORAGE_KEY, raw);
+        localStorage.setItem("isi_active_engagement_group", payload.group);
+        return true;
+      } catch (e3) {
+        return false;
+      }
     }
   }
 

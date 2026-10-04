@@ -12,6 +12,13 @@
   function readSnapshot() {
     try {
       var raw = sessionStorage.getItem("isi_client_summary");
+      if (!raw) {
+        try {
+          raw = localStorage.getItem("isi_client_summary");
+        } catch (e2) {
+          raw = null;
+        }
+      }
       return raw ? JSON.parse(raw) : null;
     } catch (e) {
       return null;

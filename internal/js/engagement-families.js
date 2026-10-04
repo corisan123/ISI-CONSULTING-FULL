@@ -201,6 +201,16 @@
       if (stored && FAMILIES[stored]) return stored;
     } catch (e) { /* ignore */ }
     var eng = global.ISI && global.ISI.store && global.ISI.store.read();
+    if (eng && eng.bus && eng.bus.activeEngine) {
+      var fromEngine = {
+        "commercial-tollgate": "commercial",
+        "financial-capital": "financial",
+        "operations-throughput": "operations",
+        "venture-sequence": "venture",
+        "project-program": "project"
+      }[eng.bus.activeEngine];
+      if (fromEngine && FAMILIES[fromEngine]) return fromEngine;
+    }
     if (eng && eng.engagement && FAMILIES[eng.engagement.family]) return eng.engagement.family;
     return "commercial";
   }

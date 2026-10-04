@@ -4,6 +4,23 @@
 (function (global) {
   "use strict";
 
+  var ENGINE_KPI_LABELS = {
+    commercial: {
+      company: "Engagement file",
+      diligence: "Diligence",
+      pipelineScore: "Pipeline integrity",
+      tollgate: "Tollgate",
+      treeBest: "Best path",
+      ev: "Expected value",
+      sensitivityTop: "Top sensitivity driver",
+      mcP50: "Monte Carlo P50 EV",
+      mcPPositive: "P(EV > 0)",
+      interventionsActive: "Active interventions",
+      matrixBest: "Matrix best",
+      rootcauseKeep: "Root-cause KEEP count"
+    }
+  };
+
   function formatEngineKpi(key, val) {
     if (val == null) return "—";
     if (key === "mcPPositive" && typeof val === "number") return (val * 100).toFixed(0) + "%";
@@ -16,17 +33,26 @@
     return String(val);
   }
 
+  function kpiTitle(familyId, key) {
+    var map = ENGINE_KPI_LABELS[familyId] || {};
+    return map[key] || key.replace(/-/g, " ");
+  }
+
   function headlineForResult(id, row) {
-    if (!row || !row.payload) return { status: "Not run", detail: "" };
+    if (!row || !row.payload) return null;
     var p = row.payload;
     if (id === "matrix" && p.best && p.best.label) {
       return { status: "Run", detail: "Best: " + p.best.label };
+    }
+    if (p.kpis && typeof p.kpis === "object") {
+      return { status: "Summary", detail: p.headline || "Engine summary KPIs stored." };
     }
     if (p.headline) return { status: "Run", detail: p.headline };
     if (p.result && p.result.headline) return { status: "Run", detail: p.result.headline };
     if (p.tree && p.tree.verdict) return { status: p.tree.verdict, detail: p.headline || "" };
     if (p.p50 != null) return { status: "P50 " + Math.round(p.p50), detail: "" };
-    return { status: "Saved", detail: row.at || "" };
+    if (p.verdict) return { status: String(p.verdict), detail: p.headline || "" };
+    return { status: "Run", detail: row.at || "" };
   }
 
   function paint() {
@@ -47,58 +73,89 @@
         ? global.ISI.engineBus.readGraph(engineId)
         : null;
     var summaryNode = graph && graph.nodes && graph.nodes.summary;
+    var engineKpis = summaryNode && summaryNode.output && summaryNode.output.kpis;
+
     if (sub) {
       sub.textContent =
         (engineId ? "Proprietary engine: " + engineId + ". " : "") +
-        "Legacy chain: " +
-        fam.pipelineSteps.join(" → ") +
-        ". Client intake: " +
+        "Client intake: " +
         fam.clientIntake;
     }
     if (busNote) {
-      if (summaryNode && summaryNode.output) {
+      if (engineKpis) {
         busNote.textContent =
           "Engine bus summary (v" +
           (graph.version || 0) +
           "): " +
-          (summaryNode.output.headline || "Run complete.");
+          (summaryNode.output.headline || "Run complete.") +
+          " · Tiles below are live from the last full engine run.";
       } else {
         busNote.textContent =
-          "Engine bus not run for this family yet. Open the proprietary engine and run the full graph.";
+          "No engine summary in this browser yet. Open " +
+          fam.entryLabel +
+          ", click Run full engine, then return here. Empty chain slots are hidden until a program runs.";
       }
     }
+
     grid.innerHTML = "";
-    if (summaryNode && summaryNode.output && summaryNode.output.kpis) {
-      Object.keys(summaryNode.output.kpis).forEach(function (key) {
-        var val = summaryNode.output.kpis[key];
+    var tileCount = 0;
+
+    if (engineKpis) {
+      Object.keys(engineKpis).forEach(function (key) {
+        var val = engineKpis[key];
         var card = document.createElement("div");
         card.className = "pr-card";
         card.innerHTML =
-          "<div class='tb-tag'>engine</div><h3>" +
-          key +
+          "<div class='tb-tag'>live KPI</div><h3>" +
+          kpiTitle(fam.id, key) +
           "</h3><p>" +
           formatEngineKpi(key, val) +
           "</p>";
         grid.appendChild(card);
+        tileCount++;
+      });
+    } else {
+      (fam.summaryKeys || []).forEach(function (key) {
+        var row = data.results[key];
+        var h = headlineForResult(key, row);
+        if (!h) return;
+        var card = document.createElement("div");
+        card.className = "pr-card";
+        card.innerHTML =
+          "<div class='tb-tag'>" +
+          key +
+          "</div><h3>" +
+          h.status +
+          "</h3><p>" +
+          (h.detail || "") +
+          "</p>";
+        grid.appendChild(card);
+        tileCount++;
       });
     }
-    (fam.summaryKeys || []).forEach(function (key) {
-      var row = data.results[key];
-      var h = headlineForResult(key, row);
-      var card = document.createElement("div");
-      card.className = "pr-card";
-      card.innerHTML =
-        "<div class='tb-tag'>" +
-        key +
-        "</div><h3>" +
-        h.status +
-        "</h3><p>" +
-        (h.detail || "Open the tool in the chain to populate.") +
-        "</p>";
-      grid.appendChild(card);
-    });
+
+    if (!tileCount) {
+      grid.innerHTML =
+        "<div class='pr-card' style='grid-column:1/-1'>" +
+        "<h3>No activated KPIs yet</h3>" +
+        "<p class='lede'>Run the proprietary engine for this family (" +
+        "<a href='" +
+        fam.entryHref +
+        "'>" +
+        fam.entryLabel +
+        "</a>), then publish the client summary at " +
+        "<a href='/client/summary.html?group=" +
+        fam.id +
+        "'>/client/summary.html?group=" +
+        fam.id +
+        "</a>.</p></div>";
+    }
+
     var entry = document.getElementById("entryLink");
-    if (entry) entry.href = fam.entryHref;
+    if (entry) {
+      entry.href = fam.entryHref;
+      entry.textContent = fam.entryLabel;
+    }
   }
 
   global.ISI = global.ISI || {};
